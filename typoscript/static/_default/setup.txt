@@ -1,0 +1,7 @@
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:pt_list/typoscript/static/_default/pageAjax.ts">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:pt_list/typoscript/static/_default/config.ts">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:pt_list/typoscript/static/_default/temp.ts">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:pt_list/typoscript/static/_default/plugin.tx_ptlist.alias.ts">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:pt_list/typoscript/static/_default/plugin.tx_ptlist.ts">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:pt_list/typoscript/static/_default/plugin.tx_ptlist.controller.list.ts">
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:pt_list/typoscript/static/_default/lib.ts">

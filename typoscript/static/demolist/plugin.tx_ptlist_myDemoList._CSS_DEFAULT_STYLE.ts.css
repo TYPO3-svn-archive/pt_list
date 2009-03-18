@@ -1,0 +1,67 @@
+plugin.tx_ptlist_myDemoList._CSS_DEFAULT_STYLE (
+
+
+	
+	.firstLetterCapital h4 {
+		display: none;
+	}
+	
+    .firstletterlist li a {
+        text-decoration: none;
+        color: black;
+        display: block;
+        padding: 2px 5px;
+    }
+    
+    .firstletterlist li {
+        list-style-type: none;
+        float: left;
+        background-color: #FFF;
+        border-top: 1px solid #AAA;
+        border-right: 1px solid #AAA;
+        border-left: 1px solid #AAA;
+        margin-right: 2px;
+        -moz-border-radius-bottomleft:0;
+        -moz-border-radius-bottomright:0;
+        -moz-border-radius-topleft:5px;
+        -moz-border-radius-topright:5px; 
+    }
+    
+    .firstletterlist li:hover,
+    .firstletterlist li.active {
+        background-color: #EBF3FD;
+        border-color: #99BBE8;
+    }
+    
+    .topFilterbox {
+        margin-bottom: 0px;
+    }   
+    
+    .topFilterbox li.tx-ptlist-filter, .topFilterbox li.filteractive {
+        padding: 0 0 0 5px;
+        margin-bottom: 0px;
+        border: none;
+    }
+    	
+	ul.topFilterbox {
+		width: 100%;
+		margin: 0px;
+		padding: 0px;
+	}
+	
+	.topFilterbox li .clearer {
+		margin: 0px;
+		padding: 0px;
+		height: 0px;
+	}
+	
+	table.tx-ptlist-list td.tx-ptlist-field-phoneColumn {
+		/* background-color: #fab; */
+	}
+	
+	a.un-link {
+		background: none !important;
+		padding: 0 3px 0 0 !important;
+	}
+	
+)

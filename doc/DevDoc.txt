@@ -1,0 +1,79 @@
+********************************************************************************
+DevDoc.txt: Development notes
+Author: Fabrizio Branca
+
+Legend:
+
+FIX: fixes a bug
+CHG: inform about changed items
+ADD: added feature
+RMV: removed Item
+RFT: refactoring / code cleanup
+********************************************************************************
+
+v0.0.1dev:
+----------
+
++ (fb) RMV: tx_ptlist_controller_stringGeneric is obsolete as it can be done with the tx_ptlist_controller_string filter using "dataDescriptionIdentifier = *"
++ (fb) CHG: filterBox configuration has changed. Class is no longer a property, but the value of the main key
+    Before:
+    10 {
+    	class < plugin.tx_ptlist.alias.filter_stringGeneric
+    	filterIdentifier = genericSearch
+    	label = Suche
+    	dataDescriptionIdentifier = 
+    }
+    
+    Now: 
+    10 < plugin.tx_ptlist.alias.filter_stringGeneric
+    10 {
+    	filterIdentifier = genericSearch
+    	label = Suche
+    	dataDescriptionIdentifier = 
+    }
++ (fb) ADD: dsn in listConfig and in renderUserFunction "fetchExternalData" can be a dsn string or a uid pointing to the tx_ptlist_databases table 
++ (fb) ADD: New table "tx_ptlist_databases"
++ (fb) CHG: renderUserFunctions only accepts numeric keys
++ (fb) CHG: tx_ptlist_renderer::cObj() renamed to tx_ptlist_renderer::cObject()
+  + (fb) CHG: parameter for tx_ptlist_renderer::cObject() renamed from "cObj(.)" to "renderObj(.)"   
+
+  
+Configuration
+
+== Extension configuration ==
+plugin.tx_<condensedExtKey>.
+
+== Controller configuration ==
+plugin.tx_<condensedExtKey>.controller.<controllerName>.
+
+== PrefixId-specific controller configuration ==
+plugin.tx_<condensedExtKey>.controller.<controllerName>.<prefixId>.
+
+== ListPrefix specific controller configuration ==
+plugin.tx_<condensedExtKey>.controller.<controllerName>.<listPrefix>.
+
+$this->conf = 
+	[already existing property $this->conf]
+	
+		// tx_ptmvc_controllerFrontend->getConfiguration()
+	[plugin.tx_<condensedExtKey>.controller.<controllerName>.] +
+	[plugin.tx_<condensedExtKey>.controller.<controllerName>.<prefixId>.] +
+	[flexFormSettings] +
+	
+		// tx_ptlist_controller_list->getConfiguration()
+	[localConfiguration set in ->main() or ->__construct()] + 
+	[plugin.tx_<condensedExtKey>.controller.<controllerName>.<listPrefix>.] +
+	
+		// tx_mvc_controller->prepare() 
+	[localConfiguration set in ->main() or ->__construct()] 
+	
+	
+Views 
+
+plugin.tx_<condensedExtKey>.view.<viewName>.
+
+$this->conf = 
+	[plugin.tx_<condensedExtKey>.view.<viewName>.] +
+	[<controllerConfig>.view.<viewName>.] 
+
+	  

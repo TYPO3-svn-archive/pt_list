@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
+<T3DataStructure>
+
+	<meta>
+		<langDisable>1</langDisable>
+	</meta>
+
+	<sheets>
+
+		<sDefault>
+			<ROOT>
+				<TCEforms>
+	  				<sheetTitle>General Options</sheetTitle>
+				</TCEforms>
+				<type>array</type>
+				<el>
+                    
+					<pluginMode>
+	    				<TCEforms>
+	      					<label>Plugin Mode</label>
+							<config>
+								<type>select</type>
+								<items type="array">
+									<numIndex index="1" type="array">
+										<numIndex index="0">LLL:EXT:pt_list/locallang_db.xml:tt_content.list_type_controller_list.pluginMode.list</numIndex>
+										<numIndex index="1">list</numIndex>
+									</numIndex>
+									<numIndex index="2" type="array">
+										<numIndex index="0">LLL:EXT:pt_list/locallang_db.xml:tt_content.list_type_controller_list.pluginMode.filterbox</numIndex>
+										<numIndex index="1">filterbox</numIndex>
+									</numIndex>
+									<numIndex index="3" type="array">
+										<numIndex index="0">LLL:EXT:pt_list/locallang_db.xml:tt_content.list_type_controller_list.pluginMode.pager</numIndex>
+										<numIndex index="1">pager</numIndex>
+									</numIndex>
+									<numIndex index="4" type="array">
+										<numIndex index="0">LLL:EXT:pt_list/locallang_db.xml:tt_content.list_type_controller_list.pluginMode.bookmarks</numIndex>
+										<numIndex index="1">bookmarks</numIndex>
+									</numIndex>
+									<numIndex index="5" type="array">
+										<numIndex index="0">LLL:EXT:pt_list/locallang_db.xml:tt_content.list_type_controller_list.pluginMode.filterbreadcrumb</numIndex>
+										<numIndex index="1">filterbreadcrumb</numIndex>
+									</numIndex>
+									<numIndex index="6" type="array">
+										<numIndex index="0">LLL:EXT:pt_list/locallang_db.xml:tt_content.list_type_controller_list.pluginMode.bookmarkform</numIndex>
+										<numIndex index="1">bookmarkform</numIndex>
+									</numIndex>
+									<numIndex index="7" type="array">
+										<numIndex index="0">LLL:EXT:pt_list/locallang_db.xml:tt_content.list_type_controller_list.pluginMode.extjsList</numIndex>
+										<numIndex index="1">extjsList</numIndex>
+									</numIndex>
+								</items>	
+							</config>
+	    				</TCEforms>
+	  				</pluginMode>
+	  			
+	  				
+					<listId>
+	    				<TCEforms>
+	      					<label>List identifier</label>
+							<config>
+								<type>input</type>
+								<size>24</size>
+								<max>48</max>
+								<eval>trim</eval>
+	      					</config>
+	    				</TCEforms>
+	  				</listId>
+	  				
+	  				<listClass>
+                        <TCEforms>
+                            <label>List type</label>
+                            <config>
+                                <type>select</type>
+                                <items>
+									<numIndex index="0" type="array">
+										<numIndex index="0">[From Typoscript configuration]</numIndex>
+										<numIndex index="1"></numIndex>
+									</numIndex>
+                                </items>
+                                <default>EXT:pt_list/model/typo3Tables/class.tx_ptlist_typo3Tables_list.php:tx_ptlist_typo3Tables_list</default>
+                                <itemsProcFunc>tx_ptlist_flexformDataProvider->getAvailableListClasses</itemsProcFunc>
+                            </config>
+                        </TCEforms>
+                    </listClass>
+                    
+				</el>
+			</ROOT>
+		</sDefault>
+			
+		<sFilterbox>
+			<ROOT>
+				<TCEforms>
+	  				<sheetTitle>Filterbox</sheetTitle>
+				</TCEforms>
+				<type>array</type>
+				<el>
+	  			
+					<filterboxId>
+	    				<TCEforms>
+	      					<label>Filterbox identifier (only required when plugin mode is "filterbox")</label>
+							<config>
+								<type>input</type>
+								<size>24</size>
+								<max>48</max>
+								<eval>trim</eval>
+								<default>defaultFilterbox</default>
+	      					</config>
+	    				</TCEforms>
+	  				</filterboxId>
+	  				
+	  			</el>
+			</ROOT>
+		</sFilterbox>
+			
+		<sPager>
+			<ROOT>
+				<TCEforms>
+	  				<sheetTitle>Pager</sheetTitle>
+				</TCEforms>
+				<type>array</type>
+				<el>
+	  				
+	  				<pagerStrategyClass>
+                        <TCEforms>
+                            <label>Pager (only required when plugin mode is "Pager")</label>
+                            <config>
+                                <type>select</type>
+                                <items>
+									<numIndex index="0" type="array">
+										<numIndex index="0">[From Typoscript configuration]</numIndex>
+										<numIndex index="1"></numIndex>
+									</numIndex>
+                                </items>
+                                <default>EXT:pt_list/model/pagerStrategy/class.tx_ptlist_pagerStrategy_default.php:tx_ptlist_pagerStrategy_default</default>
+                                <itemsProcFunc>tx_ptlist_flexformDataProvider->getAvailablePagerStrategyClasses</itemsProcFunc>
+                            </config>
+                        </TCEforms>
+                    </pagerStrategyClass>
+	  				
+				</el>
+			</ROOT>
+		</sPager>
+		
+		<!-- 
+		<sTyposcript>
+			<ROOT>
+				<TCEforms>
+					<sheetTitle>Typoscript</sheetTitle>
+				</TCEforms>
+				<type>array</type>
+				<el>
+				
+					<typoScript>
+						<TCEforms>
+							<exclude>1</exclude>
+							<label>plugin.tx_ptlist.</label>
+							<config>
+								<type>text</type>
+								<cols>80</cols>
+								<rows>10</rows>
+							</config>
+						</TCEforms>
+					</typoScript>
+					
+				</el>
+			</ROOT>
+		</sTyposcript>
+		-->
+
+	</sheets>
+</T3DataStructure> 

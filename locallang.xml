@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>database</type>
+		<description>Language labels for database tables/fields belonging to extension 't3sitecollector'</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+            <label index="noItemsFound">No items found</label>
+			<label index="reset">Reset</label>
+            <label index="filterRangeMin">min.</label>
+            <label index="filterRangeMax">max.</label>
+            <label index="filter_group_all">[All]</label>
+            <label index="pager_fill">...</label>
+            <label index="pager_prev">&amp;lt;</label>
+            <label index="pager_next">&amp;gt;</label>
+            <label index="pager_first">&amp;laquo;</label>
+            <label index="pager_last">&amp;raquo;</label>
+            <label index="displayTopics">Displaying topics {0} - {1} of {2}</label>
+			<label index="displayRows">Displaying rows %s - %s of %s</label><!-- Variables: offSetStart, offSetEnd, totalItemCount-->
+		</languageKey>
+		
+		<languageKey index="de" type="array">
+            <label index="noItemsFound">Keine Elemente gefunden</label>
+			<label index="reset">Zurücksetzen</label>
+            <label index="filter_group_all">[Alle]</label>
+            <label index="displayTopics">Ergebnisse {0} - {1} von {2}</label>
+			<label index="displayRows">Ergebnisse %s - %s von %s</label><!-- Variables: offSetStart, offSetEnd, totalItemCount-->
+		</languageKey>
+	</data>
+</T3locallang>

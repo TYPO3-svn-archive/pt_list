@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>database</type>
+		<description>Language labels for database tables/fields belonging to extension 't3sitecollector'</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			
+			<!-- 
+				Controller 
+			-->		
+				<label index="tt_content.list_type_controller_list">[pt_list] list</label>
+					<label index="tt_content.list_type_controller_list.pluginMode.list">List</label>
+					<label index="tt_content.list_type_controller_list.pluginMode.filterbox">Filterbox</label>
+					<label index="tt_content.list_type_controller_list.pluginMode.pager">Pager</label>
+					<label index="tt_content.list_type_controller_list.pluginMode.bookmarks">Bookmarks</label>
+					<label index="tt_content.list_type_controller_list.pluginMode.filterbreadcrumb">Filter Breadcrumb</label>
+					<label index="tt_content.list_type_controller_list.pluginMode.bookmarkform">Bookmark Form</label>
+					<label index="tt_content.list_type_controller_list.pluginMode.extjsList">Ext JS List</label>
+				
+			<!--
+				Database tables 
+			 -->
+			 	<!-- Bookmark Records -->
+			 	<label index="tx_ptlist_bookmarks">Bookmarks</label>
+					<label index="tx_ptlist_bookmarks.name">Name</label>
+					<label index="tx_ptlist_bookmarks.filterstates">Filter state</label>
+				
+				<!-- Database Records -->
+				<label index="tx_ptlist_databases">Databases</label>
+					<label index="tx_ptlist_databases.host">Host</label>
+					<label index="tx_ptlist_databases.db">Database</label>
+					<label index="tx_ptlist_databases.username">Username</label>
+					<label index="tx_ptlist_databases.pass">Password</label>
+				
+		</languageKey>
+	</data>
+</T3locallang>

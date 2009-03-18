@@ -1,0 +1,1 @@
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:pt_list/typoscript/static/_themes/_default/plugin.tx_ptlist._CSS_DEFAULT_STYLE.ts.css">

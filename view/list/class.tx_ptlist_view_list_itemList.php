@@ -1,0 +1,114 @@
+<?php
+
+require_once t3lib_extMgm::extPath('pt_list').'view/class.tx_ptlist_view.php';
+
+class tx_ptlist_view_list_itemList extends tx_ptlist_view {
+
+	/**
+	 * @var bool	in typoscript mode no smarty template will be used
+	 */
+	protected $typoScriptMode = false;
+
+
+
+	/**
+	 * Overwrite the getTemplateFilePath to avoid searching for a template if in typoscript mode
+	 *
+	 * @param	void
+	 * @return	void
+	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @since	2009-02-19
+	 */
+	public function getTemplateFilePath() {
+		if ($this->viewConf['template'] != 'none') {
+			$this->typoScriptMode = false;
+			parent::getTemplateFilePath();
+		} else {
+			$this->typoScriptMode = true;
+		}
+	}
+
+
+
+	/**
+	 * Overwrite the render method to make a tryposcript mode possible
+	 * In typoscript mode no smarty template will be used.
+	 * You decide how the list, rows and single fields will be wrapped be typoscript
+	 *
+	 * @param	void
+	 * @return	string	HTML output
+	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @since	2009-02-19
+	 */
+	public function render() {
+		
+		if ($this->typoScriptMode == false) {
+
+			/**
+			 * Smarty rendering
+			 */
+			$output = parent::render();
+			
+		} else {
+			
+			/**
+			 * Typoscript rendering
+			 */
+
+			$renderConfig = $this->viewConf['template.'];
+
+			$list = '';
+
+			// iterate over all rows
+			foreach ($this->itemsArr['listItems'] as $item) {
+
+				$row = '';
+
+				// iterate over all columns
+				foreach ($item as $columnIdentifier => $content) {
+
+					$GLOBALS['TSFE']->cObj->data = array(
+						'columnIdentifier' => $columnIdentifier,
+						'columnContent' => $content
+					);
+
+					$field = $content;
+					// if there is a columnIdentifier-specific stdWrap use this, else use "field_stdWrap"
+					if (is_array($renderConfig[$columnIdentifier.'_stdWrap.'])) {
+						$field = $GLOBALS['TSFE']->cObj->stdWrap($field, $renderConfig[$columnIdentifier.'_stdWrap.']);
+					} else {
+						$field = $GLOBALS['TSFE']->cObj->stdWrap($field, $renderConfig['field_stdWrap.']);
+					}
+
+					$row .= $field;
+				}
+
+				$row = $GLOBALS['TSFE']->cObj->stdWrap($row, $renderConfig['row_stdWrap.']);
+
+				$list .= $row;
+
+			}
+			$output = $GLOBALS['TSFE']->cObj->stdWrap($list, $renderConfig['list_stdWrap.']);
+		}
+		
+		return $output;
+	}
+
+
+
+	/**
+	 * This will be executed before rendering the template
+	 *
+	 * @param 	void
+	 * @return 	void
+	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @since	2009-01-19
+	 */
+	public function beforeRendering() {
+		parent::beforeRendering();
+		$this->addItem('&###LISTPREFIX###[action]=changeSortingOrder&###LISTPREFIX###[column]=%s&###LISTPREFIX###[direction]=%s', 'additionalParamsForColumnHeaders');
+	}
+
+}
+
+?>

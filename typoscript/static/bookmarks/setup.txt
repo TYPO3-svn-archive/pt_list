@@ -1,0 +1,1 @@
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:pt_list/typoscript/static/bookmarks/plugin.tx_ptlist.listConfig.bookmarks.ts">
