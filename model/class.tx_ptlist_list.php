@@ -160,6 +160,9 @@ abstract class tx_ptlist_list implements tx_ptlist_iListable, tx_ptlist_iFiltera
         if (TYPO3_DLOG) t3lib_div::devLog('Invoking a filterCollection', 'pt_list');
 
         foreach ($filterCollection as $filter) { /* @var $filter tx_ptlist_filter */
+        	if (!$this->getAllFilters()->hasItem($filter->get_filterIdentifier())) {
+        		throw new tx_pttools_exception(sprintf('Could not find filter "%s" the list\'s filter collection!', $filter->get_filterIdentifier()));
+        	}
             $currentFilter = $this->getAllFilters()->getItemById($filter->get_filterIdentifier());
             tx_pttools_assert::isInstanceOf($currentFilter, 'tx_ptlist_filter', array('message' => 'Matching filter not found!'));
             $currentFilter->invokeFilter($filter);

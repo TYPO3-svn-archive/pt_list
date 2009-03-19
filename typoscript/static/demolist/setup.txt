@@ -167,7 +167,7 @@ plugin.tx_ptlist.listConfig.myDemoList {
 			dataDescriptionIdentifier = iso2
 			isSortable = 1
 			renderUserFunctions {
-				10 = EXT:pt_list/model/typo3Tables/class.tx_ptlist_typo3Tables_renderer.php:tx_ptlist_typo3Tables_renderer->iso2CodeRenderer
+				10 = EXT:pt_list/typoscript/static/demolist/class.tx_ptlist_demolist_renderer.php:tx_ptlist_demolist_renderer->iso2CodeRenderer
 			}
 		}
 		30 {
@@ -237,10 +237,10 @@ plugin.tx_ptlist.listConfig.myDemoList {
 			label = Minimum Phone Number
 			dataDescriptionIdentifier = phone
 		}
-		30 < plugin.tx_ptlist.alias.filter_min
+		30 < plugin.tx_ptlist.alias.filter_max
 		30 {
 			filterIdentifier = minIsoNo
-			label = Minimum Iso Number
+			label = Maximum Iso Number
 			dataDescriptionIdentifier = isoNo
 		}
 		40 < plugin.tx_ptlist.alias.filter_options_group

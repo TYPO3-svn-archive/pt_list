@@ -72,6 +72,7 @@ class tx_ptlist_div {
 
 	/**
 	 * Renders an array of values for a given configuration via php userfunction or TYPO3 content object and stores it into an own cache
+	 * TODO: move this to a library (pt_tools?)
 	 *
 	 * @example
 	 * <code>
@@ -111,13 +112,16 @@ class tx_ptlist_div {
 					
 					$sortedKeys = t3lib_TStemplate::sortedKeyList($config['renderUserFunctions.'], false);
 					
-					$params = array('values' => $values);
+					$params = array();
+					$params['values'] = $values;
+					
+					$dummRef = ''; // as this method is called statically we create a dummy variable that will be passed to the user function
 					
 					foreach ($sortedKeys as $key) {
 						$rendererUserFunc = $config['renderUserFunctions.'][$key];
 						$params['currentContent'] = $renderedContent;
 						$params['conf'] = $config['renderUserFunctions.'][$key.'.']; // pass the configuration found under "<key>." to the userfunction
-						$renderedContent = t3lib_div::callUserFunction($rendererUserFunc, $params, $this);
+						$renderedContent = t3lib_div::callUserFunction($rendererUserFunc, $params, $dummRef);
 					}
 					
 				}

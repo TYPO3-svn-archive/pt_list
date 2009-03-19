@@ -7,6 +7,7 @@ plugin.tx_ptlist.alias {
     # filter_*: filter classes inheriting from the tx_ptlist_filter class
 	filter_string = EXT:pt_list/controller/filter/class.tx_ptlist_controller_filter_string.php:tx_ptlist_controller_filter_string
 	filter_min = EXT:pt_list/controller/filter/class.tx_ptlist_controller_filter_min.php:tx_ptlist_controller_filter_min
+	filter_max = EXT:pt_list/controller/filter/class.tx_ptlist_controller_filter_max.php:tx_ptlist_controller_filter_max
     filter_range = EXT:pt_list/controller/filter/class.tx_ptlist_controller_filter_range.php:tx_ptlist_controller_filter_range
     filter_timeSpan = EXT:pt_list/controller/filter/class.tx_ptlist_controller_filter_timeSpan.php:tx_ptlist_controller_filter_timeSpan
     filter_firstLetter = EXT:pt_list/controller/filter/class.tx_ptlist_controller_filter_firstLetter.php:tx_ptlist_controller_filter_firstLetter

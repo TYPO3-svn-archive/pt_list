@@ -34,6 +34,8 @@ require_once t3lib_extMgm::extPath('pt_list').'view/filter/min/class.tx_ptlist_v
  */
 class tx_ptlist_controller_filter_min extends tx_ptlist_filter {
 	
+	
+	
 	/**
 	 * MVC init method:
 	 * Checks if the column collection contains exactly one column as this filter can be used only with one column at the same time
@@ -49,6 +51,8 @@ class tx_ptlist_controller_filter_min extends tx_ptlist_filter {
 		tx_pttools_assert::isEqual(count($this->dataDescriptions), 1, array('message' => sprintf('This filter can only be used with 1 dataDescription (dataDescription found: "%s"', count($this->dataDescriptions))));
 	}
 	
+	
+	
 	/**
 	 * Displays the user interface in active state
 	 * - calls isNotActiveAction
@@ -63,6 +67,16 @@ class tx_ptlist_controller_filter_min extends tx_ptlist_filter {
 		return $this->doAction('isNotActive');
 	}
 	
+	
+	
+	/**
+	 * Display the interface
+	 *
+	 * @param 	void
+	 * @return 	unknown
+	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @since	2009-01-19
+	 */
 	public function isNotActiveAction() {
 		$view = $this->getView('filter_min_userInterface');
 		$view->addItem($this->value, 'value');
@@ -70,10 +84,15 @@ class tx_ptlist_controller_filter_min extends tx_ptlist_filter {
 	}
 	
 	
-	public function validate() {
-		return ($this->params['value'] % 2) == 0;	
-	}
 	
+	/**
+	 * Submit action
+	 *
+	 * @param 	void
+	 * @return 	string	HTML output
+	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @since	2009-01-19
+	 */
 	public function submitAction() {
 		
 		// save the incoming parameters to your value property here
@@ -82,19 +101,17 @@ class tx_ptlist_controller_filter_min extends tx_ptlist_filter {
 		// let the parent action do the submission (validate)
 		return parent::submitAction();
 	}
-			
-		
-		/*
-		
-		// TODO: remove (this is only for testing purposes)
-		if ($this->value == 42) {
-			tx_pttools_assert::isNotEmptyString($this->conf['redirectOn42'], array('message' => 'No "redirectOn42" value found!'));
-			$listControllerObj = tx_pttools_registry::getInstance()->get($this->listIdentifier.'_listControllerObject'); 
-			$listControllerObj->set_forcedNextAction('redirect', array('target' => $GLOBALS['TSFE']->cObj->getTypoLink_URL($this->conf['redirectOn42'])));
-		}
-		
-		*/
+
 	
+	
+	/**
+	 * Get sql where clause snippet
+	 *
+	 * @param 	void
+	 * @return 	string 	sql where clause snippet
+	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @since	2009-01-19
+	 */
 	public function getSqlWhereClauseSnippet() {
 		$sqlWhereClauseSnippet = sprintf('%s.%s >= %s', $this->dataDescriptions->getItemByIndex(0)->get_table(), $this->dataDescriptions->getItemByIndex(0)->get_field(), intval($this->value));
 		return $sqlWhereClauseSnippet;
