@@ -28,7 +28,7 @@ require_once t3lib_extMgm::extPath('pt_list').'view/filter/min/class.tx_ptlist_v
 /**
  * Class implementing a "minimum" filter
  * 
- * @version  	$Id: class.tx_ptlist_controller_filter_min.php,v 1.11 2009/02/04 09:57:09 ry44 Exp $
+ * @version  	$Id$
  * @author		Fabrizio Branca <branca@punkt.de>
  * @since		2009-01-26
  */

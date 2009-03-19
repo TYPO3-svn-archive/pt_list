@@ -28,7 +28,7 @@ require_once t3lib_extMgm::extPath('pt_list').'view/filter/timeSpan/class.tx_ptl
 /**
  * Class implementing a "minimum" filter
  *
- * @version  	$Id: class.tx_ptlist_controller_filter_timeSpan.php,v 1.6 2009/03/18 14:42:54 ry44 Exp $
+ * @version  	$Id$
  * @author		Fabrizio Branca <branca@punkt.de>
  * @since		2009-01-26
  */

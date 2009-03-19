@@ -24,7 +24,7 @@
 /** 
  * String filter view class for the 'pt_list' extension
  *
- * $Id: class.tx_ptlist_view_filter_string_userInterface.php,v 1.2 2009/02/13 13:26:39 ry44 Exp $
+ * $Id$
  *
  * @author  Rainer Kuhn <kuhn@punkt.de>
  * @since   2009-01-20

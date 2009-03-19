@@ -28,7 +28,7 @@ require_once t3lib_extMgm::extPath('pt_tools') . 'res/abstract/class.tx_pttools_
 /**
  * Very simple and generic class, whose property can be filled by passing an array (with property names as array keys and property values as array values) to the constructor
  *
- * @version 	$Id: class.tx_ptlist_typo3Tables_dataObject.php,v 1.4 2009/02/15 16:14:56 ry44 Exp $
+ * @version 	$Id$
  * @author		Fabrizio Branca <branca@punkt.de>
  * @since		2009-01-20
  */

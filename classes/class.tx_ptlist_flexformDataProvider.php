@@ -26,7 +26,7 @@
 /**
  * Class 'tx_ptlist_flexformDataProvider'
  * 
- * $Id: class.tx_ptlist_flexformDataProvider.php,v 1.2 2009/02/20 17:11:01 ry44 Exp $
+ * $Id$
  *
  * @author	Fabrizio Branca <branca@punkt.de>
  * @since   2008-02-06

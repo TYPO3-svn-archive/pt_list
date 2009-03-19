@@ -27,7 +27,7 @@ require_once t3lib_extMgm::extPath('pt_mvc').'classes/class.tx_ptmvc_view.php';
 /**
  * Base class for view in the pt_list extension
  * 
- * @version 	$Id: class.tx_ptlist_view.php,v 1.4 2009/02/13 13:26:39 ry44 Exp $
+ * @version 	$Id$
  * @author		Fabrizio Branca <branca@punkt.de>
  * @since		2009-01-22
  */

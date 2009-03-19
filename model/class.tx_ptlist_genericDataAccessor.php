@@ -29,7 +29,7 @@ require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_externalDat
 /**
  * Generic database accessor
  *
- * @version 	$Id: class.tx_ptlist_genericDataAccessor.php,v 1.2 2009/03/12 13:14:11 ry44 Exp $
+ * @version 	$Id$
  * @author		Fabrizio Branca <branca@punkt.de>
  * @since		2009-01-22
  */

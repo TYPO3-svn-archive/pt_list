@@ -28,7 +28,7 @@ require_once t3lib_extMgm::extPath('pt_tools').'res/staticlib/class.tx_pttools_a
 /**
  * Database accessor for the dataObject class
  * 
- * @version 	$Id: class.tx_ptlist_bookmarkAccessor.php,v 1.2 2009/02/04 09:57:09 ry44 Exp $
+ * @version 	$Id$
  * @author		Fabrizio Branca <branca@punkt.de>
  * @since		2009-01-22
  */

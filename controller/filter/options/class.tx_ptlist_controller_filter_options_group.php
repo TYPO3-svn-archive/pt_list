@@ -28,7 +28,7 @@ require_once t3lib_extMgm::extPath('pt_list').'controller/filter/options/class.t
 /**
  * Group filter class
  *
- * @version 	$Id: class.tx_ptlist_controller_filter_options_group.php,v 1.1 2009/02/23 10:33:33 ry44 Exp $
+ * @version 	$Id$
  * @author		Fabrizio Branca <branca@punkt.de>
  * @since		2009-01-23
  */

@@ -37,7 +37,7 @@ require_once t3lib_extMgm::extPath('pt_tools').'res/staticlib/class.tx_pttools_a
 /**
  * Base class for the a list object
  *
- * @version 	$Id: class.tx_ptlist_list.php,v 1.23 2009/03/13 09:20:50 ry44 Exp $
+ * @version 	$Id$
  * @author		Fabrizio Branca <branca@punkt.de>
  * @since		2009-01-26
  */

@@ -53,7 +53,7 @@ require_once t3lib_extMgm::extPath('pt_mvc').'classes/class.tx_ptmvc_controllerF
  * - pager
  * - bookmarks
  *
- * @version 	$Id: class.tx_ptlist_controller_list.php,v 1.39 2009/03/18 14:42:54 ry44 Exp $
+ * @version 	$Id$
  * @author		Fabrizio Branca <branca@punkt.de>
  * @since		2009-01-21
  */

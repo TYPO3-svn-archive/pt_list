@@ -29,7 +29,7 @@ require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_externalDat
 /**
  * Database accessor for the dataObject class
  *
- * @version 	$Id: class.tx_ptlist_typo3Tables_dataObjectAccessor.php,v 1.14 2009/03/18 14:42:54 ry44 Exp $
+ * @version 	$Id$
  * @author		Fabrizio Branca <branca@punkt.de>
  * @since		2009-01-22
  */

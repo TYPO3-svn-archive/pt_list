@@ -27,7 +27,7 @@ require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_genericData
 /**
  * Collection of static methods that can be used as user function as data renderer (renderUserFunctions.)
  *
- * @version 	$Id: class.tx_ptlist_renderer.php,v 1.6 2009/03/18 14:42:54 ry44 Exp $
+ * @version 	$Id$
  * @author		Fabrizio Branca <branca@punkt.de>
  * @since		2009-02-10
  */

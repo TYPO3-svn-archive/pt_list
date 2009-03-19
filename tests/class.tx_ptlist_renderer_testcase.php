@@ -35,7 +35,7 @@ require_once t3lib_extMgm::extPath('phpunit').'class.tx_phpunit_testcase.php';
  * @since		2009-03-06
  * @package     TYPO3
  * @subpackage  tx_ptlist
- * @version 	$Id: class.tx_ptlist_renderer_testcase.php,v 1.1 2009/03/06 08:39:51 ry44 Exp $
+ * @version 	$Id$
  */
 class tx_ptlist_renderer_testcase extends tx_phpunit_testcase {
 	

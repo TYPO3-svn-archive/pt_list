@@ -41,7 +41,7 @@ require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_div.php';
  * @since		2009-02-25
  * @package     TYPO3
  * @subpackage  tx_ptlist
- * @version 	$Id: class.tx_ptlist_externalDatabaseConnector.php,v 1.2 2009/03/06 09:43:58 ry44 Exp $
+ * @version 	$Id$
  */
 class tx_ptlist_externalDatabaseConnector extends t3lib_db {
         
@@ -58,10 +58,11 @@ class tx_ptlist_externalDatabaseConnector extends t3lib_db {
      * Class constructor
      *
      * @param 	string|int	dsn or uid pointing to a dsn record in tx_ptlist_databases
+     * @param 	string		(optional) db initizialization string
      * @author	Fabrizio Branca <branca@punkt.de>
      * @since	2009-03-06
      */
-    public function __construct($dsn) {
+    public function __construct($dsn, $setDBinit=NULL) {
         $this->store_lastBuiltQuery = true;
         
         if (is_numeric($dsn)) {
@@ -75,9 +76,11 @@ class tx_ptlist_externalDatabaseConnector extends t3lib_db {
 		$this->user     = $dsnArray['username']; 
 		$this->pass     = $dsnArray['password'];
 		
-        // allow individual database intialization
-        // $TYPO3setDBinit = $GLOBALS['TYPO3_CONF_VARS']['SYS']['setDBinit']; 
-        // $GLOBALS['TYPO3_CONF_VARS']['SYS']['setDBinit'] = $extConfArr['dbGSAsetDBinit']; // this will be used now for GSA DB initialization in t3lib_db::sql_pconnect() below
+		if (!is_null($setDBinit)) {
+			// allow individual database intialization
+        	$TYPO3setDBinit = $GLOBALS['TYPO3_CONF_VARS']['SYS']['setDBinit']; // backup original setDbInit 
+			$GLOBALS['TYPO3_CONF_VARS']['SYS']['setDBinit'] = $setDBinit;
+		}
         
         // connect to database server and select database
         tx_pttools_assert::isNotEmptyString($this->host, array('message'=>'No database host found!'));
@@ -90,8 +93,10 @@ class tx_ptlist_externalDatabaseConnector extends t3lib_db {
         $this->selectDbResult = $this->sql_select_db($this->database);
         tx_pttools_assert::isTrue($this->selectDbResult, array('message' => 'Could not select database!', 'sql_error' => $this->sql_error()));
         
-        // re-set original TYPO3 database intialization if overwritten for an external GSA database
-		// $GLOBALS['TYPO3_CONF_VARS']['SYS']['setDBinit'] = $TYPO3setDBinit; // perform all other connects with original TYPO3 setting
+        if (!is_null($setDBinit)) {
+			// re-set original TYPO3 database intialization if overwritten for an external GSA database
+			$GLOBALS['TYPO3_CONF_VARS']['SYS']['setDBinit'] = $TYPO3setDBinit; // perform all other connects with original TYPO3 setting
+        }
     }
     
     

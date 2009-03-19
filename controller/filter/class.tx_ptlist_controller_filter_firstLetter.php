@@ -29,7 +29,7 @@ require_once t3lib_extMgm::extPath('pt_list').'view/filter/firstLetter/class.tx_
 /**
  * First Letter filter class
  * 
- * @version 	$Id: class.tx_ptlist_controller_filter_firstLetter.php,v 1.5 2009/02/18 17:51:33 ry44 Exp $
+ * @version 	$Id$
  * @author		Fabrizio Branca <branca@punkt.de>, Ursula Klinger <klinger@punkt.de>
  * @since		2009-01-23
  */

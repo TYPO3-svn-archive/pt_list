@@ -24,7 +24,7 @@
 /**
  * Column description class for the 'pt_list' extension
  *
- * $Id: class.tx_ptlist_columnDescription.php,v 1.18 2009/03/18 14:42:54 ry44 Exp $
+ * $Id$
  *
  * @author  Fabrizio Branca <branca@punkt.de>, Rainer Kuhn <kuhn@punkt.de>
  * @since   2009-01-15

@@ -31,7 +31,7 @@ require_once t3lib_extMgm::extPath('pt_tools').'res/abstract/class.tx_pttools_iT
 /**
  * Data object collection
  *
- * @version 	$Id: class.tx_ptlist_typo3Tables_dataObjectCollection.php,v 1.5 2009/03/18 14:42:54 ry44 Exp $
+ * @version 	$Id$
  * @author		Fabrizio Branca <branca@punkt.de>
  * @since		2009-01-22
  */

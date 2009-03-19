@@ -28,7 +28,7 @@ require_once t3lib_extMgm::extPath('pt_list').'model/interfaces/class.tx_ptlist_
 /**
  * Class implementing a default pager strategy
  * 
- * @version		$Id: class.tx_ptlist_pagerStrategy_default.php,v 1.2 2009/02/13 13:26:39 ry44 Exp $
+ * @version		$Id$
  * @author		Fabrizio Branca <branca@punkt.de>
  * @since		2009-01-27
  */

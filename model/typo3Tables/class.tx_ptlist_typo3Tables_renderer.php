@@ -3,7 +3,7 @@
 /**
  * TYPO3 tables data renderer
  *
- * @version 	$Id: class.tx_ptlist_typo3Tables_renderer.php,v 1.2 2009/02/10 13:55:13 ry44 Exp $
+ * @version 	$Id$
  * @author		Fabrizio Branca <branca@punkt.de>
  * @since		2009-01-30
  */

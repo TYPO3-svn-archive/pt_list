@@ -17,7 +17,7 @@ require_once t3lib_extMgm::extPath('pt_tools') . 'res/abstract/class.tx_pttools_
 /**
  * TYPO3 tables class
  *
- * @version 	$Id: class.tx_ptlist_typo3Tables_list.php,v 1.20 2009/03/18 14:42:54 ry44 Exp $
+ * @version 	$Id$
  * @author		Fabrizio Branca <branca@punkt.de>
  * @since		2009-01-21
  */

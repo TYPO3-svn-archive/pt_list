@@ -24,7 +24,7 @@
 /** 
  * String filter controller class for the 'pt_list' extension
  *
- * $Id: class.tx_ptlist_controller_filter_string.php,v 1.3 2009/02/02 13:15:16 ry44 Exp $
+ * $Id$
  *
  * @author  Rainer Kuhn <kuhn@punkt.de>
  * @since   2009-01-20

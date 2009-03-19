@@ -24,7 +24,7 @@
 /** 
  * Range filter controller class for the 'pt_list' extension
  *
- * $Id: class.tx_ptlist_controller_filter_range.php,v 1.9 2009/02/04 09:57:09 ry44 Exp $
+ * $Id$
  *
  * @author  Rainer Kuhn <kuhn@punkt.de>
  * @since   2009-01-23

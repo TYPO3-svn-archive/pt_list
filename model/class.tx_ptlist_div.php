@@ -32,7 +32,7 @@ require_once t3lib_extMgm::extPath('pt_tools').'res/objects/class.tx_pttools_reg
 /**
  * Collection of static methods
  *
- * @version 	$Id: class.tx_ptlist_div.php,v 1.7 2009/03/06 09:43:58 ry44 Exp $
+ * @version 	$Id$
  * @author		Fabrizio Branca <branca@punkt.de>
  * @since		2009-02-23
  * @package     TYPO3

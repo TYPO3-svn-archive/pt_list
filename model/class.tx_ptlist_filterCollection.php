@@ -32,7 +32,7 @@ require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_filter.php'
 /**
  * Filter collection class
  *
- * @version 	$Id: class.tx_ptlist_filterCollection.php,v 1.21 2009/03/09 11:25:28 ry44 Exp $
+ * @version 	$Id$
  * @author		Fabrizio Branca <branca@punkt.de>
  * @since		2009-01-19
  */

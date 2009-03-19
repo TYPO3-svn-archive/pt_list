@@ -24,7 +24,7 @@
 /**
  * Data description collection class
  *
- * $Id: class.tx_ptlist_dataDescriptionCollection.php,v 1.7 2009/03/11 15:04:39 ry37 Exp $
+ * $Id$
  *
  * @author  Fabrizio Branca <branca@punkt.de>, Dorit Rottner <rottner@punkt.de>
  * @since   2009-01-15
