@@ -260,7 +260,7 @@ class tx_ptlist_columnDescription implements tx_pttools_iTemplateable, tx_pttool
 			$this->label = $GLOBALS['TSFE']->cObj->stdWrap($dataArray['label'], $dataArray['label.']);
 		}
 		if (isset($dataArray['access'])) {
-			$this->access = $dataArray['Access'];
+			$this->access = $dataArray['access'];
 		}
 		if (isset($dataArray['sortingDataDescription'])) {
 			$this->sortingDataDescription = $dataArray['sortingDataDescription'];

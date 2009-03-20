@@ -230,7 +230,7 @@ class tx_ptlist_dataDescription implements tx_pttools_iSettableByArray {
 			$this->isSortable = (bool) $dataDescriptionArray['isSortable'];
 		}
 		if (isset($dataDescriptionArray['access'])) {
-			$this->access = $dataDescriptionArray['Access'];
+			$this->access = $dataDescriptionArray['access'];
 		}
 	}
 
