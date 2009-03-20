@@ -170,11 +170,8 @@ class tx_ptlist_columnDescription implements tx_pttools_iTemplateable, tx_pttool
 
 		tx_pttools_assert::isTrue($this->isSortable, array('message' => 'This column is not sortable'));
 		tx_pttools_assert::isInArray($this->sortingState, array(self::SORTINGSTATE_DESC, self::SORTINGSTATE_ASC), array('message' => 'Invalid sorting state (must be "tx_ptlist_columnDescription::SORTINGSTATE_DESC" or "tx_ptlist_columnDescription::SORTINGSTATE_ASC")'));
-
-		if (empty($this->sortingDataDescription)) {
-			$this->sortingDataDescription = $this->dataDescriptions->getItemByIndex(0)->get_identifier();
-		}
-
+        tx_pttools_assert::isNotEmptyString($this->sortingDataDescription, array('message'=>'No sorting data description set'));
+        
 		$sortingData = t3lib_div::trimExplode(',', $this->sortingDataDescription);
 		foreach ($sortingData as &$value) {
 			list($dataDescriptionIdentifier, $direction) = t3lib_div::trimExplode(' ', $value);
@@ -215,7 +212,28 @@ class tx_ptlist_columnDescription implements tx_pttools_iTemplateable, tx_pttool
 	 * @since	2009-01-22
 	 */
 	public function isSortable() {
-		return $this->isSortable;
+        
+        // check if display column itself is sortable
+        if ($this->isSortable == false) {
+            return false;
+        }
+        
+        // check if the column's sorting data descriptions are sortable
+        tx_pttools_assert::isNotEmptyString($this->sortingDataDescription, array('message'=>'No sortingDataDescription found!'));
+        tx_pttools_assert::isNotEmptyString($this->listIdentifier, array('message'=>'No listIdentifier found!'));
+        $listObject = tx_pttools_registry::getInstance()->get($this->listIdentifier.'_listObject'); /* @var $listObject tx_ptlist_list */
+        tx_pttools_assert::isInstanceOf($listObject, 'tx_ptlist_list', array('message'=>'Could not find a list object in the registry!'));
+        
+        foreach (t3lib_div::trimExplode(',', $this->sortingDataDescription) as $sortingDataDescriptionIdentifier) { /* @var $sortingDataDescriptionIdentifier string */
+            if (!$listObject->getAllDataDescriptions()->hasItem($sortingDataDescriptionIdentifier)) {
+                throw new tx_pttools_exception(sprintf('Could not find dataDescriptionIdentifier "%s" in list "%s" in column "%s"', $sortingDataDescriptionIdentifier, $this->listIdentifier, $this->columnIdentifier));
+            }
+            if ($listObject->getAllDataDescriptions()->getItemById($sortingDataDescriptionIdentifier)->isSortable() == false) {
+                return false;
+            }
+        }
+            
+        return true;
 	}
 
 
@@ -229,7 +247,21 @@ class tx_ptlist_columnDescription implements tx_pttools_iTemplateable, tx_pttool
 	 * @since	2009-01-22
 	 */
     public function hasAccess($groupList) {
-        return tx_pttools_div::hasGroupAccess($groupList, $this->access);
+        
+        // check display column access
+        if (tx_pttools_div::hasGroupAccess($groupList, $this->access) == false) {
+            return false;
+        }
+        
+        // check access for the column's data descriptions
+        foreach ($this->dataDescriptions as $dataDescription) { /* @var $dataDescription tx_ptlist_dataDescription */
+            if ($dataDescription->hasAccess($groupList) == false) {
+                return false;
+            }
+        }
+        
+        return true;
+        
     }
 
 
@@ -262,26 +294,29 @@ class tx_ptlist_columnDescription implements tx_pttools_iTemplateable, tx_pttool
 		if (isset($dataArray['access'])) {
 			$this->access = $dataArray['access'];
 		}
-		if (isset($dataArray['sortingDataDescription'])) {
-			$this->sortingDataDescription = $dataArray['sortingDataDescription'];
-		}
 		if (isset($dataArray['dataDescriptionIdentifier'])) {
 			$dataDescriptionIdentifiers = array();
-			$registry = tx_pttools_registry::getInstance();
+			$listObject = tx_pttools_registry::getInstance()->get($this->listIdentifier.'_listObject'); /* @var $listObject tx_ptlist_list */
 			if ($dataArray['dataDescriptionIdentifier'] == '*') {
-				foreach($registry[$this->listIdentifier.'_listObject']->getAllDataDescriptions() as $dataDescription) { /* @var $dataDescription tx_ptlist_dataDescription */
+				foreach($listObject->getAllDataDescriptions()->getAccessibleDataDescriptions($GLOBALS['TSFE']->gr_list) as $dataDescription) { /* @var $dataDescription tx_ptlist_dataDescription */
 					$dataDescriptionIdentifiers[] = $dataDescription->get_identifier();
 				}
 			} else {
 				$dataDescriptionIdentifiers = t3lib_div::trimExplode(',', $dataArray['dataDescriptionIdentifier']);
 			}
 			foreach ($dataDescriptionIdentifiers as $dataDescriptionIdentifier) {
-				if (!$registry[$this->listIdentifier.'_listObject']->getAllDataDescriptions()->hasItem($dataDescriptionIdentifier)) {
+				if (!$listObject->getAllDataDescriptions()->hasItem($dataDescriptionIdentifier)) {
 					throw new tx_pttools_exception(sprintf('Could not find dataDescriptionIdentifier "%s" in list "%s" in column "%s"', $dataDescriptionIdentifier, $this->listIdentifier, $this->columnIdentifier));
 				}
-				$this->dataDescriptions->addItem($registry[$this->listIdentifier.'_listObject']->getAllDataDescriptions()->getItemById($dataDescriptionIdentifier));
+				$this->dataDescriptions->addItem($listObject->getAllDataDescriptions()->getItemById($dataDescriptionIdentifier));
 			}
 		}
+        if (isset($dataArray['sortingDataDescription'])) {
+            $this->sortingDataDescription = $dataArray['sortingDataDescription'];
+        }
+        if (empty($this->sortingDataDescription)) {
+            $this->sortingDataDescription = $this->dataDescriptions->getItemByIndex(0)->get_identifier();
+        }
 
 		// Rendering configuration
 		// Fields will be rendered with the tx_ptlist_div::renderValues() method. Have a look at the comment there for details
@@ -311,7 +346,7 @@ class tx_ptlist_columnDescription implements tx_pttools_iTemplateable, tx_pttool
 		$markerArray = array(
 			'identifier' => $this->columnIdentifier,
 			'label' => $this->label,
-			'isSortable' => $this->isSortable,
+			'isSortable' => $this->isSortable(),
 			'sortingState' => $this->sortingState,
 		);
 		return $markerArray;

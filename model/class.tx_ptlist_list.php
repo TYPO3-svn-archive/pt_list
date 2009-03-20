@@ -230,27 +230,16 @@ abstract class tx_ptlist_list implements tx_ptlist_iListable, tx_ptlist_iFiltera
 	 *
 	 * TODO: define this method in the "tx_ptlist_iListable" interface?
 	 *
-	 * @param 	bool	(optional) return only accessible columns for the currently logged in fe_users
 	 * @param 	void
 	 * @return 	tx_ptlist_dataDescriptionCollection
 	 * @author	Fabrizio Branca <branca@punkt.de>
 	 * @since	2009-01-14
 	 */
-	public function getAllDataDescriptions(/* $onlyAccessible=true */) {
+	public function getAllDataDescriptions() {
 
 		tx_pttools_assert::isInstanceOf($this->dataDescriptions, 'tx_ptlist_dataDescriptionCollection');
 
 		return $this->dataDescriptions;
-
-		/*
-		 * TODO: implement access control on dataDescriptions
-		if ($onlyAccessible == true) {
-			// TODO: abstract from fe_users!
-			return $this->columnDescriptions->getAccessibleColumns($GLOBALS['TSFE']->gr_list);
-		} else {
-			return $this->columnDescriptions;
-		}
-		*/
 	}
 	
 

@@ -463,7 +463,7 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
 			$dataDescriptionIdentifiers = array();
 			$registry = tx_pttools_registry::getInstance();
 			if ($dataArray['dataDescriptionIdentifier'] == '*') {
-				foreach($registry[$this->listIdentifier.'_listObject']->getAllDataDescriptions() as $dataDescription) { /* @var $dataDescription tx_ptlist_dataDescription */
+				foreach($registry[$this->listIdentifier.'_listObject']->getAllDataDescriptions()->getAccessibleDataDescriptions($GLOBALS['TSFE']->gr_list) as $dataDescription) { /* @var $dataDescription tx_ptlist_dataDescription */
 					$dataDescriptionIdentifiers[] = $dataDescription->get_identifier();
 				}
 			} else {
