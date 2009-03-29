@@ -52,10 +52,10 @@ class tx_ptlist_controller_filter_options_explicit extends tx_ptlist_controller_
 		$sortedKeys = t3lib_TStemplate::sortedKeyList($this->conf['options.'], true);
 			
 		foreach ($sortedKeys as $tsKey) {
-			$option = $this->conf['options.'][$tsKey];
-			tx_pttools_assert::isNotEmptyArray($option, array(sprintf('Inalid option found in key "%s"', $tsKey)));
+			$option = $this->conf['options.'][$tsKey . '.'];
+			tx_pttools_assert::isNotEmptyArray($option, array('message' => sprintf('Invalid option found in key "%s"', $tsKey)));
 			
-			$options[$tsKey] = array(
+			$options[$tsKey . '.'] = array(
 				'item' => 		$option['item'],
 				'label' => 		$GLOBALS['TSFE']->sL($option['label']),
 				'quantity' => 	$option['quantity'],
