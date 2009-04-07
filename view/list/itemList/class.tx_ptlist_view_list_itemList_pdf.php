@@ -39,9 +39,9 @@ class tx_ptlist_view_list_itemList_pdf extends tx_ptlist_view {
 		ob_clean();
 		
 		// load TS configuration for PDF generation
-		$pdfFilename = tx_pttools_div::getTS('config.pt_list.pdf_rendering.fileName');
+		$pdfFilename = tx_pttools_div::getTS('plugin.tx_ptlist.view.pdf_rendering.fileName');
 		tx_pttools_assert::isNotEmptyString($pdfFilename, array('message' => '$pdfFilename must not be empty but was ' .$pdfFilename));
-		$downloadType = tx_pttools_div::getTS('config.pt_list.pdf_rendering.fileGenerationType');
+		$downloadType = tx_pttools_div::getTS('plugin.tx_ptlist.view.pdf_rendering.fileHandlingType');
 		tx_pttools_assert::isNotEmptyString($downloadType, array('message' => '$downloadType must not be empty but was ' . $downloadType));
 
 		// generate pdf and output it directly to the browser
