@@ -14,6 +14,8 @@ RFT: refactoring / code cleanup
 v0.0.1dev:
 ----------
 
++ (mk) ADD: Added some documentation for generating PDF files with pt_list
++ (mk) ADD: Added TS configuration for PDF filename and type of file generation for generated PDF lists 
 + (fb) RMV: tx_ptlist_controller_stringGeneric is obsolete as it can be done with the tx_ptlist_controller_string filter using "dataDescriptionIdentifier = *"
 + (fb) CHG: filterBox configuration has changed. Class is no longer a property, but the value of the main key
     Before:

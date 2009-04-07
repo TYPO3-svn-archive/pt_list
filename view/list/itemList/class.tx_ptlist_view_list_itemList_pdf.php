@@ -5,6 +5,13 @@ require_once t3lib_extMgm::extPath('pt_list').'view/class.tx_ptlist_view.php';
 class tx_ptlist_view_list_itemList_pdf extends tx_ptlist_view {
 
 
+	
+	public function __construct($controller=NULL) {
+		parent::__construct($controller);
+		$this->itemsArray['footerReference']='1234';
+	}
+	
+	
 
 	/**
 	 * Overwriting the render method to generate a PDF output
@@ -30,6 +37,12 @@ class tx_ptlist_view_list_itemList_pdf extends tx_ptlist_view {
 
 		// remove all TYPO3 output that may be rendered before
 		ob_clean();
+		
+		// load TS configuration for PDF generation
+		$pdfFilename = tx_pttools_div::getTS('config.pt_list.pdf_rendering.fileName');
+		tx_pttools_assert::isNotEmptyString($pdfFilename, array('message' => '$pdfFilename must not be empty but was ' .$pdfFilename));
+		$downloadType = tx_pttools_div::getTS('config.pt_list.pdf_rendering.fileGenerationType');
+		tx_pttools_assert::isNotEmptyString($downloadType, array('message' => '$downloadType must not be empty but was ' . $downloadType));
 
 		// generate pdf and output it directly to the browser
 		$xmlRenderer = new tx_ptxml2pdf_generator();
@@ -38,7 +51,7 @@ class tx_ptlist_view_list_itemList_pdf extends tx_ptlist_view {
             // ->set_languageKey($conf['languageKey'])
             ->addMarkers($this->itemsArr)
 			->createXml()
-			->renderPdf('itemlist.pdf', 'D');
+			->renderPdf($pdfFilename, $downloadType);
 
 		// stop execution to avoid some content to be rendered after this output by TYPO3
 		exit();
