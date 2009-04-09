@@ -79,4 +79,13 @@ $this->conf =
 	[plugin.tx_<condensedExtKey>.view.<viewName>.] +
 	[<controllerConfig>.view.<viewName>.] 
 
-	  
+
+TODO:
+=====
+
+- (mk) What about putting all pdf_rendering into a sub-extension (pt_list_pdf)?
+- (mk) Make PDF rendering generic
+  - (mk) Add pdf-column width to column description
+  - (mk) Generate column widths and column positions array by pt_list
+  - (mk) "Zoom" col pos and col width by PHP, if table is "too wide" if all columns are displayed
+  - (mk) Will overflowing cells be overwritten by another cell, if background of "2nd" cell is set to white?!?

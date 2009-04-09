@@ -36,10 +36,6 @@ class tx_ptlist_view_list_itemList_csv extends tx_ptlist_view {
 		$full_filename = $this->generateFilenameFromTs();
 
 		$this->sendHeader($full_filename);
-		
-		// header("Content-Type: application/octet-stream");
-		//header("Content-Type: text/x-csv");
-        //header("Content-Disposition: attachment; filename=\"$full_filename\"");
 
         $out = fopen('php://output', 'w');
 
