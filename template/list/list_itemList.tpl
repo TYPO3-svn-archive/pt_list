@@ -12,12 +12,12 @@
 						<a href="{url parameter=$currentPage additionalParams='&%1$s[action]=changeSortingOrder&%1$s[column]=%2$s&%1$s[direction]=%3$s'|vsprintf:$listPrefix:$column.identifier:'1' setup='lib.tx_ptlist.typolinks.columnSortLinks'}">{$column.label|ll:0} {image file="EXT:pt_list/res/icon_table_sort_asc.png"}</a>
 					{/if}
 				{else}
-					{$column.label}
+					{$column.label|ll:0}
 				{/if}
 			</th>
 		{/foreach}
 	</tr>
-	
+
 	{foreach from=$listItems item=row name="rows"}
 	<tr class="{if $smarty.foreach.rows.index % 2}even{else}odd{/if}">
 		{foreach from=$row item=value key=columnDescriptionIdentifier}

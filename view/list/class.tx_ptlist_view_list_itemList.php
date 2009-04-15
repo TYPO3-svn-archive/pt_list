@@ -41,16 +41,16 @@ class tx_ptlist_view_list_itemList extends tx_ptlist_view {
 	 * @since	2009-02-19
 	 */
 	public function render() {
-		
+
 		if ($this->typoScriptMode == false) {
 
 			/**
 			 * Smarty rendering
 			 */
 			$output = parent::render();
-			
+
 		} else {
-			
+
 			/**
 			 * Typoscript rendering
 			 */
@@ -90,7 +90,7 @@ class tx_ptlist_view_list_itemList extends tx_ptlist_view {
 			}
 			$output = $GLOBALS['TSFE']->cObj->stdWrap($list, $renderConfig['list_stdWrap.']);
 		}
-		
+
 		return $output;
 	}
 
