@@ -106,21 +106,14 @@ class tx_ptlist_view_list_itemList_pdf extends tx_ptlist_view {
     	
     	$this->initTsConfig();
         $this->initColumnPdfConfig();
-        
-        $this->itemsArr['__config']['columns_total_width_sum'] = $this->getColumnsTotalWidthSum();
-        $this->itemsArr['__config']['columns_fixed_width_sum'] = $this->getColumnsFixedWidthSum();  
-        $this->itemsArr['__config']['column_widths_scaled'] = $this->getColumnWidthsScaled();
-        $this->itemsArr['__config']['column_widths_non_scaled'] = $this->getColumnWidthsNonScaled();
-        $this->itemsArr['__config']['column_positions_scaled'] = $this->getColumnPositionsScaled();
-        $this->itemsArr['__config']['column_positions_non_scaled'] = $this->getColumnPositionsNonScaled();
+        $this->setUpConfigArray();
+        $this->setSpecialSmartyDelimiters();
 
         // check if the pt_xml2pdf extension is loaded
         if (!t3lib_extMgm::isLoaded('pt_xml2pdf')) {
             throw new tx_pttools_exception('You need to install the "pt_xml2pdf" extension if you want to export lists as pdfs!');
         }
         require_once t3lib_extMgm::extPath('pt_xml2pdf').'res/class.tx_ptxml2pdf_generator.php';
-
-        $this->setSpecialSmartyDelimiters();
 
         // remove all TYPO3 output that may be rendered before
         ob_clean();
@@ -141,6 +134,50 @@ class tx_ptlist_view_list_itemList_pdf extends tx_ptlist_view {
     
     
     
+    /***************************************************************************
+     * Helper methods
+     ***************************************************************************/
+    
+    
+    
+    /**
+     * Adds a new configuration item to config array passed to template by a given key
+     * 
+     * @param   $key    Key of configuration value
+     * @param   $value  Value of configuration item
+     * @return  void
+     * @author  Michael Knoll <knoll@punkt.de>
+     * @since   2009-04-21
+     */
+    protected function addToConfigArray($key, $value) {
+    	
+    	$this->itemsArr['__config'][$key] = $value;
+    	
+    }
+    
+    
+    
+    /**
+     * Set up configration values in marker array
+     * 
+     * @return  void
+     * @author  Michael Knoll <knoll@punkt.de>
+     * @since   2009-04-21
+     */
+    protected function setUpConfigArray() {
+    	
+    	$this->addToConfigArray('columns_total_width_sum', $this->getColumnsTotalWidthSum());
+        $this->addToConfigArray('columns_fixed_width_sum', $this->getColumnsFixedWidthSum());  
+        $this->addToConfigArray('column_widths_scaled', $this->getColumnWidthsScaled());
+        $this->addToConfigArray('column_widths_non_scaled', $this->getColumnWidthsNonScaled());
+        $this->addToConfigArray('column_positions_scaled', $this->getColumnPositionsScaled());
+        $this->addToConfigArray('column_positions_non_scaled', $this->getColumnPositionsNonScaled());
+        $this->addToConfigArray('column_alignments', $this->getColumnAlignments());
+        
+    }
+    
+    
+    
     /**
      * Read TS configuration for PDF generation
      * 
@@ -151,19 +188,20 @@ class tx_ptlist_view_list_itemList_pdf extends tx_ptlist_view {
     protected function initTsConfig() {
         
         $this->itemsArr['__config'] = array (
-            'page_format'         => tx_pttools_div::getTS('plugin.tx_ptlist.view.pdf_rendering.pageFormat'),
-	        'page_height'         => tx_pttools_div::getTS('plugin.tx_ptlist.view.pdf_rendering.pageHeight'),
-	        'page_width'          => tx_pttools_div::getTS('plugin.tx_ptlist.view.pdf_rendering.pageWidth'),
-            'font_size'           => tx_pttools_div::getTS('plugin.tx_ptlist.view.pdf_rendering.fontSize'),        
-            'heading_font_size'   => tx_pttools_div::getTS('plugin.tx_ptlist.view.pdf_rendering.headingFontSize'),
-	        'margin_top'          => tx_pttools_div::getTS('plugin.tx_ptlist.view.pdf_rendering.marginTop'),
-	        'margin_bottom'       => tx_pttools_div::getTS('plugin.tx_ptlist.view.pdf_rendering.marginBottom'),
-	        'margin_right'        => tx_pttools_div::getTS('plugin.tx_ptlist.view.pdf_rendering.marginRight'),
-	        'margin_left'         => tx_pttools_div::getTS('plugin.tx_ptlist.view.pdf_rendering.marginLeft'),
-            'paper_orientation'   => tx_pttools_div::getTS('plugin.tx_ptlist.view.pdf_rendering.paperOrientation'),
-            'increase_col_width'  => tx_pttools_div::getTS('plugin.tx_ptlist.view.pdf_rendering.increaseColWidth'),
-            'decrease_col_width'  => tx_pttools_div::getTS('plugin.tx_ptlist.view.pdf_rendering.decreaseColWidth'),
-            'list_heading'        => tx_pttools_div::getTS('plugin.tx_ptlist.view.pdf_rendering.listHeading'),
+            'page_format'               => tx_pttools_div::getTS('plugin.tx_ptlist.view.pdf_rendering.pageFormat'),
+            'page_height'               => tx_pttools_div::getTS('plugin.tx_ptlist.view.pdf_rendering.pageHeight'),
+            'page_width'                => tx_pttools_div::getTS('plugin.tx_ptlist.view.pdf_rendering.pageWidth'),
+            'font_size'                 => tx_pttools_div::getTS('plugin.tx_ptlist.view.pdf_rendering.fontSize'),        
+            'heading_font_size'         => tx_pttools_div::getTS('plugin.tx_ptlist.view.pdf_rendering.headingFontSize'),
+            'margin_top'                => tx_pttools_div::getTS('plugin.tx_ptlist.view.pdf_rendering.marginTop'),
+            'margin_bottom'             => tx_pttools_div::getTS('plugin.tx_ptlist.view.pdf_rendering.marginBottom'),
+            'margin_right'              => tx_pttools_div::getTS('plugin.tx_ptlist.view.pdf_rendering.marginRight'),
+            'margin_left'               => tx_pttools_div::getTS('plugin.tx_ptlist.view.pdf_rendering.marginLeft'),
+            'paper_orientation'         => tx_pttools_div::getTS('plugin.tx_ptlist.view.pdf_rendering.paperOrientation'),
+            'increase_col_width'        => tx_pttools_div::getTS('plugin.tx_ptlist.view.pdf_rendering.increaseColWidth'),
+            'decrease_col_width'        => tx_pttools_div::getTS('plugin.tx_ptlist.view.pdf_rendering.decreaseColWidth'),
+            'list_heading'              => tx_pttools_div::getTS('plugin.tx_ptlist.view.pdf_rendering.listHeading'),
+            'list_heading_font_size'    => tx_pttools_div::getTS('plugin.tx_ptlist.view.pdf_rendering.listHeadingFontSize'),
         );
         
         if (TYPO3_DLOG) t3lib_div::devLog('PDF configuration for pt_list', 'pt_list', 0, array('configuration' => $this->itemsArr['__config']));  
@@ -229,22 +267,28 @@ class tx_ptlist_view_list_itemList_pdf extends tx_ptlist_view {
         }
         ksort($tmpArray, SORT_NUMERIC);
         foreach ($tmpArray as $pdfColumnConfig) {
-        	// Check, whether column should be displayed 
-        	if (array_key_exists($pdfColumnConfig['columnIdentifier'], $this->itemsArr['columns'])) {
+            // Check, whether column should be displayed 
+            if (array_key_exists($pdfColumnConfig['columnIdentifier'], $this->itemsArr['columns'])) {
                 $this->columnPdfConfig[$pdfColumnConfig['columnIdentifier']] = $pdfColumnConfig['pdf.'];
-        	}
+            }
         }
         if (TYPO3_DLOG) t3lib_div::devLog('Column configurations', 'pt_list', 0, array('configuration' => $this->columnPdfConfig));
         
     }
     
     
-    
     /***************************************************************************
-     * Helper methods for calculations
+     * Helper methods for calculations and formatting of pdf
      ***************************************************************************/
     
     
+    /**
+     * Returns effectiv page width (page width minus borders)
+     * 
+     * @return  float   Effective page width
+     * @author  Michael Knoll <knoll@punkt.de>
+     * @since   2009-04-21
+     */
     protected function getEffPageWidth() {
     	
     	return $this->itemsArr['__config']['page_width'] - $this->itemsArr['__config']['margin_left'] - $this->itemsArr['__config']['margin_right'];
@@ -253,6 +297,13 @@ class tx_ptlist_view_list_itemList_pdf extends tx_ptlist_view {
     
     
     
+    /**
+     * Returns effective page height (page height minus borders)
+     * 
+     * @return  float   Effective page height
+     * @author  Michael Knoll <knoll@punkt.de>
+     * @since   2009-04-21
+     */
     protected function getEffPageHeight() {
     	
     	return $this->itemsArr['__config']['page_height'] - $this->itemsArr['__config']['margin_top'] - $this->itemsArr['__config']['margin_bottom'];
@@ -261,6 +312,13 @@ class tx_ptlist_view_list_itemList_pdf extends tx_ptlist_view {
     
     
     
+    /**
+     * Returns sum of column widths
+     * 
+     * @return  float   Sum of column widths
+     * @author  Michael Knoll <knoll@punkt.de>
+     * @since   2009-04-21
+     */
     protected function getColumnsTotalWidthSum() {
     	
     	$columnsWidthSum = 0;
@@ -273,11 +331,18 @@ class tx_ptlist_view_list_itemList_pdf extends tx_ptlist_view {
     
     
     
+    /**
+     * Returns sum of column widths for columns with fixed widths
+     * 
+     * @return  float   Sum of column widths for columns with fixed widths
+     * @author  Michael Knoll <knoll@punkt.de>
+     * @since   2009-04-21
+     */
     protected function getColumnsFixedWidthSum() {
     	
     	$columnsFixedWidthSum = 0;
     	foreach($this->columnPdfConfig as $key => $columnConfArr) {
-    		if ($columnConfArr['dontStretch'] == 1) {
+    		if ($columnConfArr['dontScale'] == 1) {
     		    $columnsFixedWidthSum += $columnConfArr['width'];
     		}
     	}
@@ -288,6 +353,13 @@ class tx_ptlist_view_list_itemList_pdf extends tx_ptlist_view {
     
     
     
+    /**
+     * Returns array of widths of non-scaled columns
+     * 
+     * @return  array   Widths of non-scaled columns
+     * @author  Michael Knoll <knoll@punkt.de>
+     * @since   2009-04-21
+     */
     protected function getColumnWidthsNonScaled() {
     	
     	$columnWidthsNonScaled = array();
@@ -302,6 +374,13 @@ class tx_ptlist_view_list_itemList_pdf extends tx_ptlist_view {
     
     
     
+    /**
+     * Returns scaling factor for scaling column widths to fit on page
+     * 
+     * @return  float   Scaling factor
+     * @author  Michael Knoll <knoll@punkt.de>
+     * @since   2009-04-21
+     */
     protected function getScaleFactor() {
     	
     	return ($this->getEffPageWidth() - $this->getColumnsFixedWidthSum()) / ($this->getColumnsTotalWidthSum() - $this->getColumnsFixedWidthSum());
@@ -310,12 +389,19 @@ class tx_ptlist_view_list_itemList_pdf extends tx_ptlist_view {
 
     
     
+    /**
+     * Returns array of widths for scaled columns
+     * 
+     * @return  array   Widths of scaled columns
+     * @author  Michael Knoll <knoll@punkt.de>
+     * @since   2009-04-21
+     */
     protected function getColumnWidthsScaled() {
     	
     	$scaleFactor = $this->getScaleFactor();
     	$columnWidthsScaled = array();
     	foreach($this->columnPdfConfig as $columnIdentifier => $columnConfig) {
-    		if ($columnConfig['dontStretch'] != 1) {
+    		if ($columnConfig['dontScale'] != 1) {
     			$columnWidthsScaled[] = $columnConfig['width'] * $scaleFactor;
     		} else {
     			$columnWidthsScaled[] = $columnConfig['width'];
@@ -326,6 +412,14 @@ class tx_ptlist_view_list_itemList_pdf extends tx_ptlist_view {
     }
     
     
+    
+    /**
+     * Returns array of column positions for non-scaled column widths
+     * 
+     * @return  array   Positions of non-scaled columns
+     * @author  Michael Knoll <knoll@punkt.de>
+     * @since   2009-04-21
+     */
     protected function getColumnPositionsNonScaled() {
     	
     	$columnPositionsNonScaled = array();
@@ -340,6 +434,13 @@ class tx_ptlist_view_list_itemList_pdf extends tx_ptlist_view {
     
     
     
+    /**
+     * Returns array of column positions for scaled column widths
+     * 
+     * @return  array   Positions of scaled columns
+     * @author  Michael Knoll <knoll@punkt.de>
+     * @since   2009-04-21
+     */
     protected function getColumnPositionsScaled() {
     	
     	$columnPositionsScaled = array();
@@ -349,6 +450,25 @@ class tx_ptlist_view_list_itemList_pdf extends tx_ptlist_view {
             $oldPos += $columnWidth;
         }
     	return $columnPositionsScaled;
+    	
+    }
+    
+    
+    
+    /**
+     * Returns an array of alignments for columns
+     * 
+     * @return  array   Alignments for columns
+     * @author  Michael Knoll <knoll@punkt.de>
+     * @since   2009-04-21
+     */
+    protected function getColumnAlignments() {
+    	
+    	$columnAlignments = array();
+    	foreach ($this->columnPdfConfig as $columnIdentifier => $columnConfig) {
+    		$columnAlignments[] = $columnConfig['alignment'];
+    	}
+    	return $columnAlignments;
     	
     }
     

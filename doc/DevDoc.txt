@@ -14,6 +14,13 @@ RFT: refactoring / code cleanup
 v0.0.1dev:
 ----------
 
++ (mk) ADD: PDF rendering is now almost generic
+  + (mk) ADD: Added pdf-column width to column description
+  + (mk) CHG: Calculate column widths and column positions array by pt_list
+  + (mk) CHG: Col pos and col width is scaled by view
++ (mk) ADD: PDF rendering configuration can now be done via TS
++ (mk) ADD: Generic smarty template for PDF rendering (for pt_xml2pdf)
++ (mk) ADD: Sample TS file for pdf rendering (typoscript/static/pdf/plugin.tx_ptlist_pdf_rendering_example.ts) (not tested yet)
 + (mk) ADD: Added TS configuration for CSV filename and type of file handling for generated CSV files
 + (mk) ADD: Added some documentation for generating PDF files with pt_list
 + (mk) ADD: Added TS configuration for PDF filename and type of file handling for generated PDF files 
@@ -83,9 +90,10 @@ $this->conf =
 TODO:
 =====
 
-- (mk) What about putting all pdf_rendering into a sub-extension (pt_list_pdf)?
 - (mk) Make PDF rendering generic
   - (mk) Add pdf-column width to column description
   - (mk) Generate column widths and column positions array by pt_list
   - (mk) "Zoom" col pos and col width by PHP, if table is "too wide" if all columns are displayed
   - (mk) Will overflowing cells be overwritten by another cell, if background of "2nd" cell is set to white?!?
+  - (mk) Implement "show" configuration for showing PDF cells or not showing them
+- (mk) Write some documentation about all the stuff above
