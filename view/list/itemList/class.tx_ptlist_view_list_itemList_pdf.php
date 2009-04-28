@@ -40,7 +40,8 @@
 /**
  * Inclusion of external ressources
  */
-require_once t3lib_extMgm::extPath('pt_list').'view/class.tx_ptlist_view.php';
+require_once t3lib_extMgm::extPath('pt_list') . 'view/class.tx_ptlist_view.php';
+require_once t3lib_extMgm::extPath('pt_tools') . 'res/staticlib/class.tx_pttools_div.php';
 
 
 
@@ -76,6 +77,13 @@ class tx_ptlist_view_list_itemList_pdf extends tx_ptlist_view {
     protected $columnPdfConfig;
     
     
+
+    /**
+     * @var string  Holds the encoding of the Database
+     */
+    protected $dbEncoding;
+    
+    
     
     /**
      * Constructor for pdf rendering view
@@ -108,6 +116,7 @@ class tx_ptlist_view_list_itemList_pdf extends tx_ptlist_view {
         $this->initColumnPdfConfig();
         $this->setUpConfigArray();
         $this->setSpecialSmartyDelimiters();
+        $this->encodeItemsArrToUtf8();
 
         // check if the pt_xml2pdf extension is loaded
         if (!t3lib_extMgm::isLoaded('pt_xml2pdf')) {
@@ -125,9 +134,8 @@ class tx_ptlist_view_list_itemList_pdf extends tx_ptlist_view {
             // ->set_languageKey($conf['languageKey'])
             ->addMarkers($this->itemsArr)
             ->createXml()
-            ->renderPdf($this->pdfFilename, $this->downloadType)
-;
-        // stop execution to avoid some content to be rendered after this output by TYPO3
+           ->renderPdf($this->pdfFilename, $this->downloadType);
+       // stop execution to avoid some content to be rendered after this output by TYPO3
        exit();
         
     }
@@ -135,8 +143,23 @@ class tx_ptlist_view_list_itemList_pdf extends tx_ptlist_view {
     
     
     /***************************************************************************
-     * Helper methods
+     * Helper methods for initialization
      ***************************************************************************/
+    
+    
+    
+    /**
+     * Convert itemsArray to utf-8
+     * 
+     * @return void
+     * @author Michael Knoll <knoll@punkt.de>
+     * @since  2009-04-28
+     */
+    protected function encodeItemsArrToUtf8() {
+    	
+    	$this->itemsArr = tx_pttools_div::iconvArray($this->itemsArr, $this->dbEncoding, 'UTF-8');
+    	
+    }
     
     
     
@@ -173,6 +196,7 @@ class tx_ptlist_view_list_itemList_pdf extends tx_ptlist_view {
         $this->addToConfigArray('column_positions_scaled', $this->getColumnPositionsScaled());
         $this->addToConfigArray('column_positions_non_scaled', $this->getColumnPositionsNonScaled());
         $this->addToConfigArray('column_alignments', $this->getColumnAlignments());
+        $this->addToConfigArray('column_multiline', $this->getColumnMultilines());
         
     }
     
@@ -226,6 +250,8 @@ class tx_ptlist_view_list_itemList_pdf extends tx_ptlist_view {
         $this->downloadType = tx_pttools_div::getTS('plugin.tx_ptlist.view.pdf_rendering.fileHandlingType');
         tx_pttools_assert::isNotEmptyString($this->downloadType, array('message' => '$downloadType must not be empty but was ' . $this->downloadType));
         if (TYPO3_DLOG) t3lib_div::devLog('Download type for PDF File', 'pt_list', 0, array('downloadtype' => $this->downloadType));
+        $this->dbEncoding = tx_pttools_div::getTS('plugin.tx_ptlist.view.pdf_rendering.dbEncoding');
+        if (TYPO3_DLOG) t3lib_div::devLog('DB Encoding for pt_list pdf rendering', 'pt_list', 0, array('dbEncoding' => $this->dbEncoding));
         
     }
     
@@ -275,6 +301,7 @@ class tx_ptlist_view_list_itemList_pdf extends tx_ptlist_view {
         if (TYPO3_DLOG) t3lib_div::devLog('Column configurations', 'pt_list', 0, array('configuration' => $this->columnPdfConfig));
         
     }
+    
     
     
     /***************************************************************************
@@ -469,6 +496,26 @@ class tx_ptlist_view_list_itemList_pdf extends tx_ptlist_view {
     		$columnAlignments[] = $columnConfig['alignment'];
     	}
     	return $columnAlignments;
+    	
+    }
+    
+    
+    
+    /**
+     * Returns an array of multiline settings for columns
+     * (which column should be rendered using multilines?)
+     * 
+     * @return  array   Multiline settings of columns
+     * @author  Michael Knoll <knoll@punkt.de>
+     * @since   2009-04-23
+     */
+    protected function getColumnMultilines() {
+    	
+    	$columnMultilines = array();
+    	foreach ($this->columnPdfConfig as $columnIdentifier => $columnConfig) {
+    		$columnMultilines[] = $columnConfig['multiline'];
+    	}
+    	return $columnMultilines;
     	
     }
     

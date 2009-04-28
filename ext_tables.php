@@ -78,5 +78,6 @@ t3lib_extMgm::addStaticFile($_EXTKEY, 'typoscript/static/_themes/_default/', 	'[
 // add more themes here...
 t3lib_extMgm::addStaticFile($_EXTKEY, 'typoscript/static/bookmarks/', 			'[pt_list] Bookmarks');
 t3lib_extMgm::addStaticFile($_EXTKEY, 'typoscript/static/demolist/', 			'[pt_list] Demo List (static_info_tables)');
+t3lib_extMgm::addStaticFile($_EXTKEY, 'typoscript/static/pdf/',                 '[pt_list] PDF Rendering');
 
 ?>

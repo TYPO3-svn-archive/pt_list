@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document orientation="<!--{$__config.paper_orientation}-->" unit="mm" format="<!--{$__config.page_format}-->"><!--{strip}-->
+<!--{debug}-->
+<document border_bottom="<!--{$__config.margin_bottom}-->" orientation="<!--{$__config.paper_orientation}-->" unit="mm" format="<!--{$__config.page_format}-->"><!--{strip}-->
     <!-- Main configuration -->
     <!--{assign var="borderLeft" value=$__config.margin_left}-->
     <!--{assign var="borderRight" value=$__config.margin_right}-->
@@ -7,6 +8,7 @@
     <!--{assign var="borderBottom" value=$__config.margin_bottom}-->
     <!--{assign var="paperWidth" value=$__config.page_width}-->
     <!--{assign var="paperHeight" value=$__config.page_height}-->
+    <!--{/strip}-->
     
     <header>
         <allpages>
@@ -28,7 +30,7 @@
                 <cell border="1" h="5" fill="1" w="<!--{$__config.column_widths_scaled[$col]}-->" align="<!--{$__config.column_alignments[$col]}-->"><!--{$columnArray.label}--></cell>
                 <setfillcolor r="255" g="255" b="255" />
             <!--{/foreach}-->
-            <sety y="+5" />
+            <sety y="+8" />
             <!--<line x1="<!--{$borderLeft}-->" x2="<!--{$paperWidth-$borderRight}-->" />-->
             <!--<sety y="+2" />-->
         </allpages>
@@ -38,6 +40,7 @@
     <footer>
         <allpages>
             <sety y="<!--{$paperHeight-$borderBottom}-->" />
+            <cell x="<!--{$borderLeft}-->" w="165" align="L"><!--{$footerReference}--></cell>
             <pagenocell x="<!--{$paperWidth-$borderLeft-165}-->" w="165" align="R" label="Seite " />
         </allpages>
     </footer>
@@ -48,17 +51,19 @@
         <!-- ########################### GENERATE TABLE CONTENTS ##################################### -->
         
         <setfont family="Arial" style="" size="<!--{$__config.font_size}-->" />
-        
+        <setx x="<!--{$borderLeft}-->" />
+        <table>
         <!--{foreach from=$listItems item=row name="rows"}-->
+            <tr min_height="3.5">
             <!--{foreach name="listItems" from=$row item=value key=columnDescriptionIdentifier}-->
                 <!--{assign var="col" value=$smarty.foreach.listItems.iteration-1}-->
-                <setx x="<!--{$__config.column_positions_scaled[$col]}-->" />
-                <cell border="1" w="<!--{$__config.column_widths_scaled[$col]}-->" align="<!--{$__config.column_alignments[$col]}-->"><!--{$value}--></cell>
+                <td width="<!--{$__config.column_widths_scaled[$col]}-->"  min_height="3.5" align="<!--{$__config.column_alignments[$col]}-->" multi="<!--{$__config.column_multiline[$col]}-->"><!--{$value}--></td>                
             <!--{/foreach}-->
-            <sety y="+5" />
+            </tr>
         <!--{/foreach}-->
+        </table>
+        
         <addpage iflessthan="<!--{$borderBottom}-->" />
-        <!--<line x1="<!--{$borderLeft}-->" x2="<!--{$paperWidth-$borderRight}-->" />--> 
 
     </content>
 </document>

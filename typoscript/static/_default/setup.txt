@@ -5,5 +5,3 @@
 <INCLUDE_TYPOSCRIPT: source="FILE:EXT:pt_list/typoscript/static/_default/plugin.tx_ptlist.ts">
 <INCLUDE_TYPOSCRIPT: source="FILE:EXT:pt_list/typoscript/static/_default/plugin.tx_ptlist.controller.list.ts">
 <INCLUDE_TYPOSCRIPT: source="FILE:EXT:pt_list/typoscript/static/_default/lib.ts">
-<INCLUDE_TYPOSCRIPT: source="FILE:EXT:pt_list/typoscript/static/_default/plugin.tx_ptlist.view.pdf_rendering.ts">
-<INCLUDE_TYPOSCRIPT: source="FILE:EXT:pt_list/typoscript/static/_default/plugin.tx_ptlist.view.csv_rendering.ts">
