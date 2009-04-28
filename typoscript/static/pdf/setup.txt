@@ -1,0 +1,1 @@
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:pt_list/typoscript/static/pdf/plugin.tx_ptlist.view.pdf_rendering.ts">
