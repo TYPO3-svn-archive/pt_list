@@ -14,6 +14,8 @@ RFT: refactoring / code cleanup
 v0.0.1dev:
 ----------
 
++ (mk) CHG: Items of pdf-view are now converted to utf-8 before XML generation
++ (mk) ADD: Manual for PDF rendering
 + (mk) ADD: PDF rendering is now almost generic
   + (mk) ADD: Added pdf-column width to column description
   + (mk) CHG: Calculate column widths and column positions array by pt_list
