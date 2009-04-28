@@ -92,17 +92,19 @@ class tx_ptlist_view_list_itemList_csv extends tx_ptlist_view {
 	 * 
 	 * Functionality is taken from FPDF!
 	 * 
+	 * @param   string  name of the file to send to the browser
+	 * @return  void
 	 * @author	Michael Knoll <knoll@punkt.de>
 	 * @since	2009-04-07
 	 */
 	protected function sendHeader($filename) {
 		
 		$downloadType = tx_pttools_div::getTS('plugin.tx_ptlist.view.csv_rendering.fileHandlingType');
-		tx_pttools_assert::isNotEmptyString($downloadType, array('message' => '$downloadType must not be empty but was ' . $downloadType));
 		
 		if ($downloadType == '') {
-			$downloadType = 'D';
+			$downloadType = 'I';
 		}
+        tx_pttools_assert::isInList($downloadType, 'D,I', array('message' => 'Invalid download type'));
 		
 		switch($downloadType)
         {

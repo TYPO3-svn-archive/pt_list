@@ -11,9 +11,10 @@ RMV: removed Item
 RFT: refactoring / code cleanup
 ********************************************************************************
 
-v0.0.1dev:
+v0.0.1dev: as of 28.04.2009
 ----------
 
++ (rk) FIX: tx_ptlist_view_list_itemList_csv::sendHeader(): fixed assertion position, changed default download type to 'I'
 + (mk) ADD: (class.tx_ptlist_list.php) Added method "resetSortingParameters()" for resetting all sorting states of sortable columns
 + (mk) CHG: Items of pdf-view are now converted to utf-8 before XML generation
 + (mk) ADD: Manual for PDF rendering
