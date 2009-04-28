@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--{debug}-->
 <document border_bottom="<!--{$__config.margin_bottom}-->" orientation="<!--{$__config.paper_orientation}-->" unit="mm" format="<!--{$__config.page_format}-->"><!--{strip}-->
     <!-- Main configuration -->
     <!--{assign var="borderLeft" value=$__config.margin_left}-->
