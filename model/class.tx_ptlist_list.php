@@ -144,6 +144,26 @@ abstract class tx_ptlist_list implements tx_ptlist_iListable, tx_ptlist_iFiltera
 			}
 		}
 	}
+	
+	
+	
+	/**
+	 * Reset sorting parameters
+	 * 
+	 * @param  void
+	 * @return void
+	 * @author Michael Knoll <knoll@punkt.de>
+	 * @since  2009-04-28
+	 */
+	public function resetSortingParameters() {
+		
+		foreach ($this->getAllColumnDescriptions() as $column) { /* @var $column tx_ptlist_columnDescription */
+			if ($column->isSortable()) {
+				$column->set_sortingState(tx_ptlist_columnDescription::SORTINGSTATE_NONE);
+			}
+		}
+		
+	}
 
 
 

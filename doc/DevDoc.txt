@@ -14,6 +14,7 @@ RFT: refactoring / code cleanup
 v0.0.1dev:
 ----------
 
++ (mk) ADD: (class.tx_ptlist_list.php) Added method "resetSortingParameters()" for resetting all sorting states of sortable columns
 + (mk) CHG: Items of pdf-view are now converted to utf-8 before XML generation
 + (mk) ADD: Manual for PDF rendering
 + (mk) ADD: PDF rendering is now almost generic
