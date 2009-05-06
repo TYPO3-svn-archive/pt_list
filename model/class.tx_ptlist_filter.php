@@ -22,8 +22,25 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+
+
+/**
+ * Class file definition for pt_list filter class
+ * 
+ * $Id$
+ * 
+ * @author  Fabrizio Branca <branca@punkt.de>
+ * @since   2009-01-20
+ */
+
+
+
+/**
+ * Inclusion of external ressources
+ */
 require_once t3lib_extMgm::extPath('pt_tools').'res/abstract/class.tx_pttools_iTemplateable.php';
 require_once t3lib_extMgm::extPath('pt_tools').'res/abstract/class.tx_pttools_iSettableByArray.php';
+require_once t3lib_extMgm::extPath('pt_tools').'res/objects/class.tx_pttools_registry.php';
 
 require_once t3lib_extMgm::extPath('pt_mvc').'classes/class.tx_ptmvc_controllerFrontend.php';
 
@@ -31,11 +48,14 @@ require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_dataDescrip
 require_once t3lib_extMgm::extPath('pt_list').'view/filter/class.tx_ptlist_view_filter_breadcrumb.php';
 
 
+
 /**
  * Filter class
  * 
  * @author	Fabrizio Branca <branca@punkt.de>
  * @since	2009-01-20
+ * @package TYPO3
+ * @subpackage pt_list
  */
 abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements tx_pttools_iTemplateable, Serializable, tx_pttools_iSettableByArray {
 	
@@ -357,6 +377,11 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
 		if (TYPO3_DLOG) t3lib_div::devLog('onValidatedAction', 'pt_list', 2, $this->conf);	
 		$this->isActive = true;
 		
+		// Reset sorting state of filtered list, if set in TS
+        if ($this->conf['resetListSortingStateOnSubmit'] == 1) {
+            $this->resetListSortingState();
+        }   
+		
 		// execute user functions
 		if (is_array($this->conf['onValidated.'])) {
 			if (TYPO3_DLOG) t3lib_div::devLog('onValidated userfunctions', 'pt_list', 2, $this->conf['onValidated.']);
@@ -377,6 +402,7 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
    				// function return will be ignored
 			}
 		}
+		
 		return ($params['doNotReturnDefaultAction'] == true) ? '' : $this->doAction('');
 	}
 	
@@ -413,6 +439,15 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
 		$view->addItem($this->label, 'label');
 		$view->addItem($this->value, 'value');
 		return $view->render();
+	}
+	
+	
+	
+	protected function resetListSortingState() {
+        
+		$listObject = tx_pttools_registry::getInstance()->get($this->listIdentifier.'_listObject'); /* @var $listObject tx_ptlist_list */
+		$listObject->resetSortingParameters();
+		
 	}
 
 	

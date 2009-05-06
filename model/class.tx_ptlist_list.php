@@ -32,6 +32,7 @@ require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_dataDescrip
 require_once t3lib_extMgm::extPath('pt_tools').'res/abstract/class.tx_pttools_iPageable.php';
 require_once t3lib_extMgm::extPath('pt_tools').'res/abstract/class.tx_pttools_iTemplateable.php';
 require_once t3lib_extMgm::extPath('pt_tools').'res/staticlib/class.tx_pttools_assert.php';
+require_once t3lib_extMgm::extPath('pt_tools').'res/objects/class.tx_pttools_sessionStorageAdapter.php';
 
 
 /**
@@ -105,6 +106,7 @@ abstract class tx_ptlist_list implements tx_ptlist_iListable, tx_ptlist_iFiltera
 	 * @since	2009-01-26
 	 */
 	public function update() {
+		
 		$this->getAllFilters()->processSubControllers();
 		// TODO: think of a better solution to this. Maybe calling a "prepareAction" where configuration is read for the getWhereClause...
 
@@ -159,9 +161,16 @@ abstract class tx_ptlist_list implements tx_ptlist_iListable, tx_ptlist_iFiltera
 		
 		foreach ($this->getAllColumnDescriptions() as $column) { /* @var $column tx_ptlist_columnDescription */
 			if ($column->isSortable()) {
+				
+				// Reset sorting state from column
 				$column->set_sortingState(tx_ptlist_columnDescription::SORTINGSTATE_NONE);
+        
 			}
 		}
+		
+		// Delete sorting states from session
+        tx_pttools_sessionStorageAdapter::getInstance()->delete($GLOBALS['TSFE']->fe_user->user['uid'] . '_' . $this->listId . '_sortingColumn');
+        tx_pttools_sessionStorageAdapter::getInstance()->delete($GLOBALS['TSFE']->fe_user->user['uid'] . '_' . $this->listId . '_sortingDirection');
 		
 	}
 

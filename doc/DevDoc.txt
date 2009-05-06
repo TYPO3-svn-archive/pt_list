@@ -14,6 +14,9 @@ RFT: refactoring / code cleanup
 v0.0.1dev: as of 28.04.2009
 ----------
 
++ (mk) ADD: Documentation of how controllers in pt_list are processed and how filters are processed
++ (mk) ADD: tx_ptlist_filter: added possibilty to reset sorting of list by filter if configured in TS
+   + (mk) ADD: Configuration key filters.<filter_name>.resetListSortingStateOnSubmit in TS
 + (rk) FIX: tx_ptlist_view_list_itemList_csv::sendHeader(): fixed assertion position, changed default download type to 'I'
 + (mk) ADD: (class.tx_ptlist_list.php) Added method "resetSortingParameters()" for resetting all sorting states of sortable columns
 + (mk) CHG: Items of pdf-view are now converted to utf-8 before XML generation
@@ -101,3 +104,4 @@ TODO:
   - (mk) Will overflowing cells be overwritten by another cell, if background of "2nd" cell is set to white?!?
   - (mk) Implement "show" configuration for showing PDF cells or not showing them
 - (mk) Write some documentation about all the stuff above
+- (mk) Refactor tx_ptlist_controller_list::init()
