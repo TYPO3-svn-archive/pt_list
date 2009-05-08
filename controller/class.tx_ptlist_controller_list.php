@@ -436,7 +436,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 
 		$view = $this->getView('list_filterbox');
 
-		$view->addItem($this->currentListObject->getAllFilters(true, $this->filterboxId, true)->getMarkerArray(), 'filterbox');
+		$view->addItem($this->currentListObject->getAllFilters(true, $this->filterboxId, true)->getMarkerArray(), 'filterbox', false);  // do not filter HTML here since the complete filterbox is already rendered as HTML
 		$view->addItem($this->filterboxId, 'filterboxId');
 
 		return $view->render();
@@ -504,7 +504,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 		$view = $this->getView('list_itemList');
 		$view->addItem($this->currentListObject->getListId(), 'listIdentifier');
 		$view->addItem($this->currentListObject->getAllColumnDescriptions(true)->removeHiddenColumns()->getMarkerArray(), 'columns');
-		$view->addItem($this->getColumnContents(), 'listItems');
+		$view->addItem($this->getColumnContents(), 'listItems', false);  // do not filter HTML here since the column contents may already be rendered as HTML (e.g. from Typoscript wraps) and the database data is already HTML filtered (see getColumnContents())
 
 		$view->addItem($this->currentListObject->getAllFilters(true, 'renderInList', true)->getMarkerArray(), 'filterbox');
 
@@ -868,7 +868,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 					if (!isset($itemObj[$dataDescriptionIdentifier])) {
 						throw new tx_pttools_exception(sprintf('Property "%s" not found (via ArrayAccess)', $dataDescriptionIdentifier));
 					}
-					$values[$dataDescriptionIdentifier] = $itemObj[$dataDescriptionIdentifier];
+					$values[$dataDescriptionIdentifier] = tx_pttools_div::htmlOutput($itemObj[$dataDescriptionIdentifier]); // added HTML filtering by default (rk 09.05.2009) - TODO: check implementation at this place and make HTML filtering configurable for each dataDescriptionIdentifier via Typoscript
 				}
 				$listItem[$columnDescription->get_columnIdentifier()] = $columnDescription->renderFieldContent($values);
 			}
