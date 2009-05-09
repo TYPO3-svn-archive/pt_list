@@ -18,7 +18,7 @@ require_once t3lib_extMgm::extPath('pt_tools') . 'res/abstract/class.tx_pttools_
  * TYPO3 tables class
  *
  * @version 	$Id$
- * @author		Fabrizio Branca <branca@punkt.de>
+ * @author		Fabrizio Branca <mail@fabrizio-branca.de>
  * @since		2009-01-21
  */
 class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iSettableByArray {
@@ -51,7 +51,7 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 	 *
 	 * @param 	void
 	 * @return 	void
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-19
 	 */
 	public function setup() {
@@ -75,7 +75,7 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 	 *
 	 * @param 	array 	data array
 	 * @return 	void
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-03-13
 	 */
 	public function setPropertiesFromArray(array $dataArray) {
@@ -151,7 +151,7 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 	 * @param 	string	(optional) limit clause
 	 * @param 	string	(optional) csl of filter identifiers that should be ignored when retrivieving the (other) filter's where clauses, or "__ALL__" to ignore all filters
 	 * @return 	array 	array of records
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-02-12
 	 */
 	public function getGroupData($select, $where='', $groupBy='', $orderBy='', $limit='', $ignoredFiltersForWhereClause='') {
@@ -179,7 +179,7 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 	 *
 	 * @param 	void
 	 * @return 	int	total item count of items in the collection
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-22
 	 */
 	public function getTotalItemCount() {
@@ -194,7 +194,7 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 	 *
 	 * @param 	string	mysql limit clause
 	 * @return 	tx_ptlistdemo_country_countryCollection
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-19
 	 */
 	public function getItems($limit = '') {
@@ -220,7 +220,7 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 	 * @param 	string	aggregateDataDescriptionIdentifier
 	 * @param 	string	limit
 	 * @return 	string	aggregate
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-02-23
 	 */
 	public function getSingleAggregate($aggregateDataDescriptionIdentifier, $limit) {
@@ -248,7 +248,7 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 	 * 
 	 * @param	string	limit value (from pager)
 	 * @return	array	array(<aggregateDataDescriptionIdentifier> => <aggregateValue>)
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-02-20
 	 */
 	public function getAllAggregates($limit) {
@@ -283,7 +283,7 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 	 * 
 	 * @param 	void
 	 * @return 	array
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-02-23
 	 */
 	public function getAggregateRowInfo() {
@@ -307,7 +307,7 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 	 *
 	 * @param	void
 	 * @return	string	from clause
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-02-01
 	 */
 	public function getFromClause() {

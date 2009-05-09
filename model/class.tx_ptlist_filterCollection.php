@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2009 Fabrizio Branca (branca@punkt.de)
+*  (c) 2009 Fabrizio Branca (mail@fabrizio-branca.de)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -33,7 +33,7 @@ require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_filter.php'
  * Filter collection class
  *
  * @version 	$Id$
- * @author		Fabrizio Branca <branca@punkt.de>
+ * @author		Fabrizio Branca <mail@fabrizio-branca.de>
  * @since		2009-01-19
  */
 class tx_ptlist_filterCollection extends tx_pttools_objectCollection implements tx_pttools_iTemplateable, Serializable, tx_pttools_iSettableByArray {
@@ -51,7 +51,7 @@ class tx_ptlist_filterCollection extends tx_pttools_objectCollection implements 
 	 * Class constructor
 	 *
 	 * @param 	string	list identifier
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-23
 	 */
 	public function __construct($listId) {
@@ -93,7 +93,7 @@ class tx_ptlist_filterCollection extends tx_pttools_objectCollection implements 
 	 *
 	 * @param 	string	group list
 	 * @return 	tx_ptlist_filterCollection
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-23
 	 */
 	public function getAccessibleFilters($groupList) {
@@ -113,7 +113,7 @@ class tx_ptlist_filterCollection extends tx_pttools_objectCollection implements 
 	 *
 	 * @param 	string	group list
 	 * @return 	tx_ptlist_filterCollection
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-23
 	 */
 	public function getFiltersForFilterbox($filterboxId) {
@@ -133,7 +133,7 @@ class tx_ptlist_filterCollection extends tx_pttools_objectCollection implements 
 	 *
 	 * @param 	void
 	 * @return 	void
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-19
 	 */
 	public function processSubControllers() {
@@ -148,7 +148,7 @@ class tx_ptlist_filterCollection extends tx_pttools_objectCollection implements 
 	 * Returns a marker array
 	 *
 	 * @return 	array
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-15
 	 */
 	public function getMarkerArray() {
@@ -168,7 +168,7 @@ class tx_ptlist_filterCollection extends tx_pttools_objectCollection implements 
 	 *
 	 * @param	string	(optional) csl of filterIdentifier not to be resetted
 	 * @return 	tx_ptlist_filterCollection
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-02-16
 	 */
 	public function reset($except='') {
@@ -187,7 +187,7 @@ class tx_ptlist_filterCollection extends tx_pttools_objectCollection implements 
 	 * Returns the where clause snippet for all filters
 	 *
 	 * @return 	string	csl of filter identifiers to ignore (the filter itself will be ignored by default if active)
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-19
 	 */
 	public function getSqlWhereClauseSnippet($ignoredFiltersForWhereClause='') {
@@ -208,7 +208,7 @@ class tx_ptlist_filterCollection extends tx_pttools_objectCollection implements 
 	 *
 	 * @param 	void
 	 * @return 	array	array of filterbox ids
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-02-27
 	 */
 	public function getFilterboxIds() {
@@ -250,7 +250,7 @@ class tx_ptlist_filterCollection extends tx_pttools_objectCollection implements 
 	 *
 	 * @param 	array 	dataArray
 	 * @return 	void
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-22
 	 */
 	public function setPropertiesFromArray(array $dataArray) {
@@ -310,7 +310,7 @@ class tx_ptlist_filterCollection extends tx_pttools_objectCollection implements 
 	 * This method will automatically executed when calling serialize($thisObject)
 	 *
 	 * @return 	string	string representation
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-09
 	 */
 	public function serialize() {
@@ -329,7 +329,7 @@ class tx_ptlist_filterCollection extends tx_pttools_objectCollection implements 
 	 *
 	 * @param 	string 	string representation
 	 * @return 	void
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-19
 	 */
 	public function unserialize($serialized) {

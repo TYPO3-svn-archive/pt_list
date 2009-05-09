@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2009 Fabrizio Branca (branca@punkt.de)
+*  (c) 2009 Fabrizio Branca (mail@fabrizio-branca.de)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -54,7 +54,7 @@ require_once t3lib_extMgm::extPath('pt_mvc').'classes/class.tx_ptmvc_controllerF
  * - bookmarks
  *
  * @version 	$Id$
- * @author		Fabrizio Branca <branca@punkt.de>
+ * @author		Fabrizio Branca <mail@fabrizio-branca.de>
  * @since		2009-01-21
  */
 class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
@@ -136,7 +136,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 	 *
 	 * @param	void
 	 * @return	void
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-02-01
 	 */
 	protected function bootstrap() {
@@ -166,7 +166,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 	 *
 	 * @param 	void
 	 * @return 	void
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-15
 	 */
 	protected function getConfiguration() {
@@ -213,7 +213,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 	 *
 	 * @param 	void
 	 * @return 	void
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-15
 	 */
 	protected function getParameters() {
@@ -235,7 +235,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 	 *
 	 * @param 	void
 	 * @return	void
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-15
 	 */
 	protected function init() {
@@ -392,7 +392,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 	 * @param 	string	(optional) name of the action, if empty the method is trying the default actions
 	 * @param 	array	(optional) additional parameters to be passed to the action
 	 * @return 	string	HTML Output
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-26
 	 */
 	public function doAction($action = '', array $parameter = array()) {
@@ -427,7 +427,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 	 *
 	 * @param 	void
 	 * @return 	string HTML output
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-15
 	 */
 	protected function filterboxDefaultAction() {
@@ -449,7 +449,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 	 *
 	 * @param 	void
 	 * @return 	string HTML output
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-15
 	 */
 	protected function pagerDefaultAction() {
@@ -481,7 +481,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 	 *
 	 * @param 	void
 	 * @return 	string HTML output
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-15
 	 */
 	protected function listDefaultAction() {
@@ -522,7 +522,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 	 *
 	 * @param 	void
 	 * @return 	string	HTML output (div element that will be replaced by javascript)
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-02-23
 	 */
 	protected function extjsListDefaultAction() {
@@ -552,7 +552,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 	 *
 	 * @param 	void
 	 * @return 	string	HTML output
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-02-10
 	 */
 	protected function bookmarksDefaultAction() {
@@ -571,7 +571,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 	 *
 	 * @param 	void
 	 * @return 	string	HTML output
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-02-10
 	 */
 	protected function filterbreadcrumbDefaultAction() {
@@ -589,7 +589,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 	 *
 	 * @param 	void
 	 * @return 	string	HTML output
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-02-10
 	 */
 	protected function bookmarkformDefaultAction() {
@@ -607,7 +607,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 	 *
 	 * @param 	void
 	 * @return 	string 	HTML output (of the new created list controller...)
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-02-23
 	 */
 	protected function displayAvailableBookmarksAction() {
@@ -655,7 +655,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 	 *
 	 * @param 	void
 	 * @return 	string 	HTML output
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-02-23
 	 */
 	protected function addBookmarkAction() {
@@ -671,7 +671,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 	 *
 	 * @param 	void
 	 * @return 	void 	(does not return)
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-29
 	 */
 	protected function fetchDataAction() {
@@ -739,7 +739,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 	 *
 	 * @param 	void
 	 * @return 	string
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-26
 	 */
     protected function changeSortingOrderAction() {
@@ -758,7 +758,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 	 *
 	 * @param 	void
 	 * @return 	array	markerArray array('<rowKey>' => array('<columnDescriptionIdentifier>' => '<renderedAggregateValue>', [...]), [...]);
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-02-23
 	 */
 	protected function getAggregateRows() {
@@ -824,7 +824,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 	 *
 	 * @param	void
 	 * @return	array	array of array(<columnIdentifier> => <renderedColumnContent>)
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-02-20
 	 */
 	protected function getColumnContents() {
@@ -890,7 +890,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
      *
      * @param   void
      * @return  string  list prefix
-     * @author  Fabrizio Branca <branca@punkt.de>
+     * @author  Fabrizio Branca <mail@fabrizio-branca.de>
      * @since   2009-01-23
      */
     public function get_listPrefix() {
@@ -904,7 +904,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
      *
      * @param   string  action name
      * @param   array   (optional) array of parameters passed to the action
-     * @author  Fabrizio Branca <branca@punkt.de>
+     * @author  Fabrizio Branca <mail@fabrizio-branca.de>
      * @since   2009-01-26
      */
     public function set_forcedNextAction($actionName, array $params=array()) {

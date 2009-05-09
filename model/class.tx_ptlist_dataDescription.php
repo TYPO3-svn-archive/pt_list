@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2009 Fabrizio Branca (branca@punkt.de), Dorit Rottner (rottner@punkt.de)
+*  (c) 2009 Fabrizio Branca (mail@fabrizio-branca.de), Dorit Rottner (rottner@punkt.de)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -29,7 +29,7 @@ require_once t3lib_extMgm::extPath('pt_tools').'res/staticlib/class.tx_pttools_d
 /**
  * Data description class
  *
- * @author      Fabrizio Branca <branca@punkt.de>, Dorit Rottner <rottner@punkt.de>
+ * @author      Fabrizio Branca <mail@fabrizio-branca.de>, Dorit Rottner <rottner@punkt.de>
  * @since       2009-01-30
  * @package     TYPO3
  * @subpackage  tx_ptlist
@@ -135,7 +135,7 @@ class tx_ptlist_dataDescription implements tx_pttools_iSettableByArray {
 	 * @return 	string orderby clause snippet
 	 * @throws	tx_pttools_exceptionAssertion	if column is not sortable
 	 * @throws	tx_pttools_exception			if sortingState has an invalid value
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-19
 	 */
 	public function getOrderByClause() {
@@ -167,7 +167,7 @@ class tx_ptlist_dataDescription implements tx_pttools_iSettableByArray {
 	 *
 	 * @param	void
 	 * @return	string	select clause snippet
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-02-18
 	 */
 	public function getSelectClause($includeIdentifier = true) {
@@ -190,7 +190,7 @@ class tx_ptlist_dataDescription implements tx_pttools_iSettableByArray {
 	 *
 	 * @param 	void
 	 * @return 	bool
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-22
 	 */
 	public function isSortable() {
@@ -204,7 +204,7 @@ class tx_ptlist_dataDescription implements tx_pttools_iSettableByArray {
 	 *
 	 * @param 	string	csl of group uid
 	 * @return 	bool	true if the user has access to this object
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-22
 	 */
     public function hasAccess($groupList) {
@@ -222,7 +222,7 @@ class tx_ptlist_dataDescription implements tx_pttools_iSettableByArray {
 	 *
 	 * @param 	array 	dataArray
 	 * @return 	void
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-21
 	 */
 	public function setPropertiesFromArray(array $dataDescriptionArray) {

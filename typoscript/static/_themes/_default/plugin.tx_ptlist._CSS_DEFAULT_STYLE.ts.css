@@ -208,10 +208,12 @@ plugin.tx_ptlist._CSS_DEFAULT_STYLE (
 	 */
 	.tx-ptlist-pagercontainer {
 	    display: table;
-	    margin: 0 auto;
+	    margin: 10px auto;
 	}
 	 
 	ul.tx-ptlist-pager {
+		margin: 0px;
+		padding: 0px;
 	}
 	
 	ul.tx-ptlist-pager li {
@@ -276,6 +278,8 @@ plugin.tx_ptlist._CSS_DEFAULT_STYLE (
 		color: black;
 		display: block;
 		padding: 2px 5px;
+		height: 100%;
+		vertical-align: middle;
 	}
 	
 )

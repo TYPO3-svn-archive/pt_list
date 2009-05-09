@@ -2,7 +2,7 @@
 /***************************************************************
  *  Copyright notice
  *  
- *  (c) 2009 Fabrizio Branca (branca@punkt.de)
+ *  (c) 2009 Fabrizio Branca (mail@fabrizio-branca.de)
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is 
@@ -33,7 +33,7 @@ require_once t3lib_extMgm::extPath('pt_tools').'res/objects/class.tx_pttools_reg
  * Collection of static methods
  *
  * @version 	$Id$
- * @author		Fabrizio Branca <branca@punkt.de>
+ * @author		Fabrizio Branca <mail@fabrizio-branca.de>
  * @since		2009-02-23
  * @package     TYPO3
  * @subpackage  tx_ptlist
@@ -51,7 +51,7 @@ class tx_ptlist_div {
 	 * @param 	array 	parameter array, expects "$params['conf']['target']" to hold the target where to redirect to
 	 * @param 	tx_ptlist_filter 	calling filter object
 	 * @return 	void
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-02-23
 	 */
 	public static function redirectOnValidate(array $params, tx_ptlist_filter $filterObj) {
@@ -93,7 +93,7 @@ class tx_ptlist_div {
 	 * @param 	array	(optional) key "renderUserFunctions." may contain an array of userfunctions, keys "renderObj" and "renderObj." contain the configuration for the content object
 	 * @param 	array	(optional) if true the content will be rendered even if there is an entry in the cache. The rendered value will be stored in the cache
 	 * @return 	string 	rendered content
-	 * @author 	Fabrizio Branca <branca@punkt.de>
+	 * @author 	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-02-21
 	 */
 	public static function renderValues(array $values, array $config=array(), $forceCacheUpdate=false) {
@@ -151,7 +151,7 @@ class tx_ptlist_div {
      *
      * @param 	int		uid of the database record
      * @return 	string 	dsn
-     * @author	Fabrizio Branca <branca@punkt.de>
+     * @author	Fabrizio Branca <mail@fabrizio-branca.de>
      * @since	2009-03-06
      */
     public static function getDsnFromDbRecord($uid) {
@@ -170,7 +170,7 @@ class tx_ptlist_div {
      * @see http://euk1.php.net/package/DB/docs/latest/DB/DB.html#methodparseDSN
      * @param 	string	dsn string
      * @return 	array	parsed string
-     * @author	Fabrizio Branca <branca@punkt.de>
+     * @author	Fabrizio Branca <mail@fabrizio-branca.de>
      * @since	2009-03-06
      */
     public static function parseDSN($dsn){

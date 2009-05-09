@@ -2,7 +2,7 @@
 /***************************************************************
  *  Copyright notice
  *  
- *  (c) 2009 Fabrizio Branca (branca@punkt.de)
+ *  (c) 2009 Fabrizio Branca (mail@fabrizio-branca.de)
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is 
@@ -29,7 +29,7 @@
  * 
  * $Id$
  * 
- * @author  Fabrizio Branca <branca@punkt.de>
+ * @author  Fabrizio Branca <mail@fabrizio-branca.de>
  * @since   2009-01-20
  */
 
@@ -52,7 +52,7 @@ require_once t3lib_extMgm::extPath('pt_list').'view/filter/class.tx_ptlist_view_
 /**
  * Filter class
  * 
- * @author	Fabrizio Branca <branca@punkt.de>
+ * @author	Fabrizio Branca <mail@fabrizio-branca.de>
  * @since	2009-01-20
  * @package TYPO3
  * @subpackage pt_list
@@ -136,7 +136,7 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
 	 *
 	 * @param 	string	list identifier
 	 * @param 	string	filter identifier
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-20
 	 */
 	public function __construct($listIdentifier='', $filterIdentifier='') {
@@ -153,7 +153,7 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
 	 * 
 	 * @param 	void
 	 * @return 	string 	prefixId
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-20
 	 */
 	protected function getPrefixId() {
@@ -172,7 +172,7 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
 	 * 
 	 * @param 	void
 	 * @return 	void
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-26
 	 */
 	protected function getConfiguration() {
@@ -216,7 +216,7 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
 	 * 
 	 * @param	void
 	 * @return 	string	where clause snippet (without "AND")
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-19
 	 */
 	abstract function getSqlWhereClauseSnippet();
@@ -235,7 +235,7 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
      *
      * @param   void 
      * @return  string  HTML output
-     * @author  Fabrizio Branca <branca@punkt.de>
+     * @author  Fabrizio Branca <mail@fabrizio-branca.de>
      * @since   2009-01-20
      */
     public function defaultAction() {
@@ -254,7 +254,7 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
      *
      * @param   void
      * @return  string  HTML output
-     * @author  Fabrizio Branca <branca@punkt.de>
+     * @author  Fabrizio Branca <mail@fabrizio-branca.de>
      * @since   2009-01-20
      */
     public function resetAction() {
@@ -273,7 +273,7 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
 	 *
 	 * @param 	tx_ptlist_filter 	external filter object (e.g. coming from the session storage)
 	 * @return 	void
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-20
 	 */
 	public function invokeFilter(tx_ptlist_filter $filter) {
@@ -290,7 +290,7 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
 	 *
 	 * @param 	string	comma-separated list of group uids the user is in
 	 * @return 	bool	true, if the user has access to this filter
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-20
 	 */
 	public function hasAccess($groupList) {
@@ -310,7 +310,7 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
 	 * 
 	 * @param	void
 	 * @return 	void
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-19
 	 */
 	public function reset() {
@@ -332,7 +332,7 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
 	 * Override this method, set your value property there and then call this method afterwards
 	 *
 	 * @return 	string HTML output
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-02-06
 	 */
 	public function submitAction() {
@@ -355,7 +355,7 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
 	 * 
 	 * @param 	void
 	 * @return 	bool	true if the user input validates, false otherwise
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-02-06
 	 */
 	public function validate() {
@@ -370,7 +370,7 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
 	 *
 	 * @param 	array 	parameter array
 	 * @return 	string 	HTML output
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-02-06
 	 */
 	public function onValidatedAction(array $params=array()) {
@@ -414,7 +414,7 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
 	 *
 	 * @param 	array 	parameter array
 	 * @return 	string 	HTML output
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-02-06
 	 */
 	public function onNotValidatedAction(array $params=array()) {
@@ -431,7 +431,7 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
 	 *
 	 * @param 	void
 	 * @return 	string HTML ouput
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-02-06
 	 */
 	public function breadcrumbAction() {
@@ -461,7 +461,7 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
 	 *
 	 * @param 	array 	dataArray
 	 * @return 	void
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-21
 	 */
 	public function setPropertiesFromArray(array $dataArray) {
@@ -552,7 +552,7 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
 	 * 
 	 * @param 	void
 	 * @return 	array
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-15
 	 */
 	public function getMarkerArray() {
@@ -589,7 +589,7 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
 	 *
 	 * @param 	void
 	 * @return 	string	"safe" string representation of this object
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-20
 	 */
 	public function serialize() {
@@ -620,7 +620,7 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
 	 *
 	 * @param 	string	"safe" string representation of this object (generated by the serialize() method)
 	 * @return 	void
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-20
 	 */
 	public function unserialize($serialized) {

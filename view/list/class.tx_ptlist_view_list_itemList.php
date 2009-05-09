@@ -16,7 +16,7 @@ class tx_ptlist_view_list_itemList extends tx_ptlist_view {
 	 *
 	 * @param	void
 	 * @return	void
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-02-19
 	 */
 	public function getTemplateFilePath() {
@@ -37,7 +37,7 @@ class tx_ptlist_view_list_itemList extends tx_ptlist_view {
 	 *
 	 * @param	void
 	 * @return	string	HTML output
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-02-19
 	 */
 	public function render() {
@@ -101,7 +101,7 @@ class tx_ptlist_view_list_itemList extends tx_ptlist_view {
 	 *
 	 * @param 	void
 	 * @return 	void
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-19
 	 */
 	public function beforeRendering() {

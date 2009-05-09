@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2009 Fabrizio Branca (branca@punkt.de)
+*  (c) 2009 Fabrizio Branca (mail@fabrizio-branca.de)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -29,7 +29,7 @@ require_once t3lib_extMgm::extPath('pt_tools') . 'res/abstract/class.tx_pttools_
  * Very simple and generic class, whose property can be filled by passing an array (with property names as array keys and property values as array values) to the constructor
  *
  * @version 	$Id$
- * @author		Fabrizio Branca <branca@punkt.de>
+ * @author		Fabrizio Branca <mail@fabrizio-branca.de>
  * @since		2009-01-20
  */
 class tx_ptlist_typo3Tables_dataObject implements ArrayAccess, tx_pttools_iSettableByArray {
@@ -41,7 +41,7 @@ class tx_ptlist_typo3Tables_dataObject implements ArrayAccess, tx_pttools_iSetta
 	 * Pass an array("propertyName" => "propertyValue", ...) to set the objects properties
 	 *
 	 * @param 	array 	property data
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-20
 	 */
 	public function __construct(array $row = array()) {
@@ -61,7 +61,7 @@ class tx_ptlist_typo3Tables_dataObject implements ArrayAccess, tx_pttools_iSetta
 	 *
 	 * @param 	array 	dataArray
 	 * @return 	void
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-21
 	 */
 	public function setPropertiesFromArray(array $dataArray) {

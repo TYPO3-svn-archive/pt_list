@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2009 Fabrizio Branca (branca@punkt.de)
+*  (c) 2009 Fabrizio Branca (mail@fabrizio-branca.de)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -29,7 +29,7 @@ require_once t3lib_extMgm::extPath('pt_list').'controller/filter/options/class.t
  * Group filter class
  *
  * @version 	$Id$
- * @author		Fabrizio Branca <branca@punkt.de>
+ * @author		Fabrizio Branca <mail@fabrizio-branca.de>
  * @since		2009-01-23
  */
 class tx_ptlist_controller_filter_options_explicit extends tx_ptlist_controller_filter_options_base {
@@ -39,7 +39,7 @@ class tx_ptlist_controller_filter_options_explicit extends tx_ptlist_controller_
 	 *
 	 * @param 	void
 	 * @return 	array	array of array('item' => <value>, 'label' => <label>, 'quantity' => <quantity>)
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-02-21
 	 */
 	public function getOptions() {

@@ -14,7 +14,7 @@ interface tx_ptlist_iListable {
 	 * Get a tx_ptlist_columnDescriptionCollection of all columns
 	 * 
 	 * @return  tx_ptlist_columnDescriptionCollection
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-14
 	 */
 	public function getAllColumnDescriptions();
@@ -23,7 +23,7 @@ interface tx_ptlist_iListable {
 	 * Get a tx_ptlist_columnDescriptionCollection of sortable columns (objects in this collection must be references to objects in the collection returned by getAllColumnDescriptions())
 	 * 
 	 * @return  tx_ptlist_columnDescriptionCollection
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-14
 	 */
 	public function getSortableColumns();

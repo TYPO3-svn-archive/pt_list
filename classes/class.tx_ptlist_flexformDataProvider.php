@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *  
-*  (c) 2009 Fabrizio Branca (branca@punkt.de)
+*  (c) 2009 Fabrizio Branca (mail@fabrizio-branca.de)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is 
@@ -28,7 +28,7 @@
  * 
  * $Id$
  *
- * @author	Fabrizio Branca <branca@punkt.de>
+ * @author	Fabrizio Branca <mail@fabrizio-branca.de>
  * @since   2008-02-06
  */	
 class tx_ptlist_flexformDataProvider {
@@ -39,7 +39,7 @@ class tx_ptlist_flexformDataProvider {
 	 *
 	 * @param	array	configuration array
 	 * @return 	array	configuration array
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-19
 	 */
     public function getAvailableListClasses(array $config) {
@@ -58,7 +58,7 @@ class tx_ptlist_flexformDataProvider {
 	 *
 	 * @param	array	configuration array
 	 * @return 	array	configuration array
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-27
 	 */
     public function getAvailablePagerStrategyClasses(array $config) {

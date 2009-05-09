@@ -8,7 +8,7 @@
 # where the PDF rendering takes place.
 # 
 # @version  $Id:$
-# @author   Michael Knoll <knoll@punkt.de>, Fabrizio Branca <branca@punkt.de>
+# @author   Michael Knoll <knoll@punkt.de>, Fabrizio Branca <mail@fabrizio-branca.de>
 # @since    2009-04-21
 ################################################################################
 

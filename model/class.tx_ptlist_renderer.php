@@ -2,7 +2,7 @@
 /***************************************************************
  *  Copyright notice
  *  
- *  (c) 2009 Fabrizio Branca (branca@punkt.de)
+ *  (c) 2009 Fabrizio Branca (mail@fabrizio-branca.de)
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is 
@@ -28,7 +28,7 @@ require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_genericData
  * Collection of static methods that can be used as user function as data renderer (renderUserFunctions.)
  *
  * @version 	$Id$
- * @author		Fabrizio Branca <branca@punkt.de>
+ * @author		Fabrizio Branca <mail@fabrizio-branca.de>
  * @since		2009-02-10
  */
 class tx_ptlist_renderer {
@@ -39,7 +39,7 @@ class tx_ptlist_renderer {
 	 *
 	 * @param 	array 	$params
 	 * @return 	string 	rendered content
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-03-06
 	 */
 	public static function cObject(array $params) {
@@ -55,7 +55,7 @@ class tx_ptlist_renderer {
 	 *
 	 * @param 	array 	params
 	 * @return 	string 	rendered content
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-03-06
 	 */
 	public static function editIcon(array $params) {
@@ -94,7 +94,7 @@ class tx_ptlist_renderer {
 	 *
 	 * @param 	array 	params
 	 * @return 	string 	rendered content
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-03-06
 	 */
 	public static function regexReplace(array $params) {
@@ -109,7 +109,7 @@ class tx_ptlist_renderer {
 	 *
 	 * @param 	array 	params
 	 * @return 	string 	rendered content
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-02-25
 	 */
 	public static function fetchExternalData(array $params) {

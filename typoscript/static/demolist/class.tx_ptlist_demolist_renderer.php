@@ -2,7 +2,7 @@
 /***************************************************************
  *  Copyright notice
  *  
- *  (c) 2009 Fabrizio Branca (branca@punkt.de)
+ *  (c) 2009 Fabrizio Branca (mail@fabrizio-branca.de)
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is 
@@ -27,7 +27,7 @@
  * Demolist data renderer
  *
  * @version 	$Id$
- * @author		Fabrizio Branca <branca@punkt.de>
+ * @author		Fabrizio Branca <mail@fabrizio-branca.de>
  * @since		2009-01-30
  */
 class tx_ptlist_demolist_renderer {
@@ -37,7 +37,7 @@ class tx_ptlist_demolist_renderer {
 	 *
 	 * @param 	array 	array('currentContent' => <currentContent>, 'values' => array('<dataDescriptionIdentifier>' => '<value>'))
 	 * @return 	string 	rendered content
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-02-10
 	 */
 	public static function iso2CodeRenderer(array $params) {
@@ -63,7 +63,7 @@ class tx_ptlist_demolist_renderer {
 	 *
 	 * @param 	array	parameters
 	 * @return 	string	rendered content
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-02-10
 	 */
 	public static function nameAndCapitalRenderer(array $params) {

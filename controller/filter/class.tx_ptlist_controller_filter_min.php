@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *  
-*  (c) 2009 Fabrizio Branca (branca@punkt.de)
+*  (c) 2009 Fabrizio Branca (mail@fabrizio-branca.de)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is 
@@ -29,7 +29,7 @@ require_once t3lib_extMgm::extPath('pt_list').'view/filter/min/class.tx_ptlist_v
  * Class implementing a "minimum" filter
  * 
  * @version  	$Id$
- * @author		Fabrizio Branca <branca@punkt.de>
+ * @author		Fabrizio Branca <mail@fabrizio-branca.de>
  * @since		2009-01-26
  */
 class tx_ptlist_controller_filter_min extends tx_ptlist_filter {
@@ -43,7 +43,7 @@ class tx_ptlist_controller_filter_min extends tx_ptlist_filter {
 	 * @param 	void
 	 * @return 	void
 	 * @throws	tx_pttools_exceptionAssertion	if more than one column is attached to the filters columnCollection
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-23	 
 	 */
 	public function init() {
@@ -59,7 +59,7 @@ class tx_ptlist_controller_filter_min extends tx_ptlist_filter {
 	 *
 	 * @param 	void
 	 * @return 	string HTML output
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-19
 	 */
 	public function isActiveAction() {
@@ -74,7 +74,7 @@ class tx_ptlist_controller_filter_min extends tx_ptlist_filter {
 	 *
 	 * @param 	void
 	 * @return 	unknown
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-19
 	 */
 	public function isNotActiveAction() {
@@ -90,16 +90,13 @@ class tx_ptlist_controller_filter_min extends tx_ptlist_filter {
 	 *
 	 * @param 	void
 	 * @return 	string	HTML output
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-19
 	 */
 	public function submitAction() {
-		
-		// save the incoming parameters to your value property here
+		$this->isActive = true;
 		$this->value = $this->params['value'];
-		
-		// let the parent action do the submission (validate)
-		return parent::submitAction();
+		return $this->doAction('default');
 	}
 
 	
@@ -109,7 +106,7 @@ class tx_ptlist_controller_filter_min extends tx_ptlist_filter {
 	 *
 	 * @param 	void
 	 * @return 	string 	sql where clause snippet
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-19
 	 */
 	public function getSqlWhereClauseSnippet() {

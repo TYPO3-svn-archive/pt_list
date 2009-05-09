@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2009 Fabrizio Branca <branca@punkt.de>, Rainer Kuhn <kuhn@punkt.de>
+*  (c) 2009 Fabrizio Branca <mail@fabrizio-branca.de>, Rainer Kuhn <kuhn@punkt.de>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -26,7 +26,7 @@
  *
  * $Id$
  *
- * @author  Fabrizio Branca <branca@punkt.de>, Rainer Kuhn <kuhn@punkt.de>
+ * @author  Fabrizio Branca <mail@fabrizio-branca.de>, Rainer Kuhn <kuhn@punkt.de>
  * @since   2009-01-15
  */
 
@@ -43,7 +43,7 @@ require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_div.php';
 /**
  * Column description class
  *
- * @author      Fabrizio Branca <branca@punkt.de>, Rainer Kuhn <kuhn@punkt.de>
+ * @author      Fabrizio Branca <mail@fabrizio-branca.de>, Rainer Kuhn <kuhn@punkt.de>
  * @since       2009-01-15
  * @package     TYPO3
  * @subpackage  tx_ptlist
@@ -147,7 +147,7 @@ class tx_ptlist_columnDescription implements tx_pttools_iTemplateable, tx_pttool
 	 *
 	 * @param 	array	values
 	 * @return	string	rendered field content
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-02-20
 	 */
 	public function renderFieldContent(array $values) {
@@ -163,7 +163,7 @@ class tx_ptlist_columnDescription implements tx_pttools_iTemplateable, tx_pttool
 	 * @return 	string orderby clause snippet
 	 * @throws	tx_pttools_exceptionAssertion	if column is not sortable
 	 * @throws	tx_pttools_exception			if sortingState has an invalid value
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-19
 	 */
 	public function getOrderByClause() {
@@ -208,7 +208,7 @@ class tx_ptlist_columnDescription implements tx_pttools_iTemplateable, tx_pttool
 	 *
 	 * @param 	void
 	 * @return 	bool
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-22
 	 */
 	public function isSortable() {
@@ -243,7 +243,7 @@ class tx_ptlist_columnDescription implements tx_pttools_iTemplateable, tx_pttool
 	 *
 	 * @param 	string	csl of group uid
 	 * @return 	bool	true if the user has access to this object
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-22
 	 */
     public function hasAccess($groupList) {
@@ -275,7 +275,7 @@ class tx_ptlist_columnDescription implements tx_pttools_iTemplateable, tx_pttool
 	 *
 	 * @param 	array 	dataArray
 	 * @return 	void
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-21
 	 */
 	public function setPropertiesFromArray(array $dataArray) {
@@ -339,7 +339,7 @@ class tx_ptlist_columnDescription implements tx_pttools_iTemplateable, tx_pttool
 	 *
 	 * @param 	void
 	 * @return 	array	marker array
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-02-23
 	 */
 	public function getMarkerArray() {
@@ -422,7 +422,7 @@ class tx_ptlist_columnDescription implements tx_pttools_iTemplateable, tx_pttool
      *
      * @param 	int		sorting state, see class constants for available values
      * @return 	void
-     * @author	Fabrizio Branca <branca@punkt.de>
+     * @author	Fabrizio Branca <mail@fabrizio-branca.de>
      * @since	2009-02-23
      */
     public function set_sortingState($sortingState) {
@@ -437,7 +437,7 @@ class tx_ptlist_columnDescription implements tx_pttools_iTemplateable, tx_pttool
      *
      * @param	void
      * @return  tx_ptlist_dataDescriptionCollection
-     * @author	Fabrizio Branca <branca@punkt.de>
+     * @author	Fabrizio Branca <mail@fabrizio-branca.de>
      * @since	2009-02-23
      */
     public function get_dataDescriptions() {

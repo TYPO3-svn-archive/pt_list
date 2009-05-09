@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2009 Fabrizio Branca (branca@punkt.de)
+*  (c) 2009 Fabrizio Branca (mail@fabrizio-branca.de)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -30,7 +30,7 @@ require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_externalDat
  * Database accessor for the dataObject class
  *
  * @version 	$Id$
- * @author		Fabrizio Branca <branca@punkt.de>
+ * @author		Fabrizio Branca <mail@fabrizio-branca.de>
  * @since		2009-01-22
  */
 class tx_ptlist_typo3Tables_dataObjectAccessor implements tx_pttools_iSingletonCollection {
@@ -62,7 +62,7 @@ class tx_ptlist_typo3Tables_dataObjectAccessor implements tx_pttools_iSingletonC
      *
      * @param   void
      * @return  tx_ptlist_typo3Tables_dataObjectAccessor      unique instance of the object (Singleton)
-     * @author	Fabrizio Branca <branca@punkt.de>
+     * @author	Fabrizio Branca <mail@fabrizio-branca.de>
      * @since	2009-01-22
      */
     public static function getInstanceById($identifier) {
@@ -85,7 +85,7 @@ class tx_ptlist_typo3Tables_dataObjectAccessor implements tx_pttools_iSingletonC
      * Final method to prevent object cloning (using 'clone'), in order to use only the unique instance of the Singleton object.
      * @param   void
      * @return  void
-     * @author	Fabrizio Branca <branca@punkt.de>
+     * @author	Fabrizio Branca <mail@fabrizio-branca.de>
      * @since	2009-01-22
      */
     public final function __clone() {
@@ -97,7 +97,7 @@ class tx_ptlist_typo3Tables_dataObjectAccessor implements tx_pttools_iSingletonC
     /**
      * This class cannot be constructed manually. Use the getInstance() method!
      * 
-     * @author	Fabrizio Branca <branca@punkt.de>
+     * @author	Fabrizio Branca <mail@fabrizio-branca.de>
      * @since	2009-02-24 
      */
 	private function  __construct() {
@@ -112,7 +112,7 @@ class tx_ptlist_typo3Tables_dataObjectAccessor implements tx_pttools_iSingletonC
 	 *
 	 * @param	string dsn, if equals to "<default>" the TYPO3 database will be used
 	 * @return 	void
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-02-24
 	 */
     public function setDatabase($dsn) {
@@ -136,7 +136,7 @@ class tx_ptlist_typo3Tables_dataObjectAccessor implements tx_pttools_iSingletonC
 	 * @param	string	(optional) orderBy clause
 	 * @param	string	(optional) limit
 	 * @return	array	array of record arrays
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-02-01
 	 */
 	public function getGroupData($listId, $select, $where='', $groupBy='', $orderBy='', $limit='') {
@@ -186,7 +186,7 @@ class tx_ptlist_typo3Tables_dataObjectAccessor implements tx_pttools_iSingletonC
      * @param 	string	limit clause (usually prepared by the pager)
      * @param 	string	(optional) group by clause
      * @return 	array	array of records
-     * @author	Fabrizio Branca <branca@punkt.de>
+     * @author	Fabrizio Branca <mail@fabrizio-branca.de>
      * @since	2009-01-22
      */
     public function selectRows($listId, $fields, $where, $orderBy, $limit, $groupBy='') {
@@ -260,7 +260,7 @@ class tx_ptlist_typo3Tables_dataObjectAccessor implements tx_pttools_iSingletonC
      * @param 	string	list identifier (this is needed to fetch additional information like table names and baseWhereClause from the list object found in the registry)
      * @param 	string	where clause (usually prepared by the filter[Collection])
      * @return 	int		quantity of rows
-     * @author	Fabrizio Branca <branca@punkt.de>
+     * @author	Fabrizio Branca <mail@fabrizio-branca.de>
      * @since	2009-01-22
      */
     public function countRows($listId, $where) {

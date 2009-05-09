@@ -2,7 +2,7 @@
 /***************************************************************
  *  Copyright notice
  *  
- *  (c) 2009 Fabrizio Branca (branca@punkt.de)
+ *  (c) 2009 Fabrizio Branca (mail@fabrizio-branca.de)
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is 
@@ -90,7 +90,7 @@ class tx_ptlist_pager implements tx_pttools_iTemplateable {
 	 *
 	 * @param 	tx_pttools_iPageable $objectitemCollection
 	 * @return 	void
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-20
 	 */
 	public function set_itemCollection(tx_pttools_iPageable $itemCollection) {
@@ -109,7 +109,7 @@ class tx_ptlist_pager implements tx_pttools_iTemplateable {
 	 *
 	 * @param 	int	current page number
 	 * @return 	void
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-20
 	 */
 	public function set_currentPageNumber($currentPageNumber) {
@@ -128,7 +128,7 @@ class tx_ptlist_pager implements tx_pttools_iTemplateable {
 	 * 
 	 * @param 	void
 	 * @return 	void
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-20
 	 */
 	public function getItemCollectionForPage() {
@@ -181,7 +181,7 @@ class tx_ptlist_pager implements tx_pttools_iTemplateable {
 	 *
 	 * @param	void
 	 * @return	array	array(<aggregateDataDescriptionIdentifier> => <aggregateValue>)
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-02-20 
 	 */
 	public function getAggregateDataForPage() {
@@ -200,7 +200,7 @@ class tx_ptlist_pager implements tx_pttools_iTemplateable {
 	 *
 	 * @param 	void
 	 * @return 	array	marker array
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-20
 	 */
 	public function getMarkerArray() {

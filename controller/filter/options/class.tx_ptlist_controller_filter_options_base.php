@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2009 Fabrizio Branca (branca@punkt.de)
+*  (c) 2009 Fabrizio Branca (mail@fabrizio-branca.de)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -34,7 +34,7 @@ require_once t3lib_extMgm::extPath('pt_list').'view/filter/options/class.tx_ptli
  * Group filter class
  *
  * @version 	$Id$
- * @author		Fabrizio Branca <branca@punkt.de>
+ * @author		Fabrizio Branca <mail@fabrizio-branca.de>
  * @since		2009-01-23
  */
 abstract class tx_ptlist_controller_filter_options_base extends tx_ptlist_filter {
@@ -49,7 +49,7 @@ abstract class tx_ptlist_controller_filter_options_base extends tx_ptlist_filter
 	 * @param 	void
 	 * @return 	void
 	 * @throws	tx_pttools_exceptionAssertion	if more than one column is attached to the filters columnCollection
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-23
 	 */
 	public function init() {
@@ -68,7 +68,7 @@ abstract class tx_ptlist_controller_filter_options_base extends tx_ptlist_filter
 	 *
 	 * @param 	void
 	 * @return 	string HTML output
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-19
 	 */
 	public function defaultAction() {
@@ -196,7 +196,7 @@ abstract class tx_ptlist_controller_filter_options_base extends tx_ptlist_filter
 	 *
 	 * @param 	void
 	 * @return 	array	array of array('item' => <value>, 'label' => <label>, 'quantity' => <quantity>)
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-02-21
 	 */
 	abstract public function getOptions();
@@ -209,7 +209,7 @@ abstract class tx_ptlist_controller_filter_options_base extends tx_ptlist_filter
 	 *
 	 * @param 	void
 	 * @return 	string	HTML output
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-23
 	 */
 	public function submitAction() {
@@ -260,7 +260,7 @@ abstract class tx_ptlist_controller_filter_options_base extends tx_ptlist_filter
 	 *
 	 * @param 	void
 	 * @return 	string HTML ouput
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-02-06
 	 */
 	public function breadcrumbAction() {
@@ -297,7 +297,7 @@ abstract class tx_ptlist_controller_filter_options_base extends tx_ptlist_filter
 	 *
 	 * @param 	void
 	 * @return 	string 	where clause snippet
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-23
 	 */
 	public function getSqlWhereClauseSnippet() {

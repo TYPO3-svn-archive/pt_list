@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *  
-*  (c) 2009 Fabrizio Branca (branca@punkt.de)
+*  (c) 2009 Fabrizio Branca (mail@fabrizio-branca.de)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is 
@@ -29,7 +29,7 @@ require_once t3lib_extMgm::extPath('pt_tools').'res/staticlib/class.tx_pttools_a
  * Database accessor for the dataObject class
  * 
  * @version 	$Id$
- * @author		Fabrizio Branca <branca@punkt.de>
+ * @author		Fabrizio Branca <mail@fabrizio-branca.de>
  * @since		2009-01-22
  */
 class tx_ptlist_bookmarkAccessor implements tx_pttools_iSingleton { 
@@ -49,7 +49,7 @@ class tx_ptlist_bookmarkAccessor implements tx_pttools_iSingleton {
      *
      * @param   void
      * @return  tx_ptlist_bookmarkAccessor      unique instance of the object (Singleton) 
-     * @author	Fabrizio Branca <branca@punkt.de>
+     * @author	Fabrizio Branca <mail@fabrizio-branca.de>
      * @since	2009-01-22
      */
     public static function getInstance() {
@@ -66,7 +66,7 @@ class tx_ptlist_bookmarkAccessor implements tx_pttools_iSingleton {
      * Final method to prevent object cloning (using 'clone'), in order to use only the unique instance of the Singleton object.
      * @param   void
      * @return  void
-     * @author	Fabrizio Branca <branca@punkt.de>
+     * @author	Fabrizio Branca <mail@fabrizio-branca.de>
      * @since	2009-01-22
      */
     public final function __clone() {

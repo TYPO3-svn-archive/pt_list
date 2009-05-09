@@ -25,7 +25,7 @@ class tx_ptlist_view_list_itemList_csv extends tx_ptlist_view {
 	 *
 	 * @param	void
 	 * @return	void (never returns)
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-02-19
 	 */
 	public function render() {

@@ -2,7 +2,7 @@
 /***************************************************************
  *  Copyright notice
  *  
- *  (c) 2009 Fabrizio Branca (branca@punkt.de)
+ *  (c) 2009 Fabrizio Branca (mail@fabrizio-branca.de)
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is 
@@ -37,7 +37,7 @@ require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_div.php';
 /**
  * Database connector for external databases
  *
- * @author		Fabrizio Branca <branca@punkt.de>
+ * @author		Fabrizio Branca <mail@fabrizio-branca.de>
  * @since		2009-02-25
  * @package     TYPO3
  * @subpackage  tx_ptlist
@@ -59,7 +59,7 @@ class tx_ptlist_externalDatabaseConnector extends t3lib_db {
      *
      * @param 	string|int	dsn or uid pointing to a dsn record in tx_ptlist_databases
      * @param 	string		(optional) db initizialization string
-     * @author	Fabrizio Branca <branca@punkt.de>
+     * @author	Fabrizio Branca <mail@fabrizio-branca.de>
      * @since	2009-03-06
      */
     public function __construct($dsn, $setDBinit=NULL) {

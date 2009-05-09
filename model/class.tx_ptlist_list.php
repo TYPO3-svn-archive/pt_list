@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2009 Fabrizio Branca (branca@punkt.de)
+*  (c) 2009 Fabrizio Branca (mail@fabrizio-branca.de)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -39,7 +39,7 @@ require_once t3lib_extMgm::extPath('pt_tools').'res/objects/class.tx_pttools_ses
  * Base class for the a list object
  *
  * @version 	$Id$
- * @author		Fabrizio Branca <branca@punkt.de>
+ * @author		Fabrizio Branca <mail@fabrizio-branca.de>
  * @since		2009-01-26
  */
 abstract class tx_ptlist_list implements tx_ptlist_iListable, tx_ptlist_iFilterable, tx_pttools_iPageable {
@@ -86,7 +86,7 @@ abstract class tx_ptlist_list implements tx_ptlist_iListable, tx_ptlist_iFiltera
 	 *
 	 * @param 	void
 	 * @return 	void
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-19
 	 */
 	abstract protected function setup();
@@ -102,7 +102,7 @@ abstract class tx_ptlist_list implements tx_ptlist_iListable, tx_ptlist_iFiltera
 	 *
 	 * @param 	void
 	 * @return 	void
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-26
 	 */
 	public function update() {
@@ -124,7 +124,7 @@ abstract class tx_ptlist_list implements tx_ptlist_iListable, tx_ptlist_iFiltera
 	 * @param 	string	sorting field
 	 * @param 	string	sorting direction
 	 * @return 	void
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-19
 	 */
 	public function setSortingParameters($sortingField, $sortingDirection) {
@@ -182,7 +182,7 @@ abstract class tx_ptlist_list implements tx_ptlist_iListable, tx_ptlist_iFiltera
      *
      * @param   tx_ptlist_filterCollection  filterCollection
      * @return  void
-     * @author  Fabrizio Branca <branca@punkt.de>
+     * @author  Fabrizio Branca <mail@fabrizio-branca.de>
      * @since   2009-01-19
      */
     public function invokeFilterCollection(tx_ptlist_filterCollection $filterCollection) {
@@ -209,7 +209,7 @@ abstract class tx_ptlist_list implements tx_ptlist_iListable, tx_ptlist_iFiltera
 	 *
 	 * @param 	void
 	 * @return 	tx_ptlist_columnDescriptionCollection
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-14
 	 */
 	public function getSortableColumns() {
@@ -224,7 +224,7 @@ abstract class tx_ptlist_list implements tx_ptlist_iListable, tx_ptlist_iFiltera
 	 *
 	 * @param 	void
 	 * @return 	string 	list identifier
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-26
 	 */
 	public function getListId() {
@@ -239,7 +239,7 @@ abstract class tx_ptlist_list implements tx_ptlist_iListable, tx_ptlist_iFiltera
 	 * @param 	bool	(optional) return only accessible columns for the currently logged in fe_users
 	 * @param 	void
 	 * @return 	tx_ptlist_columnDescriptionCollection
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-14
 	 */
 	public function getAllColumnDescriptions($onlyAccessible=true) {
@@ -261,7 +261,7 @@ abstract class tx_ptlist_list implements tx_ptlist_iListable, tx_ptlist_iFiltera
 	 *
 	 * @param 	void
 	 * @return 	tx_ptlist_dataDescriptionCollection
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-14
 	 */
 	public function getAllDataDescriptions() {
@@ -284,7 +284,7 @@ abstract class tx_ptlist_list implements tx_ptlist_iListable, tx_ptlist_iFiltera
 	 * @param 	string	(optional) if not null the methods returns only filters for a given filterbox
 	 * @param 	bool	(optional) remove dependent filters
 	 * @return 	tx_ptlist_filterCollection
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-15
 	 */
 	public function getAllFilters($onlyAccessible=true, $filterboxId=NULL, $removeDependentFilters=false) {
@@ -331,7 +331,7 @@ abstract class tx_ptlist_list implements tx_ptlist_iListable, tx_ptlist_iFiltera
 	 *
 	 * @param 	string	list identifier
 	 * @return 	void
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-26
 	 */
 	public function set_listId($listId) {
@@ -346,7 +346,7 @@ abstract class tx_ptlist_list implements tx_ptlist_iListable, tx_ptlist_iFiltera
 	 *
 	 * @param 	void
 	 * @return 	string 	list identifier
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-26
 	 */
 	public function get_listId() {
@@ -360,7 +360,7 @@ abstract class tx_ptlist_list implements tx_ptlist_iListable, tx_ptlist_iFiltera
 	 *
 	 * @param 	void
 	 * @return 	string 	csl of columnDescriptionIdentifiers of columns that should be hidden
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-03-13
 	 */
 	public function get_hideColumns() {

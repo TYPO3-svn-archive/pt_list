@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2009 Fabrizio Branca (branca@punkt.de)
+*  (c) 2009 Fabrizio Branca (mail@fabrizio-branca.de)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -32,7 +32,7 @@ require_once t3lib_extMgm::extPath('pt_tools').'res/abstract/class.tx_pttools_iT
  * Data object collection
  *
  * @version 	$Id$
- * @author		Fabrizio Branca <branca@punkt.de>
+ * @author		Fabrizio Branca <mail@fabrizio-branca.de>
  * @since		2009-01-22
  */
 class tx_ptlist_typo3Tables_dataObjectCollection extends tx_pttools_objectCollection implements tx_pttools_iTemplateable {
@@ -49,7 +49,7 @@ class tx_ptlist_typo3Tables_dataObjectCollection extends tx_pttools_objectCollec
      * Class constructor
      *
      * @param 	string	list identifier
-     * @author	Fabrizio Branca <branca@punkt.de>
+     * @author	Fabrizio Branca <mail@fabrizio-branca.de>
      * @since	2009-01-22
      */
     public function __construct($listId) {
@@ -66,7 +66,7 @@ class tx_ptlist_typo3Tables_dataObjectCollection extends tx_pttools_objectCollec
      * @param unknown_type $orderBy
      * @param unknown_type $limit
      * @return 	void
-     * @author	Fabrizio Branca <branca@punkt.de>
+     * @author	Fabrizio Branca <mail@fabrizio-branca.de>
      * @since	2009-01-22
      */
     public function loadItems($fields, $where = '', $orderBy = '', $limit = '', $groupBy = '') {
@@ -85,7 +85,7 @@ class tx_ptlist_typo3Tables_dataObjectCollection extends tx_pttools_objectCollec
      *
      * @param 	void
      * @return 	arra	array of marker arrays of all elements in this collection
-     * @author	Fabrizio Branca <branca@punkt.de>
+     * @author	Fabrizio Branca <mail@fabrizio-branca.de>
      * @since	2009-01-22
      */
     public function getMarkerArray() {

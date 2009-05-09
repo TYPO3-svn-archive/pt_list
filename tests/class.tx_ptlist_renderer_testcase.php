@@ -2,7 +2,7 @@
 /***************************************************************
  *  Copyright notice
  *  
- *  (c) 2009 Fabrizio Branca (branca@punkt.de)
+ *  (c) 2009 Fabrizio Branca (mail@fabrizio-branca.de)
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is 
@@ -31,7 +31,7 @@ require_once t3lib_extMgm::extPath('phpunit').'class.tx_phpunit_testcase.php';
 /**
  * tx_ptlist_renderer test case.
  *
- * @author		Fabrizio Branca <branca@punkt.de>
+ * @author		Fabrizio Branca <mail@fabrizio-branca.de>
  * @since		2009-03-06
  * @package     TYPO3
  * @subpackage  tx_ptlist

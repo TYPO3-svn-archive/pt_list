@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2009 Fabrizio Branca <branca@punkt.de>, Dorit Rottner <rottner@punkt.de>
+*  (c) 2009 Fabrizio Branca <mail@fabrizio-branca.de>, Dorit Rottner <rottner@punkt.de>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -26,7 +26,7 @@
  *
  * $Id$
  *
- * @author  Fabrizio Branca <branca@punkt.de>, Dorit Rottner <rottner@punkt.de>
+ * @author  Fabrizio Branca <mail@fabrizio-branca.de>, Dorit Rottner <rottner@punkt.de>
  * @since   2009-01-15
  */
 
@@ -42,7 +42,7 @@ require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_dataDescrip
 /**
  * Data description collection class
  *
- * @author      Fabrizio Branca <branca@punkt.de>, Rainer Kuhn <kuhn@punkt.de>
+ * @author      Fabrizio Branca <mail@fabrizio-branca.de>, Rainer Kuhn <kuhn@punkt.de>
  * @since       2009-01-15
  * @package     TYPO3
  * @subpackage  tx_ptlist
@@ -73,7 +73,7 @@ class tx_ptlist_dataDescriptionCollection extends tx_pttools_objectCollection im
 	 * @param 	tx_ptlist_dataDescription 	(optional) second columnDescription object
 	 * 											...
 	 * @param 	tx_ptlist_dataDescription 	(optional) nth columnDescription object
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-22
 	 */
     public function __construct() {
@@ -142,7 +142,7 @@ class tx_ptlist_dataDescriptionCollection extends tx_pttools_objectCollection im
 	 *
 	 * @param 	void
 	 * @return 	tx_ptlist_dataDescriptionCollection
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-22
 	 */
 	public function getSortableColumns() {
@@ -164,7 +164,7 @@ class tx_ptlist_dataDescriptionCollection extends tx_pttools_objectCollection im
 	 *
 	 * @param 	void
 	 * @return 	string 	order by snippet
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-22
 	 */
 	public function getOrderByClause() {
@@ -183,7 +183,7 @@ class tx_ptlist_dataDescriptionCollection extends tx_pttools_objectCollection im
 	 *
 	 * @param 	string	csl of group uids
 	 * @return 	tx_ptlist_dataDescriptionCollection
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-22
 	 */
 	public function getAccessibleDataDescriptions($groupList) {
@@ -211,7 +211,7 @@ class tx_ptlist_dataDescriptionCollection extends tx_pttools_objectCollection im
 	 *
 	 * @param 	array 	dataArray
 	 * @return 	void
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-22
 	 */
 	public function setPropertiesFromArray(array $dataArray) {
@@ -252,7 +252,7 @@ class tx_ptlist_dataDescriptionCollection extends tx_pttools_objectCollection im
 	 *
 	 * @param 	void
 	 * @return 	array
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-14
 	 */
 	public function getMarkerArray() {

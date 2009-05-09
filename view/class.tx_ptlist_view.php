@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *  
-*  (c) 2009 Fabrizio Branca (branca@punkt.de)
+*  (c) 2009 Fabrizio Branca (mail@fabrizio-branca.de)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is 
@@ -28,7 +28,7 @@ require_once t3lib_extMgm::extPath('pt_mvc').'classes/class.tx_ptmvc_view.php';
  * Base class for view in the pt_list extension
  * 
  * @version 	$Id$
- * @author		Fabrizio Branca <branca@punkt.de>
+ * @author		Fabrizio Branca <mail@fabrizio-branca.de>
  * @since		2009-01-22
  */
 class tx_ptlist_view extends tx_ptmvc_view {
@@ -37,7 +37,7 @@ class tx_ptlist_view extends tx_ptmvc_view {
 	 * Class constructor
 	 *
 	 * @param 	object	(optional) reference to the calling object
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-22
 	 */
 	public function __construct($controller=NULL) {
@@ -53,7 +53,7 @@ class tx_ptlist_view extends tx_ptmvc_view {
 	 * 
 	 * @param 	void
 	 * @return 	void
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-22
 	 */
 	public function beforeRendering() {
@@ -68,7 +68,7 @@ class tx_ptlist_view extends tx_ptmvc_view {
 	 *
 	 * @param 	string 	rendered content
 	 * @return 	string 	rendered content
-	 * @author	Fabrizio Branca <branca@punkt.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-22
 	 */
 	public function afterRendering($output) {
