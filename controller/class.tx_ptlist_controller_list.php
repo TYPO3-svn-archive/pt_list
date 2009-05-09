@@ -577,8 +577,12 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 	protected function filterbreadcrumbDefaultAction() {
 		$view = $this->getView('list_filterbreadcrumb');
 
-		$view->addItem($this->currentListObject->getAllFilters(true)->getMarkerArray(), 'filters');
-
+		$activeFilterCollection = $this->currentListObject->getAllFilters(true)->where_isActive();
+		
+		$view->addItem($activeFilterCollection->count(), 'activeFilterCount');
+		$view->addItem($activeFilterCollection->getMarkerArray(), 'filters', false);
+		// filter breadcrumb elements contain html that should not be filtered here. Check is done in the filters.	
+		
 		return $view->render();
 	}
 

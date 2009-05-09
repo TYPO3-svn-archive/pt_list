@@ -15,12 +15,18 @@ v0.0.1dev: as of 08.05.2009
 ----------
 
 - TODO: check and extend changes for default XSS prevention
-  - check new default XSS prevention behaviour of pt_mvc for unwanted effects, e.g. for breadcrumbs, bookmarks and other list features using tx_ptmvc_view::addItem()
+  - check new default XSS prevention behaviour of pt_mvc for unwanted effects, for 
+    + breadcrumbs, 
+    - bookmarks 
+    - and other list features using tx_ptmvc_view::addItem()
   - check already implemented adaptions of tx_ptlist_controller_list (is this the right place?)
   - check for further default prevention actions
   - make default XSS prevention configurable for each dataDescriptionIdentifier via Typoscript
 
-
++ (fb) RFT: filter breadcrumb, added html filtering
+  + added new method tx_ptlist_filterCollection->where_isActive()
+  + filterbreadcrumb can be hidden now via css if no filter is active
+  + changed my mail address
 + (rk) CHG: Addition of default XSS prevention for database data, adaption for new default XSS prevention of pt_mvc views 
   ***** IMPORTANT: unfinished - this may result in unwanted effects for existing pt_list implementations! *****
   + tx_ptlist_controller_list:

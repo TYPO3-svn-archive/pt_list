@@ -557,7 +557,6 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
 	 */
 	public function getMarkerArray() {
 		$markerArray = array(
-			'userInterface' => $this->lastRenderedContent,
 			'name' => get_class($this),
 			'label' => $this->label,
 			'isActive' => $this->get_isActive(),
@@ -565,8 +564,14 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
 			'filterId' => $this->filterIdentifier,
 			'filterClass' => str_replace('_', '-', get_class($this)),
 			'hideResetLink' => ($this->conf['hideResetLink'] == true),
-			'breadcrumb' => $this->doAction('breadcrumb'),
 		);
+
+		// filter html in the markerArray
+		$markerArray = tx_pttools_div::htmlOutputArray($markerArray);
+		
+		// "userInterface" and "breadcrumb" may contain html and will not be filtered here!
+		$markerArray['userInterface'] = $this->lastRenderedContent;
+		$markerArray['breadcrumb'] = $this->doAction('breadcrumb');
 		
 		$markerArray['dataDescriptions'] = array();
 		foreach ($this->dataDescriptions as $dataDescriptions) { /* @var $dataDescriptions tx_ptlist_dataDescription */

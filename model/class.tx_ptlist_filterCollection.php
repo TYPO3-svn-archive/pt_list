@@ -85,6 +85,29 @@ class tx_ptlist_filterCollection extends tx_pttools_objectCollection implements 
         parent::addItem($filterObj, $key);
 
     }
+	
+    
+    
+	/**
+	 * Filters out all filters that aren't active 
+	 * and returns a new object collection with references to the original objects
+	 * 
+	 * @param void
+	 * @return tx_ptlist_filterCollection
+	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
+	 * @since 2009-05-09
+	 */
+	public function where_isActive() {
+		$collection = new tx_ptlist_filterCollection($this->listId);
+		
+		foreach ($this as $key => $filter) { /* @var filter tx_ptlist_filter */
+			if ($filter->get_isActive() == true) {
+				$collection->addItem($filter);
+			}
+		}
+		
+		return $collection;
+	}
 
 
 

@@ -18,6 +18,7 @@
             <label index="pager_last">&amp;raquo;</label>
             <label index="displayTopics">Displaying topics {0} - {1} of {2}</label>
 			<label index="displayRows">Displaying rows %s - %s of %s</label><!-- Variables: offSetStart, offSetEnd, totalItemCount-->
+			<label index="activeFilters">Active filters</label>
 		</languageKey>
 		
 		<languageKey index="de" type="array">
@@ -26,6 +27,7 @@
             <label index="filter_group_all">[Alle]</label>
             <label index="displayTopics">Ergebnisse {0} - {1} von {2}</label>
 			<label index="displayRows">Ergebnisse %s - %s von %s</label><!-- Variables: offSetStart, offSetEnd, totalItemCount-->
+			<label index="activeFilters">Aktive Filter</label>
 		</languageKey>
 	</data>
 </T3locallang>
