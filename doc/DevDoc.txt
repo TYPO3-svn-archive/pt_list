@@ -23,6 +23,7 @@ v0.0.1dev: as of 08.05.2009
   - check for further default prevention actions
   - make default XSS prevention configurable for each dataDescriptionIdentifier via Typoscript
 
++ (fb) ADD: added hint in the manual concerning the bug if external databases use the same credential as the typo3 database
 + (fb) RFT: filter breadcrumb, added html filtering
   + added new method tx_ptlist_filterCollection->where_isActive()
   + filterbreadcrumb can be hidden now via css if no filter is active
