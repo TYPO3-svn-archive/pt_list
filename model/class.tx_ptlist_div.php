@@ -130,7 +130,7 @@ class tx_ptlist_div {
 				if (!empty($config['renderObj.'])) {
 		
 					$local_cObj = t3lib_div::makeInstance('tslib_cObj');
-					$local_cObj->data = $values;
+					$local_cObj->start($values);
 		
 					$config['renderObj.']['setCurrent'] = $renderedContent;
 					// $renderedContent = $GLOBALS['TSFE']->cObj->cObjGetSingle($this->cObj['name'], $this->cObj['conf']);

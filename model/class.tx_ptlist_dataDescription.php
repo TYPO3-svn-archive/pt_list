@@ -162,6 +162,7 @@ class tx_ptlist_dataDescription implements tx_pttools_iSettableByArray {
 	}
 
 
+	
 	/**
 	 * Returns the select clause snippet
 	 *
@@ -262,14 +263,32 @@ class tx_ptlist_dataDescription implements tx_pttools_iSettableByArray {
      * Getter/setter methods
      **************************************************************************/
 
+	/**
+	 * Get the identifier
+	 * 
+	 * @param void
+	 * @return string identifier
+	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
+	 */
     public function get_identifier() {
         return $this->identifier;
     }
 
+    
+    
+    /**
+     * Get access settings
+     * 
+     * @param void
+     * @return string access settings
+	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
+     */
     public function get_access() {
         return $this->access;
     }
 
+    
+    
     /**
      * Sets the access property
      *
@@ -282,6 +301,8 @@ class tx_ptlist_dataDescription implements tx_pttools_iSettableByArray {
         $this->access = $access;
     }
 
+    
+    
     /**
      * Sets the isSortable property
      *
@@ -294,14 +315,41 @@ class tx_ptlist_dataDescription implements tx_pttools_iSettableByArray {
         $this->isSortable = $isSortable;
     }
 
+    
+    
+    /**
+     * Get field property
+     * 
+     * @param void
+     * @return string field
+	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
+     */
     public function get_field() {
         return $this->field;
     }
 
+    
+    
+    /**
+     * Get table property
+     * 
+     * @param void
+     * @return string table
+	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
+     */
     public function get_table() {
         return $this->table;
     }
 
+    
+    
+    /**
+     * Get special property
+     * 
+     * @param void
+     * @return string special
+	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
+     */
     public function get_special() {
     	return $this->special;
     }

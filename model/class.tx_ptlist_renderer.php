@@ -44,7 +44,7 @@ class tx_ptlist_renderer {
 	 */
 	public static function cObject(array $params) {
 		$local_cObj = t3lib_div::makeInstance('tslib_cObj');
-		$local_cObj->data = $params['values'];
+		$local_cObj->start($params['values']);
 		return $local_cObj->cObjGetSingle($params['conf']['renderObj'], $params['conf']['renderObj.']);
 	}
 	

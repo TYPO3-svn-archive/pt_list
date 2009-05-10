@@ -8,6 +8,7 @@
 		<languageKey index="default" type="array">
             <label index="column_isoNoColumn">ISO</label>
             <label index="column_nameColumn">Country name (local country name)</label>
+            <label index="demo17_areaLabel"><![CDATA[Area [km&sup2;]]]></label>
 		</languageKey>
 	</data>
 </T3locallang>

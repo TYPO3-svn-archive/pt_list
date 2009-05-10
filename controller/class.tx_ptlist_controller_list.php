@@ -506,9 +506,9 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 		$view->addItem($this->currentListObject->getAllColumnDescriptions(true)->removeHiddenColumns()->getMarkerArray(), 'columns');
 		$view->addItem($this->getColumnContents(), 'listItems', false);  // do not filter HTML here since the column contents may already be rendered as HTML (e.g. from Typoscript wraps) and the database data is already HTML filtered (see getColumnContents())
 
-		$view->addItem($this->currentListObject->getAllFilters(true, 'renderInList', true)->getMarkerArray(), 'filterbox');
+		$view->addItem($this->currentListObject->getAllFilters(true, 'renderInList', true)->getMarkerArray(), 'filterbox', false);
 
-		$view->addItem($this->getAggregateRows(), 'aggregateRows');
+		$view->addItem($this->getAggregateRows(), 'aggregateRows', false);
 
 		// render
 		return $view->render();

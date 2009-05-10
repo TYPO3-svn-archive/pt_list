@@ -158,6 +158,10 @@ plugin.tx_ptlist._CSS_DEFAULT_STYLE (
 		font-weight: bold;
 	}
 	
+	label {
+		font-size: small;
+	}
+	
 	
 	
 	/***************************************************************************
