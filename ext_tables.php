@@ -14,7 +14,7 @@ $TCA["tx_ptlist_bookmarks"] = array (
             'disabled' => 'hidden',
         ),
         'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY).'tca_ptlist.php',
-        'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_ptlist_bookmarks.gif',
+        'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_ptlist_bookmarks.png',
     ),
     "feInterface" => array (
         "fe_admin_fieldList" => "hidden, name, list, filterstates, feuser",
@@ -36,7 +36,7 @@ $TCA["tx_ptlist_databases"] = array (
             'disabled' => 'hidden',
         ),
         'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY).'tca_ptlist.php',
-        'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_ptlist_databases.gif',
+        'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_ptlist_databases.png',
     ),
     "feInterface" => array (
         "fe_admin_fieldList" => "hidden, host, db, username, pass",

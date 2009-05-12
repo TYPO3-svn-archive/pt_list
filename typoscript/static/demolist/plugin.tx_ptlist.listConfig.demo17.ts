@@ -74,10 +74,10 @@ plugin.tx_ptlist.listConfig.demo17 {
 		areaMax = round(max(country.Area))
 		areaMin = round(min(country.Area))
 		
-		populationSum = round(sum(country.Population) / 1000)	
-		populationAvg = round(avg(country.Population) / 1000)
-		populationMax = round(max(country.Population) / 1000)
-		populationMin = round(min(country.Population) / 1000)
+		populationSum = round(sum(country.Population))	
+		populationAvg = round(avg(country.Population))
+		populationMax = round(max(country.Population))
+		populationMin = round(min(country.Population))
 	}
 	
 	aggregateRows.10 {
@@ -142,9 +142,10 @@ plugin.tx_ptlist.listConfig.demo17 {
 		}
 		
 		60 {
-			label = Population [x1000]
+			label = Population
 			columnIdentifier = populationColumn
 			dataDescriptionIdentifier = population
+			/*
 			renderObj = TEXT
 			renderObj {
 				cObject = TEXT
@@ -152,6 +153,7 @@ plugin.tx_ptlist.listConfig.demo17 {
 				cObject.insertData = 1
 				prioriCalc = intval
 			}
+			*/
 		}
 		
 		70 {
@@ -209,3 +211,6 @@ plugin.tx_ptlist_listConfig_demo17._CSS_DEFAULT_STYLE (
 )
 
 plugin.tx_ptlist.view.list_itemList.template = EXT:pt_list/typoscript/static/demolist/demo17_list_itemList.tpl
+
+page.1 = LOAD_REGISTER
+page.1.listId = demo17

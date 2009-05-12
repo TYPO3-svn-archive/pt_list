@@ -24,6 +24,10 @@ v0.0.1dev: as of 12.05.2009
     - and other list features using tx_ptmvc_view::addItem()
   - check already implemented adaptions of tx_ptlist_controller_list (is this the right place?)
 
++ (fb) FIX: fixed bug with breadcrumb output of range filter
++ (fb) ADD: added some new icons
++ (fb) ADD: added some typoscript examples (not finished yet)
++ (fb) RFT: changed mail address
 + (fb) RFT: minor code improments
 + (fb) ADD: demo typoscript
 + (fb) ADD: added hint in the manual concerning the bug if external databases use the same credential as the typo3 database

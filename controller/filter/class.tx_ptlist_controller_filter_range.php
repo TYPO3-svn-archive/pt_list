@@ -154,7 +154,30 @@ class tx_ptlist_controller_filter_range extends tx_ptlist_filter {
     	
     	return true;
     }
-	
+
+
+
+	/**
+	 * This method will be called to generate the output for the filter breadcrumb.
+	 *
+	 * @param 	void
+	 * @return 	string HTML ouput
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
+	 * @since	2009-02-06
+	 */
+	public function breadcrumbAction() {
+
+		if (empty($this->value)) {
+			$value = 'Not set';
+		} else {
+			$value = sprintf('%s-%s', $this->value['minval'], $this->value['maxval']);
+		}
+
+		$view = $this->getView('filter_breadcrumb');
+		$view->addItem($this->label, 'label');
+		$view->addItem($value, 'value');
+		return $view->render();
+	}
 	
 	
 }

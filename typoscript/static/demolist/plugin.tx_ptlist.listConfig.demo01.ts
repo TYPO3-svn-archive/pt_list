@@ -195,4 +195,4 @@ plugin.tx_ptlist.listConfig.demo01 {
 	}
 }
 
-
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:pt_list/typoscript/static/demolist/plugin.tx_ptlist_myDemoList._CSS_DEFAULT_STYLE.ts.css">

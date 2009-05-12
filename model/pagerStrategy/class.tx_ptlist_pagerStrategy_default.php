@@ -28,7 +28,7 @@
  * 
  * $Id$
  * 
- * @author Fabrizio Branca <branca@punkt.de>
+ * @author Fabrizio Branca <mail@fabrizio-branca.de>
  * @since 2009-01-27
  */
 
@@ -80,7 +80,7 @@ class tx_ptlist_pagerStrategy_default implements tx_ptlist_iPagerStrategy {
 	 * 
 	 * @param  array   $conf       Configuration of pager strategy
 	 * @return void 
-	 * @author      Fabrizio Branca <branca@punkt.de>
+	 * @author      Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since       2009-01-27
 	 */
 	public function setConfiguration(array $conf) {
@@ -101,7 +101,7 @@ class tx_ptlist_pagerStrategy_default implements tx_ptlist_iPagerStrategy {
 	 * 
 	 * @param  int  $currentPageNumber  Current Page number
 	 * @return void
-     * @author      Fabrizio Branca <branca@punkt.de>
+     * @author      Fabrizio Branca <mail@fabrizio-branca.de>
      * @since       2009-01-27
 	 */
 	public function setCurrentPageNumber($currentPageNumber) {
@@ -115,7 +115,7 @@ class tx_ptlist_pagerStrategy_default implements tx_ptlist_iPagerStrategy {
 	 * 
 	 * @param  int $amountPages    Amount of pages
 	 * @return void
-     * @author      Fabrizio Branca <branca@punkt.de>
+     * @author      Fabrizio Branca <mail@fabrizio-branca.de>
      * @since       2009-01-27
 	 */
 	public function setAmountPages($amountPages) {
@@ -129,7 +129,7 @@ class tx_ptlist_pagerStrategy_default implements tx_ptlist_iPagerStrategy {
 	 * 
 	 * @param  void
 	 * @return void
-     * @author      Fabrizio Branca <branca@punkt.de>
+     * @author      Fabrizio Branca <mail@fabrizio-branca.de>
      * @since       2009-01-27
 	 */
 	public function getLinks() {

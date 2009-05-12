@@ -23,12 +23,12 @@
 				Database tables 
 			 -->
 			 	<!-- Bookmark Records -->
-			 	<label index="tx_ptlist_bookmarks">Bookmarks</label>
+			 	<label index="tx_ptlist_bookmarks">Bookmark for a list generator list</label>
 					<label index="tx_ptlist_bookmarks.name">Name</label>
 					<label index="tx_ptlist_bookmarks.filterstates">Filter state</label>
 				
 				<!-- Database Records -->
-				<label index="tx_ptlist_databases">Databases</label>
+				<label index="tx_ptlist_databases">External Database for the list generator</label>
 					<label index="tx_ptlist_databases.host">Host</label>
 					<label index="tx_ptlist_databases.db">Database</label>
 					<label index="tx_ptlist_databases.username">Username</label>

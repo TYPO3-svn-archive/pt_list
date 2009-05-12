@@ -82,6 +82,24 @@ plugin.tx_ptlist_listConfig_demo10._CSS_DEFAULT_STYLE (
 		padding: 2px;
 		border: 1px solid #ccc;
 	}
+	
+	ul.tx-ptlist-pager li.prev, 
+	ul.tx-ptlist-pager li.next {
+		border: none;
+	}
+	
+	ul.tx-ptlist-pager li.prev span.wrapper, 
+	ul.tx-ptlist-pager li.next span.wrapper {
+		display: none;
+	}
+	
+	ul.tx-ptlist-pager li.prev {
+		background: url(/typo3conf/ext/pt_list/typoscript/static/demolist/left.png) no-repeat center;
+	}
+	
+	ul.tx-ptlist-pager li.next {
+		background: url(/typo3conf/ext/pt_list/typoscript/static/demolist/right.png) no-repeat center;
+	}
 )
 
 plugin.tx_ptlist.view.list_itemList {

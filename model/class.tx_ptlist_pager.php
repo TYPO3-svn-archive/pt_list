@@ -28,7 +28,7 @@
  * Class definition file for pt_list pager class
  * $Id$
  * 
- * @author      Fabrizio Branca <branca@punkt.de>
+ * @author      Fabrizio Branca <mail@fabrizio-branca.de>
  * @since       2009-01-27 
  */
 
@@ -46,7 +46,7 @@ require_once t3lib_extMgm::extPath('pt_tools').'res/abstract/class.tx_pttools_iT
  * 
  * @package     TYPO3
  * @subpackage  pt_list
- * @author      Fabrizio Branca <branca@punkt.de>
+ * @author      Fabrizio Branca <mail@fabrizio-branca.de>
  * @since       2009-01-27
  */
 class tx_ptlist_pager implements tx_pttools_iTemplateable {
@@ -95,7 +95,7 @@ class tx_ptlist_pager implements tx_pttools_iTemplateable {
 	 * 
 	 * @param  int     $itemsPerPage   Number of items to be displayed on page
 	 * @return void
-	 * @author Fabrizio Branca <branca@punkt.de>
+	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since  2009-01-20
 	 */
 	public function set_itemsPerPage($itemsPerPage) {
@@ -114,7 +114,7 @@ class tx_ptlist_pager implements tx_pttools_iTemplateable {
 	 * 
 	 * @param  int     $maxRows    Maximum number of rows
 	 * @return void
-     * @author Fabrizio Branca <branca@punkt.de>
+     * @author Fabrizio Branca <mail@fabrizio-branca.de>
      * @since  2009-01-27
 	 */
 	public function set_maxRows($maxRows) {
@@ -128,7 +128,7 @@ class tx_ptlist_pager implements tx_pttools_iTemplateable {
 	 * 
 	 * @param  tx_ptlist_iPagerStrategy $pagerStrategy  Pager strategy object
 	 * @return void
-     * @author Fabrizio Branca <branca@punkt.de>
+     * @author Fabrizio Branca <mail@fabrizio-branca.de>
      * @since  2009-01-27
 	 */
 	public function set_pagerStrategy($pagerStrategy) {
@@ -143,7 +143,7 @@ class tx_ptlist_pager implements tx_pttools_iTemplateable {
 	 * @param  int     $totalItemCount     Total number of items
 	 * @param  int     $itemsPerPage       Number of items per page
 	 * @return int                         Number of pages
-     * @author      Fabrizio Branca <branca@punkt.de>
+     * @author      Fabrizio Branca <mail@fabrizio-branca.de>
      * @since       2009-01-27
 	 */
 	public function calculateAmountPages($totalItemCount, $itemsPerPage) {
@@ -191,7 +191,7 @@ class tx_ptlist_pager implements tx_pttools_iTemplateable {
 	 * 
 	 * @param  void
 	 * @return int     Total amount of items
-     * @author Fabrizio Branca <branca@punkt.de>
+     * @author Fabrizio Branca <mail@fabrizio-branca.de>
      * @since  2009-01-27
 	 */
 	public function get_totalItemCount() {
@@ -220,7 +220,7 @@ class tx_ptlist_pager implements tx_pttools_iTemplateable {
 	 * 
 	 * @param  void
 	 * @return array   Current offset and rowcount
-     * @author Fabrizio Branca <branca@punkt.de>
+     * @author Fabrizio Branca <mail@fabrizio-branca.de>
      * @since  2009-01-27
 	 */
 	public function getCurrentOffSetAndRowcount() {
@@ -243,7 +243,7 @@ class tx_ptlist_pager implements tx_pttools_iTemplateable {
 	 * @param	int	offset
 	 * @param	int	rowcount
 	 * @return	Traversable
-     * @author  Fabrizio Branca <branca@punkt.de>
+     * @author  Fabrizio Branca <mail@fabrizio-branca.de>
      * @since   2009-01-27
 	 */
 	public function getItemCollection($rowcount, $offset=NULL) {
@@ -259,7 +259,7 @@ class tx_ptlist_pager implements tx_pttools_iTemplateable {
 	 * @param  int     $rowcount   Number of records to be displayed
 	 * @param  int     $offset     Offset to display records from
 	 * @return string              SQL LIMIT string
-     * @author Fabrizio Branca <branca@punkt.de>
+     * @author Fabrizio Branca <mail@fabrizio-branca.de>
      * @since  2009-01-27
 	 */
 	public static function getLimitFromRowcountAndOffset($rowcount, $offset) {
