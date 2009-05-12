@@ -51,7 +51,7 @@
         
         <setfont family="Arial" style="" size="<!--{$__config.font_size}-->" />
         <setx x="<!--{$borderLeft}-->" />
-        <table>
+        <table border="1">
         <!--{foreach from=$listItems item=row name="rows"}-->
             <tr min_height="3.5">
             <!--{foreach name="listItems" from=$row item=value key=columnDescriptionIdentifier}-->

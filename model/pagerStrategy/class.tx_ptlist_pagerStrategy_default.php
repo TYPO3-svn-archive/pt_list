@@ -22,7 +22,23 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+
+/**
+ * Class definition file for a default pager strategy implementation
+ * 
+ * $Id$
+ * 
+ * @author Fabrizio Branca <branca@punkt.de>
+ * @since 2009-01-27
+ */
+
+
+
+/**
+ * Inclusion of external ressources
+ */
 require_once t3lib_extMgm::extPath('pt_list').'model/interfaces/class.tx_ptlist_iPagerStrategy.php';
+
 
 
 /**
@@ -33,17 +49,40 @@ require_once t3lib_extMgm::extPath('pt_list').'model/interfaces/class.tx_ptlist_
  * @since		2009-01-27
  */
 class tx_ptlist_pagerStrategy_default implements tx_ptlist_iPagerStrategy {
+
 	
+	
+	/**
+	 * @var array  Configuration array for pager strategy
+	 */
 	protected $conf;
 	
+	/**
+	 * @var int    Holds current page number
+	 */
 	protected $currentPageNumber;
 	
+	/**
+	 * @var int    Holds amount of pages
+	 */
 	protected $amountPages;
+	
+	
 	
 	/***************************************************************************
 	 * Methods implementing the "tx_ptlist_iPagerStrategy" interface
 	 **************************************************************************/
 	
+	
+	
+	/**
+	 * Sets configuration of pager strategy
+	 * 
+	 * @param  array   $conf       Configuration of pager strategy
+	 * @return void 
+	 * @author      Fabrizio Branca <branca@punkt.de>
+	 * @since       2009-01-27
+	 */
 	public function setConfiguration(array $conf) {
 		$this->conf = $conf;
 		
@@ -55,14 +94,44 @@ class tx_ptlist_pagerStrategy_default implements tx_ptlist_iPagerStrategy {
 		
 	}
 	
+	
+	
+	/**
+	 * Sets the current page number
+	 * 
+	 * @param  int  $currentPageNumber  Current Page number
+	 * @return void
+     * @author      Fabrizio Branca <branca@punkt.de>
+     * @since       2009-01-27
+	 */
 	public function setCurrentPageNumber($currentPageNumber) {
 		$this->currentPageNumber = $currentPageNumber;
 	}
 	
+	
+	
+	/**
+	 * Sets the total amount of pages
+	 * 
+	 * @param  int $amountPages    Amount of pages
+	 * @return void
+     * @author      Fabrizio Branca <branca@punkt.de>
+     * @since       2009-01-27
+	 */
 	public function setAmountPages($amountPages) {
 		$this->amountPages = $amountPages;	
 	}
 	
+	
+	
+	/**
+	 * Returns an array of links for paging
+	 * 
+	 * @param  void
+	 * @return void
+     * @author      Fabrizio Branca <branca@punkt.de>
+     * @since       2009-01-27
+	 */
 	public function getLinks() {
 		$links = array();
 

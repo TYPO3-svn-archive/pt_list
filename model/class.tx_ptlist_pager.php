@@ -22,9 +22,36 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+
+
+/**
+ * Class definition file for pt_list pager class
+ * $Id$
+ * 
+ * @author      Fabrizio Branca <branca@punkt.de>
+ * @since       2009-01-27 
+ */
+
+
+
+/**
+ * Inclusion of external ressources
+ */
 require_once t3lib_extMgm::extPath('pt_tools').'res/abstract/class.tx_pttools_iTemplateable.php';
 
+
+
+/**
+ * Pager class for pt_list
+ * 
+ * @package     TYPO3
+ * @subpackage  pt_list
+ * @author      Fabrizio Branca <branca@punkt.de>
+ * @since       2009-01-27
+ */
 class tx_ptlist_pager implements tx_pttools_iTemplateable {
+	
+	
 	
 	/**
 	 * @var int	current page number
@@ -42,7 +69,7 @@ class tx_ptlist_pager implements tx_pttools_iTemplateable {
 	protected $maxRows;
 	
 	/**
-	 * @var int	resulting amount of pages (for the given itemsPerPage and total count of items in the collection
+	 * @var int	resulting amount of pages (for the given itemsPerPage and total count of items in the collection)
 	 */
 	protected $amountPages;
 	
@@ -62,6 +89,15 @@ class tx_ptlist_pager implements tx_pttools_iTemplateable {
 	protected $pagerStrategy;
 	
 	
+	
+	/**
+	 * Sets amount of items per page
+	 * 
+	 * @param  int     $itemsPerPage   Number of items to be displayed on page
+	 * @return void
+	 * @author Fabrizio Branca <branca@punkt.de>
+	 * @since  2009-01-20
+	 */
 	public function set_itemsPerPage($itemsPerPage) {
 		$this->itemsPerPage = $itemsPerPage;
 		
@@ -71,14 +107,45 @@ class tx_ptlist_pager implements tx_pttools_iTemplateable {
 		}
 	}
 
+	
+	
+	/**
+	 * Sets the maximum number of rows
+	 * 
+	 * @param  int     $maxRows    Maximum number of rows
+	 * @return void
+     * @author Fabrizio Branca <branca@punkt.de>
+     * @since  2009-01-27
+	 */
 	public function set_maxRows($maxRows) {
 		$this->maxRows = $maxRows;
 	}
 	
+	
+	
+	/**
+	 * Sets the pager strategy used to generate links etc.
+	 * 
+	 * @param  tx_ptlist_iPagerStrategy $pagerStrategy  Pager strategy object
+	 * @return void
+     * @author Fabrizio Branca <branca@punkt.de>
+     * @since  2009-01-27
+	 */
 	public function set_pagerStrategy($pagerStrategy) {
 		$this->pagerStrategy = $pagerStrategy;
 	}
 
+	
+	
+	/**
+	 * Calculates the amount of pages by total amount of items and number of items per page
+	 * 
+	 * @param  int     $totalItemCount     Total number of items
+	 * @param  int     $itemsPerPage       Number of items per page
+	 * @return int                         Number of pages
+     * @author      Fabrizio Branca <branca@punkt.de>
+     * @since       2009-01-27
+	 */
 	public function calculateAmountPages($totalItemCount, $itemsPerPage) {
 		return empty($itemsPerPage) ? 1 : ceil($totalItemCount / $itemsPerPage);
 	}
@@ -117,6 +184,16 @@ class tx_ptlist_pager implements tx_pttools_iTemplateable {
 		$this->currentPageNumber = (int)$currentPageNumber;
 	}
 	
+	
+	
+	/**
+	 * Returns the total amount of items 
+	 * 
+	 * @param  void
+	 * @return int     Total amount of items
+     * @author Fabrizio Branca <branca@punkt.de>
+     * @since  2009-01-27
+	 */
 	public function get_totalItemCount() {
 		return $this->totalItemCount;
 	}
@@ -136,6 +213,16 @@ class tx_ptlist_pager implements tx_pttools_iTemplateable {
     	return $this->getItemCollection($offSetandRowCount['rowcount'], $offSetandRowCount['offset']);
 	}
 
+	
+	
+	/**
+	 * Returns current offset and rowcount as an array ($result['offset'] and $result['rowcount'])
+	 * 
+	 * @param  void
+	 * @return array   Current offset and rowcount
+     * @author Fabrizio Branca <branca@punkt.de>
+     * @since  2009-01-27
+	 */
 	public function getCurrentOffSetAndRowcount() {
 		$offSetandRowCount = array();
 		if (!empty($this->itemsPerPage)) {
@@ -156,13 +243,25 @@ class tx_ptlist_pager implements tx_pttools_iTemplateable {
 	 * @param	int	offset
 	 * @param	int	rowcount
 	 * @return	Traversable
+     * @author  Fabrizio Branca <branca@punkt.de>
+     * @since   2009-01-27
 	 */
 	public function getItemCollection($rowcount, $offset=NULL) {
 		tx_pttools_assert::isInstanceOf($this->itemCollection, 'tx_pttools_iPageable', array('message' => 'No valid "itemCollection" found!'));
 		return $this->itemCollection->getItems(self::getLimitFromRowcountAndOffset($rowcount, $offset));
 	}
 
+	
 
+	/**
+	 * Returns a LIMIT string for SQL clauses
+	 * 
+	 * @param  int     $rowcount   Number of records to be displayed
+	 * @param  int     $offset     Offset to display records from
+	 * @return string              SQL LIMIT string
+     * @author Fabrizio Branca <branca@punkt.de>
+     * @since  2009-01-27
+	 */
 	public static function getLimitFromRowcountAndOffset($rowcount, $offset) {
 		$limit = '';
 		if (!empty($offset)) {
@@ -176,8 +275,9 @@ class tx_ptlist_pager implements tx_pttools_iTemplateable {
 	}
 
 
+	
 	/**
-	 * Get aggregates data
+	 * Get aggregated data
 	 *
 	 * @param	void
 	 * @return	array	array(<aggregateDataDescriptionIdentifier> => <aggregateValue>)
@@ -189,6 +289,7 @@ class tx_ptlist_pager implements tx_pttools_iTemplateable {
 		$offSetandRowCount = $this->getCurrentOffSetAndRowcount();
 		return $this->itemCollection->getAllAggregates(self::getLimitFromRowcountAndOffset($offSetandRowCount['rowcount'], $offSetandRowCount['offset']));
 	}
+	
 	
 	
 	/***************************************************************************
