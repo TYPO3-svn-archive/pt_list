@@ -11,17 +11,18 @@ RMV: removed Item
 RFT: refactoring / code cleanup
 ********************************************************************************
 
-v0.0.1dev: as of 08.05.2009
+v0.0.1dev: as of 12.05.2009
 ----------
 
-- TODO: check and extend changes for default XSS prevention
+- TODO (mk): check and extend changes for default XSS prevention
+  - IMPORTANT: make default XSS prevention configurable for a complete list (e.g. pt_list usage for CSV and PDF)
+    (Alternative, but not-so-easy-to-implemt: make default XSS prevention configurable for each dataDescriptionIdentifier via Typoscript) 
+  - IMPORTANT: check for further default prevention actions
   - check new default XSS prevention behaviour of pt_mvc for unwanted effects, for 
     + breadcrumbs, 
     - bookmarks 
     - and other list features using tx_ptmvc_view::addItem()
   - check already implemented adaptions of tx_ptlist_controller_list (is this the right place?)
-  - check for further default prevention actions
-  - make default XSS prevention configurable for each dataDescriptionIdentifier via Typoscript
 
 + (fb) RFT: minor code improments
 + (fb) ADD: demo typoscript
