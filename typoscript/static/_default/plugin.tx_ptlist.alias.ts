@@ -19,7 +19,7 @@ plugin.tx_ptlist.alias {
 	pagerStrategy_default = EXT:pt_list/model/pagerStrategy/class.tx_ptlist_pagerStrategy_default.php:tx_ptlist_pagerStrategy_default
 
     # renderer_*: renderer user functions
-	renderer_cObj = EXT:pt_list/model/class.tx_ptlist_renderer.php:tx_ptlist_renderer->cObj
+	renderer_cObject = EXT:pt_list/model/class.tx_ptlist_renderer.php:tx_ptlist_renderer->cObject
 	renderer_editIcon = EXT:pt_list/model/class.tx_ptlist_renderer.php:tx_ptlist_renderer->editIcon
 	renderer_regexReplace = EXT:pt_list/model/class.tx_ptlist_renderer.php:tx_ptlist_renderer->regexReplace
 	renderer_fetchExternalData = EXT:pt_list/model/class.tx_ptlist_renderer.php:tx_ptlist_renderer->fetchExternalData

@@ -533,11 +533,11 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 		$view = $this->getView('list_extjsList_headerdata');
 		$view->addItem($element, 'element');
 		$view->addItem($this->conf['itemsPerPage'], 'itemsPerPage');
-		$view->addItem($this->currentListObject->getAllColumnDescriptions()->getMarkerArray(), 'columns');
+		$view->addItem($this->currentListObject->getAllColumnDescriptions()->getMarkerArray(), 'columns', false);
 		$view->addItem($this->currentListObject->getListId(), 'listIdentifier');
 		$view->addItem($this->cObj->data['uid'], 'tt_content_uid');
-		$view->addItem($this->currentListObject->getAllFilters(true, 'defaultFilterbox')->getMarkerArray(), 'defaultFilterbox');
-		$view->addItem($this->currentListObject->getAllFilters(true, 'topFilterbox')->getMarkerArray(), 'topFilterbox');
+		$view->addItem($this->currentListObject->getAllFilters(true, 'defaultFilterbox')->getMarkerArray(), 'defaultFilterbox', false);
+		$view->addItem($this->currentListObject->getAllFilters(true, 'topFilterbox')->getMarkerArray(), 'topFilterbox', false);
 
 		// setup and include own headerData
 		$GLOBALS['TSFE']->additionalHeaderData['tx_ptlist_grid_'.$this->currentListObject->get_listId()] = $view->render();

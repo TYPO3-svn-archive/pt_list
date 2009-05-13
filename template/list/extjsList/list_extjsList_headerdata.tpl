@@ -10,10 +10,10 @@
 
 {{* Include Ext Js (do not change the order of following lines!) *}}
 
-<link rel="stylesheet" type="text/css" href="typo3conf/ext/pt_list/lib/ext-2.2/resources/css/ext-all.css" />
-<script type="text/javascript" src="typo3conf/ext/pt_list/lib/ext-2.2/adapter/ext/ext-base.js"></script>
-<script type="text/javascript" src="typo3conf/ext/pt_list/lib/ext-2.2/ext-all-debug.js"></script>
-<script type="text/javascript" src="typo3conf/ext/pt_list/lib/ext-2.2/build/locale/ext-lang-de.js"></script>
+<link rel="stylesheet" type="text/css" href="fileadmin/lib/ext-2.2.1/resources/css/ext-all.css" />
+<script type="text/javascript" src="fileadmin/lib/ext-2.2.1/adapter/ext/ext-base.js"></script>
+<script type="text/javascript" src="fileadmin/lib/ext-2.2.1/ext-all-debug.js"></script>
+<script type="text/javascript" src="fileadmin/lib/ext-2.2.1/build/locale/ext-lang-de.js"></script>
 
 <script type="text/javascript">
 /*<![CDATA[*/

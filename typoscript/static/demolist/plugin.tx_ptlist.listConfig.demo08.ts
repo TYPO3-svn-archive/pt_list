@@ -1,5 +1,5 @@
 ################################################################################
-# Demo 06
+# Demo 04
 #
 # Very simple list with data from the "static_countries" table joined with the
 # "static_territories" table.
@@ -9,22 +9,7 @@
 # @since	2009-04-15
 ################################################################################
 
-page {
-
-	headerData.20 >
-
-	headerData.20 = TEXT
-	headerData.20 {
-		typolink {
-			parameter = 29
-			returnLast = url
-		}
-		wrap = <link rel="alternate" type="application/rss+xml" title="RSS" href="|" />
-	}
-}
-
-
-plugin.tx_ptlist.listConfig.demo06 {
+plugin.tx_ptlist.listConfig.demo08 {
 
 	############################################################################
 	# General settings
@@ -236,11 +221,55 @@ plugin.tx_ptlist.listConfig.demo06 {
 	}
 }
 
-plugin.tx_ptlist_listConfig_demo06._CSS_DEFAULT_STYLE (
-	ul.csc-menu-1 {
+plugin.tx_ptlist_listConfig_demo04._CSS_DEFAULT_STYLE (
+	li.tx-ptlist-controller-filter-firstLetter .tx-ptlist-filterbox-userinterface {
+		margin: 0 auto;
+		display: table;
+	}
+	
+	ul.firstletterlist {
 		padding: 0;
-		margin: 0;
+	}
+	
+	.firstletterlist li a {
+		text-decoration: none;
+		color: black;
+		display: block;
+		padding: 2px 5px;
+	}
+	
+	.firstletterlist li {
 		list-style-type: none;
+		float: left;
+		background-color: #FFF;
+		border-top: 1px solid #AAA;
+		border-right: 1px solid #AAA;
+		border-left: 1px solid #AAA;
+		margin-right: 2px;
+		-moz-border-radius-bottomleft:0;
+		-moz-border-radius-bottomright:0;
+		-moz-border-radius-topleft:5px;
+		-moz-border-radius-topright:5px; 
+	}
+	
+	.firstletterlist li:hover,
+	.firstletterlist li.active {
+		background-color: #EBF3FD;
+		border-color: #99BBE8;
+	}
+	
+	.topFilterbox {
+		margin-bottom: 0px;
+	}
+
+	.topFilterbox li.tx-ptlist-filter, .topFilterbox li.filteractive {
+		padding: 0 0 0 5px;
+		margin-bottom: 0px;
+		border: none;
+	}
+	
+	.tx-ptlist-controller-filter-firstLetter h4.filterbox-label {
+		display: none;
 	}
 )
 
