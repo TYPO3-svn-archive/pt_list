@@ -26,7 +26,7 @@
                 <!--{assign var="col" value=$smarty.foreach.headers.iteration-1}-->
                 <setx x="<!--{$__config.column_positions_scaled[$col]}-->" />
                 <setfillcolor r="220" g="220" b="220"/>
-                <cell border="1" h="5" fill="1" w="<!--{$__config.column_widths_scaled[$col]}-->" align="<!--{$__config.column_alignments[$col]}-->"><!--{$columnArray.label}--></cell>
+                <cell border="1" h="5" fill="1" w="<!--{$__config.column_widths_scaled[$col]}-->" align="<!--{$__config.column_alignments[$col]}-->"><!--{$columnArray.label|ll:0}--></cell>
                 <setfillcolor r="255" g="255" b="255" />
             <!--{/foreach}-->
             <sety y="+8" />
