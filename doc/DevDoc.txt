@@ -10,6 +10,8 @@ ADD: added feature
 RMV: removed Item
 RFT: refactoring / code cleanup
 ********************************************************************************
+v0.0.1dev: as of 14.05.2009
++ (uk) FIX: fixed bug PDF template label variable add |ll:0 to allow label set in language files
 
 v0.0.1dev: as of 12.05.2009
 ----------
