@@ -60,6 +60,27 @@ class tx_ptlist_view_list_itemList_csv extends tx_ptlist_view {
 	
 	
 	/**
+     * Overwriting the addItem method to make html filtering non-default for CSV contents
+     * 
+     * Settings of filterHtml are overwritten by TS!
+     * 
+     * @param   mixed   $itemObj    Object to add to the view
+     * @param   mixed   $id         ID of object to be added to the view
+     * @param   bool    $filterHtml Should contents of added object be html filtered?
+     * @return  void
+     * @author  Michael Knoll <knoll@punkt.de>
+     * @since   2009-05-18
+     */
+    public function addItem($itemObj, $id = 0, $filterHtml = false) {
+        
+    	/* Call parent method with new filterHtml settings */
+        parent::addItem($itemObj, $id, $filterHtml);
+        
+    }
+    
+    
+	
+	/**
 	 * Helper method to generate file name from TS config
 	 * 
 	 * @return  string		File name of CSV File
@@ -124,18 +145,7 @@ class tx_ptlist_view_list_itemList_csv extends tx_ptlist_view {
                                 header('Content-Type: application/octet-stream');
                         header('Content-disposition: attachment; filename="'.$filename.'"');
                         break;
-                 // TODO add possibility to save on server or return as string!
-//                case 'F':
-//                        //Save to local file
-//                        $f=fopen($name,'wb');
-//                        if(!$f)
-//                                $this->Error('Unable to create output file: '.$name);
-//                        fwrite($f,$this->buffer,strlen($this->buffer));
-//                        fclose($f);
-//                        break;
-//                case 'S':
-//                        //Return as a string
-//                        return $this->buffer;
+
                 default:
                         throw new tx_pttools_exceptionInternal('No valid download handling set for CSV file!');
         }

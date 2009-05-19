@@ -33,6 +33,8 @@ require_once t3lib_extMgm::extPath('pt_mvc').'classes/class.tx_ptmvc_view.php';
  */
 class tx_ptlist_view extends tx_ptmvc_view {
 	
+	
+	
 	/**
 	 * Class constructor
 	 *
@@ -78,6 +80,8 @@ class tx_ptlist_view extends tx_ptmvc_view {
         $output = str_replace(array_keys($replace), array_values($replace), $output);
 		return $output;
 	}
+
+	
 	
 }
 

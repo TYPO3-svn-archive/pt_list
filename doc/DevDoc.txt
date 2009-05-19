@@ -13,25 +13,25 @@ RFT: refactoring / code cleanup
 
 - TODO: check and extend changes for default XSS prevention
   - check already implemented adaptions of rk in tx_ptlist_controller_list (see changelog below) - is this the right place?
-  - IMPORTANT: make default XSS prevention configurable for a complete list (e.g. pt_list usage for CSV and PDF)
+  + IMPORTANT: make default XSS prevention configurable for a complete list (e.g. pt_list usage for CSV and PDF)
     (Alternative, but not-so-easy-to-implemt: make default XSS prevention configurable for each dataDescriptionIdentifier via Typoscript) 
+    
   - IMPORTANT: check for further default prevention actions
   - check new default XSS prevention behaviour of pt_mvc for unwanted effects, for 
     + breadcrumbs, 
     - bookmarks 
     - and other list features using tx_ptmvc_view::addItem()
   
-  
-   
-v0.0.1dev: as of 14.05.2009
-----------
 
++ (mk) ADD: PDF and CSV list now does NOT filter HTML by default. This setting is overwritten by TS plugin.tx_ptlist.view.filterHtml
++ (mk) ADD: Added generic pagers and some documentation on how to use them
++ (mk) FIX: tx_pteublis_controller_sortiment::getContents XSS prevention is now configurable via: plugin.tx_ptlist.view.filterHtml
 + (uk) FIX: fixed bug PDF template label variable add |ll:0 to allow label set in language files
 + (fb) FIX: fixed bug with breadcrumb output of range filter
 + (fb) ADD: added some new icons
 + (fb) ADD: added some typoscript examples (not finished yet)
 + (fb) RFT: changed mail address
-+ (fb) RFT: minor code improments
++ (fb) RFT: minor code improvements
 + (fb) ADD: demo typoscript
 + (fb) ADD: added hint in the manual concerning the bug if external databases use the same credential as the typo3 database
 + (fb) RFT: filter breadcrumb, added html filtering

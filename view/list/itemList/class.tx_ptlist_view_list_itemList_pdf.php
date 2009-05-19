@@ -134,10 +134,31 @@ class tx_ptlist_view_list_itemList_pdf extends tx_ptlist_view {
             // ->set_languageKey($conf['languageKey'])
             ->addMarkers($this->itemsArr)
             ->createXml()
-           ->renderPdf($this->pdfFilename, $this->downloadType);
+            ->renderPdf($this->pdfFilename, $this->downloadType);
        // stop execution to avoid some content to be rendered after this output by TYPO3
        exit();
         
+    }
+    
+        
+    
+    /**
+     * Overwriting the addItem method to make html filtering non-default for PDF contents
+     * 
+     * Settings for filterHtml can be overwritten by TS!
+     * 
+     * @param   mixed   $itemObj    Object to add to the view
+     * @param   mixed   $id         ID of object to be added to the view
+     * @param   bool    $filterHtml Should contents of added object be html filtered?
+     * @return  void
+     * @author  Michael Knoll <knoll@punkt.de>
+     * @since   2009-05-18
+     */
+    public function addItem($itemObj, $id = 0, $filterHtml = false) {
+    	
+        /* Call parent method with new filterHtml settings */
+    	parent::addItem($itemObj, $id, $filterHtml);
+    	
     }
     
     

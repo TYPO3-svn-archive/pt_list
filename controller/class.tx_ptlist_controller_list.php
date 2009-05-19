@@ -872,7 +872,25 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 					if (!isset($itemObj[$dataDescriptionIdentifier])) {
 						throw new tx_pttools_exception(sprintf('Property "%s" not found (via ArrayAccess)', $dataDescriptionIdentifier));
 					}
-					$values[$dataDescriptionIdentifier] = tx_pttools_div::htmlOutput($itemObj[$dataDescriptionIdentifier]); // added HTML filtering by default (rk 09.05.2009) - TODO: check implementation at this place and make HTML filtering configurable for each dataDescriptionIdentifier via Typoscript
+					
+					/**
+					 * XSS prevention: Use plugin.tx_ptlist.view.csv_rendering.filterHtml = 1 in your TS Setup to 
+					 * filter all values
+					 */
+					$tsHtmlFiltering = tx_pttools_div::getTS('plugin.tx_ptlist.view.filterHtml');
+                    $filterHtml = true;     // filter HTML by default
+					if ( $tsHtmlFiltering == 0 ) {
+			            $filterHtml = false;
+			        }
+			        
+			        if ($filterHtml) {
+						// Here only raw data is filtered, BEFORE data is rendered by TS setup
+						$values[$dataDescriptionIdentifier] = tx_pttools_div::htmlOutput($itemObj[$dataDescriptionIdentifier]); // added HTML filtering by default (rk 09.05.2009) - TODO: check implementation at this place and make HTML filtering configurable for each dataDescriptionIdentifier via Typoscript
+			        } else {
+			        	// Filtering is deactivated by TS
+			        	$values[$dataDescriptionIdentifier] = $itemObj[$dataDescriptionIdentifier];
+			        }
+			        
 				}
 				$listItem[$columnDescription->get_columnIdentifier()] = $columnDescription->renderFieldContent($values);
 			}
