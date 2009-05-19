@@ -10,13 +10,9 @@ ADD: added feature
 RMV: removed Item
 RFT: refactoring / code cleanup
 ********************************************************************************
-v0.0.1dev: as of 14.05.2009
-+ (uk) FIX: fixed bug PDF template label variable add |ll:0 to allow label set in language files
 
-v0.0.1dev: as of 12.05.2009
-----------
-
-- TODO (mk): check and extend changes for default XSS prevention
+- TODO: check and extend changes for default XSS prevention
+  - check already implemented adaptions of rk in tx_ptlist_controller_list (see changelog below) - is this the right place?
   - IMPORTANT: make default XSS prevention configurable for a complete list (e.g. pt_list usage for CSV and PDF)
     (Alternative, but not-so-easy-to-implemt: make default XSS prevention configurable for each dataDescriptionIdentifier via Typoscript) 
   - IMPORTANT: check for further default prevention actions
@@ -24,8 +20,13 @@ v0.0.1dev: as of 12.05.2009
     + breadcrumbs, 
     - bookmarks 
     - and other list features using tx_ptmvc_view::addItem()
-  - check already implemented adaptions of tx_ptlist_controller_list (is this the right place?)
+  
+  
+   
+v0.0.1dev: as of 14.05.2009
+----------
 
++ (uk) FIX: fixed bug PDF template label variable add |ll:0 to allow label set in language files
 + (fb) FIX: fixed bug with breadcrumb output of range filter
 + (fb) ADD: added some new icons
 + (fb) ADD: added some typoscript examples (not finished yet)
