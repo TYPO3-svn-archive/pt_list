@@ -138,8 +138,6 @@ class tx_ptlist_pagerStrategy_reverse implements tx_ptlist_iPagerStrategy {
 	public function getLinks() {
 		$links = array();
 
-		print_r(t3lib_div::trimExplode(',', $this->conf['elements']));
-		
 		foreach (t3lib_div::trimExplode(',', $this->conf['elements']) as $element) {
 			
 			switch ($element) {
