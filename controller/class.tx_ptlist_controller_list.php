@@ -22,6 +22,21 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+
+
+/**
+ * Class definition for pt_list controller.
+ * 
+ * @version   $Id$
+ * @author      Fabrizio Branca <mail@fabrizio-branca.de>
+ * @since       2009-01-21
+ */
+
+
+
+/**
+ * Inclusion of external ressources
+ */
 require_once t3lib_extMgm::extPath('pt_tools').'res/objects/class.tx_pttools_exception.php';
 require_once t3lib_extMgm::extPath('pt_tools').'res/staticlib/class.tx_pttools_assert.php';
 require_once t3lib_extMgm::extPath('pt_tools').'res/staticlib/class.tx_pttools_debug.php';
@@ -44,6 +59,7 @@ require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_bookmarkCol
 require_once t3lib_extMgm::extPath('pt_mvc').'classes/class.tx_ptmvc_controllerFrontend.php';
 
 
+
 /**
  * Controller class for the "list" controller
  *
@@ -53,9 +69,10 @@ require_once t3lib_extMgm::extPath('pt_mvc').'classes/class.tx_ptmvc_controllerF
  * - pager
  * - bookmarks
  *
- * @version 	$Id$
  * @author		Fabrizio Branca <mail@fabrizio-branca.de>
  * @since		2009-01-21
+ * @package     Typo3
+ * @subpackage  pt_list
  */
 class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 
@@ -116,7 +133,10 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 	 *			'listObject' => new tx_ptlist_bookmarklist(), // extends tx_ptlist_list
  	 * 		)
      * );
-	 * @param array  localConfiguration
+	 * @param  array  localConfiguration
+	 * @return void
+	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
+	 * @since 2009-01-23
 	 */
 	public function __construct(array $localConfiguration=array()) {
 	    
@@ -127,6 +147,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 		}
 
 		parent::__construct();
+		
 	}
 
 

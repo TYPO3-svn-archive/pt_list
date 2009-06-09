@@ -26,7 +26,7 @@
 /**
  * Class definition file for a default pager strategy implementation
  * 
- * $Id$
+ * $Id: class.tx_ptlist_pagerStrategy_default.php 20242 2009-05-12 22:21:13Z fabriziobranca $
  * 
  * @author Fabrizio Branca <mail@fabrizio-branca.de>
  * @since 2009-01-27
@@ -42,13 +42,14 @@ require_once t3lib_extMgm::extPath('pt_list').'model/interfaces/class.tx_ptlist_
 
 
 /**
- * Class implementing a default pager strategy
+ * Class implementing a pager strategy that shows prev, next, last etc. in reverse order
+ * TODO if labels of pager buttons would be configurable via TS, this class would be obsolete!
  * 
- * @version		$Id$
+ * @version		$Id: class.tx_ptlist_pagerStrategy_default.php 20242 2009-05-12 22:21:13Z fabriziobranca $
  * @author		Fabrizio Branca <mail@fabrizio-branca.de>
  * @since		2009-01-27
  */
-class tx_ptlist_pagerStrategy_default implements tx_ptlist_iPagerStrategy {
+class tx_ptlist_pagerStrategy_reverse implements tx_ptlist_iPagerStrategy {
 
 	
 	
@@ -125,11 +126,13 @@ class tx_ptlist_pagerStrategy_default implements tx_ptlist_iPagerStrategy {
 	
 	
 	/**
-	 * Returns an array of links for paging
+	 * Returns an array of links for paging with reverse fields (next->prev, last->first)
+	 * 
+	 * TODO If this was configurable via TS, the class would be obsolete!
 	 * 
 	 * @param  void
 	 * @return void
-     * @author      Fabrizio Branca <mail@fabrizio-branca.de>
+     * @author      Fabrizio Branca <mail@fabrizio-branca.de>, Michael Knoll <knoll@punkt.de>
      * @since       2009-01-27
 	 */
 	public function getLinks() {
@@ -169,7 +172,7 @@ class tx_ptlist_pagerStrategy_default implements tx_ptlist_iPagerStrategy {
 		            	'pageNumber' => $prevpage,
 		            	'label' => 'EXT:pt_list/locallang.xml:pager_prev',
 						'current' => ($prevpage == $this->currentPageNumber),
-		            	'type' => 'prev',
+		            	'type' => 'next',
 		            );
 				} break;
 				
@@ -179,7 +182,7 @@ class tx_ptlist_pagerStrategy_default implements tx_ptlist_iPagerStrategy {
 	            		'pageNumber' => $nextpage,
 	            		'label' => 'EXT:pt_list/locallang.xml:pager_next',
 						'current' => ($nextpage == $this->currentPageNumber),
-	            		'type' => 'next',
+	            		'type' => 'prev',
 	            	);
 				} break; 
 				
@@ -189,7 +192,7 @@ class tx_ptlist_pagerStrategy_default implements tx_ptlist_iPagerStrategy {
 		            	'pageNumber' => $firstpage,
 		            	'label' => 'EXT:pt_list/locallang.xml:pager_first',
 						'current' => ($firstpage == $this->currentPageNumber),
-		            	'type' => 'first',
+		            	'type' => 'last',
 		            );
 				} break;
 				
@@ -199,7 +202,7 @@ class tx_ptlist_pagerStrategy_default implements tx_ptlist_iPagerStrategy {
 		            	'pageNumber' => $lastpage,
 		            	'label' => 'EXT:pt_list/locallang.xml:pager_last',
 						'current' => ($lastpage == $this->currentPageNumber),
-		            	'type' => 'last',
+		            	'type' => 'first',
 		            );
 					
 				} break;
