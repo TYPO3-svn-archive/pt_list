@@ -482,9 +482,12 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
 		if (isset($dataArray['hasUserInterface'])) {
 			$this->hasUserInterface = (bool) $dataArray['hasUserInterface'];
 		}
-		if (isset($dataArray['label'])) {
-			$this->label = $dataArray['label'];
-		}
+	    if (isset($dataArray['label'])) {
+            $this->label = $GLOBALS['TSFE']->cObj->stdWrap($dataArray['label'], $dataArray['label.']);
+        }
+		#if (isset($dataArray['label'])) {
+		#	$this->label = $dataArray['label'];
+		#}
 		if (isset($dataArray['dependsOn'])) {
 			$this->dependsOn = $dataArray['dependsOn'];
 		}
