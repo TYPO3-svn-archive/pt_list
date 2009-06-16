@@ -19,7 +19,7 @@
 	<input type="text" name="{$prefixId}[value][to]" class="date-pick dp-applied">
 
 	<br />
-	<input type="submit" />
+	<input type="submit" value="{$filter.submitValue|ll:0}" />
 
 </form>
 {/if}

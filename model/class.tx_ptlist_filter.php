@@ -90,6 +90,11 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
 	protected $label;
 	
 	/**
+	 * @var string
+	 */
+	protected $submitLabel;
+	
+	/**
 	 * @var bool
 	 */
 	protected $isActive = false;
@@ -482,12 +487,12 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
 		if (isset($dataArray['hasUserInterface'])) {
 			$this->hasUserInterface = (bool) $dataArray['hasUserInterface'];
 		}
-	    if (isset($dataArray['label'])) {
-            $this->label = $GLOBALS['TSFE']->cObj->stdWrap($dataArray['label'], $dataArray['label.']);
-        }
-		#if (isset($dataArray['label'])) {
-		#	$this->label = $dataArray['label'];
-		#}
+		if (isset($dataArray['label'])) {
+			$this->label = $dataArray['label'];
+		}
+		if (isset($dataArray['submitLabel'])) {
+			$this->submitLabel = $dataArray['submitLabel'];
+		}
 		if (isset($dataArray['dependsOn'])) {
 			$this->dependsOn = $dataArray['dependsOn'];
 		}
@@ -562,6 +567,7 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
 		$markerArray = array(
 			'name' => get_class($this),
 			'label' => $this->label,
+		    'submitLabel' => $this->submitLabel,
 			'isActive' => $this->get_isActive(),
 			'filterPrefixId' => $this->prefixId, 
 			'filterId' => $this->filterIdentifier,
@@ -696,6 +702,10 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
         
     public function set_label($label) {
         $this->label = $label;
+    }
+    
+    public function set_submitLabel($submitLabel) {
+    	$this->submitLabel = $submitLabel;
     }
     
     public function get_isActive() {
