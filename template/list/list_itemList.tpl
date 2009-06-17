@@ -29,7 +29,7 @@
 		<td colspan="{$smarty.foreach.columnHeaders.total}">
 		    {* TODO ry21: Replace this by translation handling in pt_mvc! *}
 		    {if $no_elements_found_text != ""}
-		        <center>{$no_elements_found_text}</center>
+		        <center>{$no_elements_found_text|ll:0}</center>
 		    {else}
 			    <center>{"noItemsFound"|ll}</center>
 			{/if}

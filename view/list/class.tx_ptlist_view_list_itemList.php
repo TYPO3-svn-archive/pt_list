@@ -43,10 +43,9 @@ class tx_ptlist_view_list_itemList extends tx_ptlist_view {
 	public function render() {
 
 	    // Set special text for "no items found" if no items in current list
-	    // TODO ry21: Replace this by a translation mechanism in pt_mvc 
+	    // TODO ry21: Replace this by a translation mechanism in pt_mvc
         if (count($this->itemsArr['listItems']) == 0) {
-        	$tsNoElementsFoundText = tx_pttools_div::getTS('plugin.tx_ptlist.noElementsFoundText');
-            $this->addItem($tsNoElementsFoundText, 'no_elements_found_text');
+            $this->addItem($this->_extConf['listConfig.'][$this->controller->get_currentlistId() . '.']['noElementsFoundText'], 'no_elements_found_text');
         }
 		
 		if ($this->typoScriptMode == false) {

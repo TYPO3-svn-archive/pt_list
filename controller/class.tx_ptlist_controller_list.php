@@ -940,6 +940,20 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
         return $this->listPrefix;
     }
 
+    
+    
+    /**
+     * Returns the current list id
+     * 
+     * @param void
+     * @return string list id
+     * @author Michael Knoll <knoll@punkt.de>
+     * @since 2009-06-17
+     */
+    public function get_currentlistId() {
+    	return $this->currentlistId;
+    }
+    
 
 
     /**
