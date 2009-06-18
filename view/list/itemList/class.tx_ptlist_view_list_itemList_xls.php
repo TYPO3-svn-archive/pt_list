@@ -1,11 +1,8 @@
 <?php
-
-
-
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2008 Fabrizio Branca <mail@fabrizio-branca.de>
+*  (c) 2009 Michael Knoll <knoll@punkt.de>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -25,8 +22,6 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-
-
 /**
  * Class definition file for XLS Export from pt_list
  *
@@ -40,7 +35,7 @@
  * Inclusion of external ressources
  */
 require_once t3lib_extMgm::extPath('pt_list').'view/class.tx_ptlist_view.php';
-require_once "Spreadsheet/Excel/Writer.php";        // Remind installing the PEAR package if you want to use XLS export!
+require_once 'Spreadsheet/Excel/Writer.php';        // Remind installing the PEAR package if you want to use XLS export, see http://pear.php.net/package/Spreadsheet_Excel_Writer/download!
 
 
 /**
@@ -121,16 +116,15 @@ class tx_ptlist_view_list_itemList_xls extends tx_ptlist_view {
 		
         // Write Headings for spreadsheet columns
         foreach ($this->getItemById('columns') as $column) {
-                $sheet->write($row,$col,$column['label']); 
+                $sheet->write($row, $col, $column['label']); 
                 $col++;
         }
-        
         $col = 0;
         $row++;
         
         // Write spreadsheet rows
         foreach ($this->getItemById('listItems') as $cells) {
-            $row = tx_pttools_div::iconvArray($row, "UTF-8", "ISO-8859-1");     // TODO make encoding configurable via TS
+            $row = tx_pttools_div::iconvArray($row, 'UTF-8', 'ISO-8859-1');     // TODO: make encoding configurable via TS
             foreach ($cells as $cell) {
             	$sheet->write($row, $col, $cell);
             	$col++;
