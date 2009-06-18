@@ -1,5 +1,5 @@
 <div class="tx-ptlist-pagercontainer" id="ry21">
-    <form name="{$pager_form_name}" action="{url parameter=$currentPage}" method="get"><ul class="tx-ptlist-pager">
+    <form name="{$pager_form_name}" action="{url parameter=$currentPage}" method="post"><ul class="tx-ptlist-pager">
         {foreach from=$hidden_fields_array item=hiddenFieldValue key=hiddenFieldName}
             <input type="hidden" name="{$hiddenFieldName}" value="{$hiddenFieldValue}" />
         {/foreach}
