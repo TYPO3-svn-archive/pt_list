@@ -1,7 +1,7 @@
 <ul class="tx-ptlist-filterbox {$filterboxId}">
 {foreach from=$filterbox item=filter}
 	<li class="tx-ptlist-filter {$filter.filterClass}{if $filter.isActive} filteractive{/if} {$filter.filterId}">
-		<h4 class="filterbox-label">{$filter.label|ll:0}</h4>
+		{$filter.label|ll:0|wrap:'<h4 class="filterbox-label">|</h4>'}
 		<div class="tx-ptlist-filterbox-userinterface">
 			{$filter.userInterface}
 		</div>
