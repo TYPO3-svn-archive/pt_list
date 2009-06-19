@@ -131,7 +131,7 @@ class tx_ptlist_view_list_itemList_xls extends tx_ptlist_view {
             $cells = tx_pttools_div::iconvArray($cells, 'UTF-8', 'ISO-8859-1');     // TODO: make encoding configurable via TS
             foreach ($cells as $cell) {
             	if (is_numeric($cell)) {
-            		$sheet->writeNumber($row, $col, $cell)
+            		$sheet->writeNumber($row, $col, $cell);
             	} else {
             		$sheet->write($row, $col, $cell);
             	}
