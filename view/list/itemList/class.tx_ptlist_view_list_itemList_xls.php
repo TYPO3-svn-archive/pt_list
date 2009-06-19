@@ -32,10 +32,15 @@
 
 
 /**
+ * Inclusion of external PEAR resources: this requires PEAR to be installed on your server (see http://pear.php.net/) and the path to PEAR being part of your include path!
+ */
+require_once 'Spreadsheet/Excel/Writer.php';  // the PEAR package Spreadsheet_Excel_Writer has to be installed if you want to use XLS export, see http://pear.php.net/package/Spreadsheet_Excel_Writer/download!
+
+/**
  * Inclusion of external ressources
  */
 require_once t3lib_extMgm::extPath('pt_list').'view/class.tx_ptlist_view.php';
-require_once 'Spreadsheet/Excel/Writer.php';        // Remind installing the PEAR package if you want to use XLS export, see http://pear.php.net/package/Spreadsheet_Excel_Writer/download!
+
 
 
 /**
@@ -99,10 +104,10 @@ class tx_ptlist_view_list_itemList_xls extends tx_ptlist_view {
 	/**
 	 * Generates XLS file from list items
 	 * 
-	 * @param void
+	 * @param  void
 	 * @return void
-	 * @author Michael Knoll <knoll@punkt.de>
-	 * @since 2009-06-16
+	 * @author Michael Knoll <knoll@punkt.de>, Rainer Kuhn <kuhn@punkt.de>
+	 * @since  2009-06-16
 	 */
 	protected function generateXlsFile() {
 		
@@ -116,11 +121,15 @@ class tx_ptlist_view_list_itemList_xls extends tx_ptlist_view {
 		
         // Write Headings for spreadsheet columns
         foreach ($this->getItemById('columns') as $column) {
+                /*
         		if (is_numeric($column)) {
         			$sheet->writeNumber($row, $col, $column['label']);
         		} else {
                 	$sheet->write($row, $col, iconv('UTF-8', 'ISO-8859-1', $column['label']));
         		} 
+                */
+                $columnLabel = iconv('UTF-8', 'ISO-8859-1', $column['label']);  // TODO: make encoding configurable via TS
+                $sheet->writeString($row, $col, $columnLabel); // (rk) this assures that a numeric value will not be formatted by Excel, e.g. the '9000000000000' converted to '9E+12' for display
                 $col++;
         }
         $col = 0;
@@ -130,11 +139,14 @@ class tx_ptlist_view_list_itemList_xls extends tx_ptlist_view {
         foreach ($this->getItemById('listItems') as $cells) {
             $cells = tx_pttools_div::iconvArray($cells, 'UTF-8', 'ISO-8859-1');     // TODO: make encoding configurable via TS
             foreach ($cells as $cell) {
+                /*
             	if (is_numeric($cell)) {
-            		$sheet->writeNumber($row, $col, $cell);
+            	    $sheet->writeNumber($row, $col, $cell);
             	} else {
             		$sheet->write($row, $col, $cell);
             	}
+                */
+                $sheet->writeString($row, $col, $cell); // (rk) this assures that a numeric value will not be formatted by Excel, e.g. the '9000000000000' converted to '9E+12' for display
             	$col++;
             }
             $col = 0;
