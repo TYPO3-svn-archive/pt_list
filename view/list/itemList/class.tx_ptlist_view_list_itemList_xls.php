@@ -116,7 +116,11 @@ class tx_ptlist_view_list_itemList_xls extends tx_ptlist_view {
 		
         // Write Headings for spreadsheet columns
         foreach ($this->getItemById('columns') as $column) {
-                $sheet->write($row, $col, $column['label']); 
+        		if (is_numeric($column)) {
+        			$sheet->writeNumber($row, $col, $column['label']);
+        		} else {
+                	$sheet->write($row, $col, iconv('UTF-8', 'ISO-8859-1', $column['label']));
+        		} 
                 $col++;
         }
         $col = 0;
@@ -124,9 +128,13 @@ class tx_ptlist_view_list_itemList_xls extends tx_ptlist_view {
         
         // Write spreadsheet rows
         foreach ($this->getItemById('listItems') as $cells) {
-            $row = tx_pttools_div::iconvArray($row, 'UTF-8', 'ISO-8859-1');     // TODO: make encoding configurable via TS
+            $cells = tx_pttools_div::iconvArray($cells, 'UTF-8', 'ISO-8859-1');     // TODO: make encoding configurable via TS
             foreach ($cells as $cell) {
-            	$sheet->write($row, $col, $cell);
+            	if (is_numeric($cell)) {
+            		$sheet->writeNumber($row, $col, $cell)
+            	} else {
+            		$sheet->write($row, $col, $cell);
+            	}
             	$col++;
             }
             $col = 0;
