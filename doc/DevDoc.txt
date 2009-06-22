@@ -23,6 +23,20 @@ RFT: refactoring / code cleanup
     - and other list features using tx_ptmvc_view::addItem()
   
 
++ (fb) ADD: string filter now supports "AND" queries: All search words will be concatenated with "and". The resulting expression
+  must be in at least one of the data descriptions. 
+  To simulate a fulltext search you can create a special datadescription only used by the string search by concatenating all fields you 
+  want to search in:
+  Example: 
+  plugin.tx_ptlist.listConfig.profileSearchResults.data.mySearchField {
+		special = CONCAT(fe_users.tx_myext_firstname, '|', fe_users.tx_myext_lastname)
+  }
+  [...]
+  plugin.tx_ptlist.listConfig.profileSearchResults.filters.defaultFilterbox.10 < plugin.tx_ptlist.alias.filter_string
+  plugin.tx_ptlist.listConfig.profileSearchResults.filters.defaultFilterbox.10 {
+  	dataDescriptionIdentifier = mySearchField
+  	filterIdentifier = search
+  }  
 + (mk) ADD: PDF and CSV list now does NOT filter HTML by default. This setting is overwritten by TS plugin.tx_ptlist.view.filterHtml
 + (mk) ADD: Added generic pagers and some documentation on how to use them
 + (mk) FIX: tx_pteublis_controller_sortiment::getContents XSS prevention is now configurable via: plugin.tx_ptlist.view.filterHtml

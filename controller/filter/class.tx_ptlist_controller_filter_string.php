@@ -66,7 +66,11 @@ class tx_ptlist_controller_filter_string extends tx_ptlist_filter {
         $sqlWhereClauseSnippets = array();
         
         foreach ($this->dataDescriptions as $dataDescription) {  /* @var $dataDescription tx_ptlist_dataDescription */
-            $sqlWhereClauseSnippets[] = sprintf('%s.%s LIKE "%%%s%%"', $dataDescription->get_table(), $dataDescription->get_field(), $GLOBALS['TYPO3_DB']->quoteStr($this->value, $dataDescription->get_table()));
+        	$sqlWhereClauseSnippetsAndParts = array();
+        	foreach (t3lib_div::trimExplode(' ', $this->value, true) as $part) {
+        		$sqlWhereClauseSnippetsAndParts[] = sprintf('%s LIKE "%%%s%%"', $dataDescription->getSelectClause(false), $GLOBALS['TYPO3_DB']->quoteStr($part, $dataDescription->get_table()));
+        	}
+            $sqlWhereClauseSnippets[] = ' ( ' . implode(' AND ', $sqlWhereClauseSnippetsAndParts) . ' ) ';
         }
         $sqlWhereClauseSnippet = implode(' OR ', $sqlWhereClauseSnippets);
         
