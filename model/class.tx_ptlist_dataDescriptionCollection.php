@@ -218,6 +218,12 @@ class tx_ptlist_dataDescriptionCollection extends tx_pttools_objectCollection im
 
 		// fills itself with column objects that will be constructed with the "tx_pttools_iSettableByArray" interface theirself
 		foreach ($dataArray as $tsKey => $dataDescriptionConf) {
+		
+			// apply stdWrap to the properties
+			$dataDescriptionConf['identifier'] = $GLOBALS['TSFE']->cObj->stdWrap($dataDescriptionConf['identifier'], $dataDescriptionConf['identifier.']);
+			$dataDescriptionConf['table'] = $GLOBALS['TSFE']->cObj->stdWrap($dataDescriptionConf['table'], $dataDescriptionConf['table.']);
+			$dataDescriptionConf['field'] = $GLOBALS['TSFE']->cObj->stdWrap($dataDescriptionConf['field'], $dataDescriptionConf['field.']);
+			$dataDescriptionConf['special'] = $GLOBALS['TSFE']->cObj->stdWrap($dataDescriptionConf['special'], $dataDescriptionConf['special.']);
 
 			// if the "identifier" is not set we take the typoscript key (without the dot) as identifier
 			if (empty($dataDescriptionConf['identifier'])) {

@@ -23,6 +23,7 @@ RFT: refactoring / code cleanup
     - and other list features using tx_ptmvc_view::addItem()
   
 
++ (fb) ADD: apply stdWrap to dataDescription configuration's properties
 + (fb) ADD: string filter now supports "AND" queries: All search words will be concatenated with "and". The resulting expression
   must be in at least one of the data descriptions. 
   To simulate a fulltext search you can create a special datadescription only used by the string search by concatenating all fields you 
