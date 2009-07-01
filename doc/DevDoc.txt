@@ -21,8 +21,10 @@ RFT: refactoring / code cleanup
     + breadcrumbs, 
     - bookmarks 
     - and other list features using tx_ptmvc_view::addItem()
+  - Configuration plugin.tx_ptlist.controller.list.itemsPerPage should be configurable for each list id
   
 
++ (mk) ADD: Possibility to structure a list by certain columns
 + (fb) ADD: apply stdWrap to dataDescription configuration's properties
 + (fb) ADD: string filter now supports "AND" queries: All search words will be concatenated with "and". The resulting expression
   must be in at least one of the data descriptions. 

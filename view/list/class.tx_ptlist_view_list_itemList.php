@@ -33,7 +33,7 @@ class tx_ptlist_view_list_itemList extends tx_ptlist_view {
 	/**
 	 * Overwrite the render method to make a tryposcript mode possible
 	 * In typoscript mode no smarty template will be used.
-	 * You decide how the list, rows and single fields will be wrapped be typoscript
+	 * You decide how the list, rows and single fields will be wrapped by typoscript
 	 *
 	 * @param	void
 	 * @return	string	HTML output
