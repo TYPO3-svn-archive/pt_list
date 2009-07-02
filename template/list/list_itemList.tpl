@@ -2,7 +2,7 @@
 
 	<tr>
 		{foreach from=$columns item=column name="columnHeaders"}
-			{if $column.identifier|in_array:$structure_by_cols}
+			{if is_array($structure_by_cols) && $column.identifier|in_array:$structure_by_cols}
 			    {*Don't show column header, if it's a structured column *}
 			{else}
 			    <th class="tx-ptlist-list-header">
@@ -24,7 +24,7 @@
 	{foreach from=$listItems item=row name="rows"}
     	<tr class="{if $smarty.foreach.rows.index % 2}even{else}odd{/if}">
     		{foreach from=$row item=value key=columnDescriptionIdentifier}
-    		    {if $columnDescriptionIdentifier|in_array:$structure_by_cols}
+    		    {if is_array($structure_by_cols) && $columnDescriptionIdentifier|in_array:$structure_by_cols}
     		    {elseif $columnDescriptionIdentifier == '__combined_struct_col__'}
     		        {*Don't show cell, if it's a structured column*}
     		    {elseif $columnDescriptionIdentifier == '__structure_header__'}
