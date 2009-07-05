@@ -144,7 +144,7 @@ class tx_ptlist_columnDescriptionCollection extends tx_pttools_objectCollection 
 	 */
 	public function getSortableColumns() {
 
-		$sortableColumns = new tx_ptlist_columnDescriptionCollection();
+		$sortableColumns = new tx_ptlist_columnDescriptionCollection($this->listId);
 
 		foreach ($this as $column) { /* @var $column tx_ptlist_columnDescription */
 			if ($column->isSortable() == true) {
@@ -209,13 +209,26 @@ class tx_ptlist_columnDescriptionCollection extends tx_pttools_objectCollection 
      * @since   2009-02-02
      */
     public function getSelectClause() {
+    	
+    	$listObject = tx_pttools_registry::getInstance()->get($this->listId.'_listObject'); /* @var $listObject tx_ptlist_list */
 
     	$selectSnippetArray = array();
     	foreach ($this as $column) { /* @var $column tx_ptlist_columnDescription */
 			foreach ($column->get_dataDescriptions() as $dataDescription) { /* @var $dataDescription tx_ptlist_dataDescription */
-				$selectSnippetArray[] = $dataDescription->getSelectClause();
+				if (!isset($selectSnippetArray[$dataDescription->get_identifier()])) {
+					$selectSnippetArray[$dataDescription->get_identifier()] = $dataDescription->getSelectClause();
+				}
+			}
+			
+			$sortingDataDescriptions = t3lib_div::trimExplode(',', $column->get_sortingDataDescription());
+			foreach ($sortingDataDescriptions as $sortingDataDescriptionIdentifier) {
+				if (!isset($selectSnippetArray[$sortingDataDescriptionIdentifier])) {
+					$sortingDataDescription = $listObject->getAllDataDescriptions()->getItemById($sortingDataDescriptionIdentifier);
+					$selectSnippetArray[$sortingDataDescriptionIdentifier] = $sortingDataDescription->getSelectClause();
+				}
 			}
 		}
+		
         $selectSnippet = implode(', ', $selectSnippetArray); /* @var $selectSnippet string */
 
         return $selectSnippet;
@@ -252,7 +265,7 @@ class tx_ptlist_columnDescriptionCollection extends tx_pttools_objectCollection 
 	 * @since	2009-01-22
 	 */
 	public function getAccessibleColumns($groupList) {
-		$accessibleColumns = new tx_ptlist_columnDescriptionCollection();
+		$accessibleColumns = new tx_ptlist_columnDescriptionCollection($this->listId);
 		foreach ($this as $column) { /* @var $column tx_ptlist_columnDescription */
 			if ($column->hasAccess($groupList)) {
 				$accessibleColumns->addItem($column);
@@ -272,7 +285,7 @@ class tx_ptlist_columnDescriptionCollection extends tx_pttools_objectCollection 
 	 * @since	2009-02-10
 	 */
 	public function removeHiddenColumns() {
-		$notHiddenColumns = new tx_ptlist_columnDescriptionCollection();
+		$notHiddenColumns = new tx_ptlist_columnDescriptionCollection($this->listId);
 		foreach ($this as $column) { /* @var $column tx_ptlist_columnDescription */
 			if ($column->get_hidden() == false) {
 				$notHiddenColumns->addItem($column);

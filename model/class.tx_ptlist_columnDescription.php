@@ -263,6 +263,18 @@ class tx_ptlist_columnDescription implements tx_pttools_iTemplateable, tx_pttool
         return true;
         
     }
+    
+    
+    
+    /**
+     * Get sorting data descriptions
+     * 
+     * @param 	void
+     * @return	string 	csl of dataDescriptionIdentifiers
+     */
+    public function get_sortingDataDescription() {
+    	return $this->sortingDataDescription;
+    }
 
 
 
