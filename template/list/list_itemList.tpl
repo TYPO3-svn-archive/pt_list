@@ -2,8 +2,10 @@
 
 	<tr>
 		{foreach from=$columns item=column name="columnHeaders"}
-			{if is_array($structure_by_cols) && $column.identifier|in_array:$structure_by_cols}
-			    {*Don't show column header, if it's a structured column *}
+		    {if is_array($structure_by_cols) }
+			    {if $column.identifier|in_array:$structure_by_cols}
+			        {*Don't show column header, if it's a structured column *}
+			    {/if}
 			{else}
 			    <th class="tx-ptlist-list-header">
     				{if $column.isSortable}
