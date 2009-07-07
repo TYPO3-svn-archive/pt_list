@@ -1,3 +1,4 @@
+{debug}
 <table class="tx-ptlist-list tx-ptlist-list-standard {$listIdentifier}">
 
 	<tr>
@@ -42,16 +43,24 @@
 	{foreach from=$listItems item=row name="rows"}
     	<tr class="{if $smarty.foreach.rows.index % 2}even{else}odd{/if}">
     		{foreach from=$row item=value key=columnDescriptionIdentifier}
-    		    {if is_array($structure_by_cols) && $columnDescriptionIdentifier|in_array:$structure_by_cols}
-    		    {elseif $columnDescriptionIdentifier == '__combined_struct_col__'}
-    		        {*Don't show cell, if it's a structured column*}
-    		    {elseif $columnDescriptionIdentifier == '__structure_header__'}
-    		        {*Generate header for structuring list*}
-    		        <td class="tx-ptlist-structure-header" colspan="{$spanned_cols_by_header}">{$value}</td>
-    		    {else}
-    		        {*Generate "normal" cell*}
-    			    <td class="tx-ptlist-field-{$columnDescriptionIdentifier}">{$value}</td>
-    			{/if}
+    		    {if is_array($structure_by_cols)}
+    		        {if $columnDescriptionIdentifier|in_array:$structure_by_cols}
+        		    {elseif $columnDescriptionIdentifier == '__combined_struct_col__'}
+        		        {*Don't show cell, if it's a structured column*}
+    	   	        {elseif $columnDescriptionIdentifier == '__structure_header__'}
+    		            {*Generate header for structuring list*}
+    		            <td class="tx-ptlist-structure-header" colspan="{$spanned_cols_by_header}">{$value}</td>
+    		        {else}
+    		            {if $row.is_structure_header == '1'}
+    		            {else}
+    		                {*Generate "normal" cell*}
+			                <td class="tx-ptlist-field-{$columnDescriptionIdentifier}">{$value}</td>
+			            {/if}
+    			    {/if}
+    			{else}
+    			    {*Generate "normal" cell*}
+                    <td class="tx-ptlist-field-{$columnDescriptionIdentifier}">{$value}</td>
+                {/if}
     		{/foreach}
     	</tr>
 	{foreachelse}

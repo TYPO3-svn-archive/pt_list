@@ -74,6 +74,12 @@ class tx_ptlist_view_list_itemList_structured extends tx_ptlist_view_list_itemLi
 	
 	
 	/**
+	 * @var string String to concat structured header columns
+	 */
+	protected $concatString;
+	
+	
+	/**
 	 * Constructor for structured list
 	 * 
 	 * @author Michael Knoll <knoll@punkt.de>
@@ -116,11 +122,12 @@ class tx_ptlist_view_list_itemList_structured extends tx_ptlist_view_list_itemLi
         /* Add headers for structured sections */
         $this->addStructureHeaders();
         
-        
         /* Assign additional template vars for structured list */
         $this->addItem('1', 'is_a_structured_list', false);
         $this->addItem(array_merge($this->structureByCols, $this->structureByHeaders), 'structure_by_cols', false);
+        $this->addItem($this->structureByHeaders, 'structure_by_headers', false);
         $this->addItem($this->countVisibleCols(array_keys($this->itemsArr['columns']),array_merge($this->structureByCols, $this->structureByHeaders)), 'spanned_cols_by_header', false);
+        $this->addItem($this->concatString, 'concat_string');
     }
     
     
@@ -158,6 +165,8 @@ class tx_ptlist_view_list_itemList_structured extends tx_ptlist_view_list_itemLi
         tx_pttools_assert::isArray($this->structureByCols, array('message' => 'No structure by cols given for list configuration!'));
         $this->structureByHeaders = t3lib_div::trimExplode(',',$this->_extConf['listConfig.'][$this->listId . '.']['structureByHeaders']);
         tx_pttools_assert::isArray($this->structureByHeaders, array('message' => 'No headers for structure by col given for list configuration!'));
+        $this->concatString = array_key_exists('concatString',$this->_extConf['listConfig.'][$this->listId . '.']) ?
+            $this->_extConf['listConfig.'][$this->listId . '.']['concatString'] : ' - ';
     }
     
     
@@ -175,7 +184,17 @@ class tx_ptlist_view_list_itemList_structured extends tx_ptlist_view_list_itemLi
             $currentStructCols = $row['__combined_struct_col__'];
             if ($currentStructCols != $structCol) {
                 $structCol = $currentStructCols;
-                $newListItems[] = array('__structure_header__' => $this->getCurrentHeader($row, $this->structureByHeaders, ' - '));
+                /**
+                 * Use '_' to concat header here to make sorting of concatenated headers correct
+                 * Add $row in header row display correct headers for structured list
+                 */
+                $newListItems[] = array_merge(
+	                                  array(
+	                                      'is_structure_header' => '1', 
+	                                      '__structure_header__' => $this->getCurrentHeader($row, $this->structureByHeaders, $this->concatString)
+	                                  ), 
+	                                  $row
+                                  );
             }
             $newListItems[] = $row;
         }
