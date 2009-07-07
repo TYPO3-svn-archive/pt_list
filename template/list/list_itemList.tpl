@@ -1,6 +1,4 @@
-{debug}
 <table class="tx-ptlist-list tx-ptlist-list-standard {$listIdentifier}">
-
 	<tr>
 		{foreach from=$columns item=column name="columnHeaders"}
 		    {if is_array($structure_by_cols) } {* Lazy evaluation is not working here!!! *}
