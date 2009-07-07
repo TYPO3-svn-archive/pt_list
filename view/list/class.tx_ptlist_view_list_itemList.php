@@ -113,6 +113,9 @@ class tx_ptlist_view_list_itemList extends tx_ptlist_view {
 	public function beforeRendering() {
 		parent::beforeRendering();
 		$this->addItem('&###LISTPREFIX###[action]=changeSortingOrder&###LISTPREFIX###[column]=%s&###LISTPREFIX###[direction]=%s', 'additionalParamsForColumnHeaders');
+		
+		/* Add empty arrays for non-structured lists (template uses "in_array()") */
+		$this->addItem(array(), 'structure_by_cols', false);
 	}
 
 }
