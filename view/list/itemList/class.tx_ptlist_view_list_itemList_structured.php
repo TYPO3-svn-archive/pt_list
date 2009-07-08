@@ -165,6 +165,7 @@ class tx_ptlist_view_list_itemList_structured extends tx_ptlist_view_list_itemLi
         tx_pttools_assert::isArray($this->structureByCols, array('message' => 'No structure by cols given for list configuration!'));
         $this->structureByHeaders = t3lib_div::trimExplode(',',$this->_extConf['listConfig.'][$this->listId . '.']['structureByHeaders']);
         tx_pttools_assert::isArray($this->structureByHeaders, array('message' => 'No headers for structure by col given for list configuration!'));
+        
         $this->concatString = array_key_exists('concatString',$this->_extConf['listConfig.'][$this->listId . '.']) ?
             $this->_extConf['listConfig.'][$this->listId . '.']['concatString'] : ' - ';
     }

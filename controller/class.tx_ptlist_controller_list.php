@@ -530,7 +530,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 		$view->addItem($this->currentListObject->getAllFilters(true, 'renderInList', true)->getMarkerArray(), 'filterbox', false);
 
 		$view->addItem($this->getAggregateRows(), 'aggregateRows', false);
-
+		
 		// render
 		return $view->render();
 	}
@@ -917,7 +917,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 			}
 			$listItems[] = $listItem;
 		}
-
+		
 		return $listItems;
 	}
 

@@ -113,6 +113,7 @@ class tx_ptlist_view_list_itemList_pdf extends tx_ptlist_view {
         $this->setUpConfigArray();
         $this->setSpecialSmartyDelimiters();
         $this->encodeItemsArrToUtf8();
+        $this->beforeRendering();
 
         // check if the pt_xml2pdf extension is loaded
         if (!t3lib_extMgm::isLoaded('pt_xml2pdf')) {
@@ -245,6 +246,9 @@ class tx_ptlist_view_list_itemList_pdf extends tx_ptlist_view {
             'list_heading_font_size'    => tx_pttools_div::getTS('plugin.tx_ptlist.view.pdf_rendering.listHeadingFontSize'),
         );
         
+        // This can only be assigned AFTER the upper array is initialized!
+        $this->itemsArr['__config']['effective_width'] = $this->getEffPageWidth();
+        
         if (TYPO3_DLOG) t3lib_div::devLog('PDF configuration for pt_list', 'pt_list', 0, array('configuration' => $this->itemsArr['__config']));  
 
     }
@@ -264,7 +268,8 @@ class tx_ptlist_view_list_itemList_pdf extends tx_ptlist_view {
         $this->pdfFilename = tx_pttools_div::getTS('plugin.tx_ptlist.view.pdf_rendering.fileName');
         tx_pttools_assert::isNotEmptyString($this->pdfFilename, array('message' => '$pdfFilename must not be empty but was ' .$this->pdfFilename));
         if (TYPO3_DLOG) t3lib_div::devLog('Filename for PDF List', 'pt_list', 0, array('filename' => $this->pdfFilename));
-        $this->downloadType = tx_pttools_div::getTS('plugin.tx_ptlist.view.pdf_rendering.fileHandlingType');
+        $this->downloadType = tx_pttools_div::getTS('plugin.tx_ptlist.view.pdf_rendering.fileHandlingType') != '' ? 
+            tx_pttools_div::getTS('plugin.tx_ptlist.view.pdf_rendering.fileHandlingType') : 'I';
         tx_pttools_assert::isNotEmptyString($this->downloadType, array('message' => '$downloadType must not be empty but was ' . $this->downloadType));
         if (TYPO3_DLOG) t3lib_div::devLog('Download type for PDF File', 'pt_list', 0, array('downloadtype' => $this->downloadType));
         $this->dbEncoding = tx_pttools_div::getTS('plugin.tx_ptlist.view.pdf_rendering.dbEncoding');
