@@ -211,6 +211,24 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
 	}
 	
 	
+	
+	/**
+	 * Configuration of filter will be passed to template as 'filter'
+	 * 
+	 * @param  string          $viewName   Name of view
+	 * @return tx_ptmvc_view               View for filter user interface
+	 * @author Michael Knoll <knoll@punkt.de>
+	 * @since  2009-07-17
+	 */
+	public function getView($viewName='') {
+		
+		$view = parent::getView($viewName);
+		$view->addItem($this->conf, 'filter');
+		return $view;
+		
+	}
+	
+	
 	/***************************************************************************
 	 * Abstract methods for this abstract class 
 	 **************************************************************************/
@@ -472,7 +490,7 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
 	public function setPropertiesFromArray(array $dataArray) {
 		if (TYPO3_DLOG) t3lib_div::devLog('Setting properties from array in ' . __CLASS__, 'pt_list', 0, $dataArray);
 		
-		// set configuration from outside instead of getting it the usual way vie getConfiguration()
+		// set configuration from outside instead of getting it the usual way via getConfiguration()
 		$this->conf = $dataArray;
 		
 		if (isset($dataArray['listIdentifier'])) {
