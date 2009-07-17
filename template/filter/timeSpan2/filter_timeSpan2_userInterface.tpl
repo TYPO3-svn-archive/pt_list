@@ -1,4 +1,4 @@
-{debug}
+{*debug*}
 <form method="post" action="{url parameter=$currentPage additionalParams='&%1$s[action]=submit&%1$s[value]=custom'|vsprintf:$prefixId setup='lib.tx_ptlist.typolinks.timeSpan'}">
 	
 	Custom: <br />
