@@ -14,7 +14,34 @@ require_once t3lib_extMgm::extPath('pt_list').'view/list/itemList/class.tx_ptlis
 class tx_ptlist_view_list_itemList_structured_pdf extends tx_ptlist_view_list_itemList_pdf {
 	
 	
-/**
+	
+	/**
+     * @var array  Columns to structure list by
+     */
+    protected $structureByCols;
+    
+    
+    
+    /**
+     * @var array  Columns to show as header for structured list
+     */
+    protected $structureByHeaders;
+    
+    
+    /**
+     * @var string ID of current list
+     */
+    protected $listId;
+    
+    
+    /**
+     * @var string String to concat structured header columns
+     */
+    protected $concatString;
+	
+	
+	
+    /**
      * This will be executed before rendering the template
      * 
      * Create template configuration for structured lists and sort data according to structure given in TS
@@ -27,16 +54,17 @@ class tx_ptlist_view_list_itemList_structured_pdf extends tx_ptlist_view_list_it
     public function beforeRendering() {
 
     	parent::beforeRendering();
-        
+    	
         /* Get configuration for structured list */
         $this->initStructureConfig();
+        
         
         /* Generate keys for sorting list items */
         $this->createSortingColumn();
         
         /* Sort list items according to structure */
         $this->reSortListItems();
-
+        
         /* Add headers for structured sections */
         $this->addStructureHeaders();
         
@@ -46,10 +74,6 @@ class tx_ptlist_view_list_itemList_structured_pdf extends tx_ptlist_view_list_it
         $this->addItem($this->structureByHeaders, 'structure_by_headers', false);
         $this->addItem($this->countVisibleCols(array_keys($this->itemsArr['columns']),array_merge($this->structureByCols, $this->structureByHeaders)), 'spanned_cols_by_header', false);
         $this->addItem($this->concatString, 'concat_string');
-        
-        #ob_clean();
-        #print_r($this->itemsArr);
-        #exit();
         
     }
     
@@ -89,8 +113,8 @@ class tx_ptlist_view_list_itemList_structured_pdf extends tx_ptlist_view_list_it
         $this->structureByHeaders   = t3lib_div::trimExplode(',', tx_pttools_div::getTS('plugin.tx_ptlist.listConfig.' . $this->listId . '.structureByHeaders'));
         tx_pttools_assert::isArray($this->structureByHeaders, array('message' => 'No headers for structure by col given for list configuration!'));
         
-        print_r($this->listId);
-        print_r($this->_extConf);
+        #print_r($this->listId);
+        #print_r($this->_extConf);
         
         $this->concatString = tx_pttools_div::getTS('plugin.tx_ptlist.listConfig.' . $this->listId . '.concatString') != '' ?
             tx_pttools_div::getTS('plugin.tx_ptlist.listConfig.' . $this->listId . '.concatString') : ' - ';
@@ -197,10 +221,10 @@ class tx_ptlist_view_list_itemList_structured_pdf extends tx_ptlist_view_list_it
      * @author  Michael Knoll <knoll@punkt.de>
      * @since   2009-07-01
      */
-    protected function getArrayKeys($array, $key) {
+    protected function getArrayKeys($array, $arraykey) {
         $returnArray = array();
         foreach ($array as $key => $value) {
-            $returnArray[] = $value[$key];
+            $returnArray[] = $value[$arraykey];
         }
         return $returnArray;
     }
