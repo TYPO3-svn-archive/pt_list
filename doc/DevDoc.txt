@@ -22,8 +22,10 @@ RFT: refactoring / code cleanup
     - bookmarks 
     - and other list features using tx_ptmvc_view::addItem()
   - Configuration plugin.tx_ptlist.controller.list.itemsPerPage should be configurable for each list id
+  - (mk) Prevent code duplication in structured list / PDF structured list (make renderer an own object to use different renderers for output)
   
 
++ (mk) ADD: Added new filter timeSpan2 to select two dates
 + (fb) BUG: added sortingDataDescriptions to the selectClause.
 + (fb) BUG: in list_itemList.tpl there was a "$columnDescriptionIdentifier|in_array:$structure_by_cols" construct which fails if
        $structure_by_cols is not an array. I didn't looked deeper into why this is no array, but simply added a check before that.
