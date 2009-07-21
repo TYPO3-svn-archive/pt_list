@@ -53,6 +53,12 @@ class tx_ptlist_controller_filter_timeSpan2 extends tx_ptlist_filter {
 	protected $value = array();
 
 	
+	
+	/****************************************************************************************************************
+	 * Methods implementing filter template methods
+	 ****************************************************************************************************************/
+	
+	
 
 	/**
 	 * MVC init method:
@@ -197,7 +203,36 @@ class tx_ptlist_controller_filter_timeSpan2 extends tx_ptlist_filter {
 		$view->addItem($value, 'value');
 		return $view->render();
 	}
+	
+	
+	
+    /**
+     * Get sql where clause snippet
+     *
+     * @param   array   (optional) if empty the function takes $this->value as  $value
+     * @return  string  sql where clause snippet
+     * @author  Michael Knoll <knoll@punkt.de>
+     * @since   2009-07-17
+     */
+    public function getSqlWhereClauseSnippet() {
 
+        $span = $this->valueToTimeSpan($this->value);
+
+        if (empty($span['from']) && empty($span['to'])) {
+            throw new tx_pttools_exception('"From" and "to" cannot be both empty!');
+        }
+
+        $rangeSnippet = $this->getRangeSnippet($span['from'], $span['to'], $this->getDbColumn());
+        
+        return $rangeSnippet;
+    }
+
+	
+	
+	/****************************************************************************************************************
+     * Helper methods
+     ****************************************************************************************************************/
+	
 
 
 	/**
@@ -319,29 +354,7 @@ class tx_ptlist_controller_filter_timeSpan2 extends tx_ptlist_filter {
     	
     	return array('from' => $fromTimestamp, 'to' => $toTimestamp); 
     }
-    
-    
-
-	/**
-	 * Get sql where clause snippet
-	 *
-	 * @param 	array 	(optional) if empty the function takes $this->value as  $value
-	 * @return 	string 	sql where clause snippet
-	 * @author	Michael Knoll <knoll@punkt.de>
-	 * @since	2009-07-17
-	 */
-	public function getSqlWhereClauseSnippet() {
-
-		$span = $this->valueToTimeSpan($this->value);
-
-		if (empty($span['from']) && empty($span['to'])) {
-			throw new tx_pttools_exception('"From" and "to" cannot be both empty!');
-		}
-
-        $rangeSnippet = $this->getRangeSnippet($span['from'], $span['to'], $this->getDbColumn());
-        
-        return $rangeSnippet;
-    }
+	
 
 }
 
