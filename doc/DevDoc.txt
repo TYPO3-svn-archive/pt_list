@@ -25,6 +25,7 @@ RFT: refactoring / code cleanup
   - (mk) Prevent code duplication in structured list / PDF structured list (make renderer an own object to use different renderers for output)
   
 
++ (fb) BUG: fixed bug in filter_options_userInterface_links.tpl: urlencode was applied to the whole additionalParams string instead of the value only
 + (mk) ADD: Added new filter timeSpan2 to select two dates
 + (fb) BUG: added sortingDataDescriptions to the selectClause.
 + (fb) BUG: in list_itemList.tpl there was a "$columnDescriptionIdentifier|in_array:$structure_by_cols" construct which fails if
