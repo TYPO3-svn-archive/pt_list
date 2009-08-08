@@ -229,7 +229,7 @@ abstract class tx_ptlist_controller_filter_options_base extends tx_ptlist_filter
 
 			if (!is_array($this->value)) $this->value = array();
 
-			if (($this->conf['mode'] == 'links') && ($this->conf['toggleMode'] ==  true)) {
+			if (($this->conf['mode'] == 'links') && ($this->conf['toggleMode'] == true)) {
 				if (($arrayKey = array_search($this->params['value'], $this->value)) !== false) {
 					// already set => remove
 					if (TYPO3_DLOG) t3lib_div::devLog(sprintf('Value "%s" was already set in key "%s", removing it now.', $this->params['value'], $arrayKey), 'pt_list', 0, $this->value);
@@ -245,7 +245,8 @@ abstract class tx_ptlist_controller_filter_options_base extends tx_ptlist_filter
 		} else {
 			$this->value = array();
 		}
-		if ($this->value[0] == 'reset' || empty($this->value)) {
+		// TODO: don't use hardcoded value "reset" for resetting, but think of a better solution to this
+		if (array_search('reset', $this->value) !==  false || empty($this->value)) {
 			return $this->doAction('reset');
 		} else {
 			return $this->doAction('default');
