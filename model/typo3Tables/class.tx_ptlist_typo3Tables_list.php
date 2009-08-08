@@ -24,11 +24,6 @@ require_once t3lib_extMgm::extPath('pt_tools') . 'res/abstract/class.tx_pttools_
 class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iSettableByArray {
 
 	/**
-	 * @var array configuration array
-	 */
-	protected $conf = array();
-
-	/**
 	 * @var string	where clause from configuration
 	 */
 	protected $baseWhereClause;

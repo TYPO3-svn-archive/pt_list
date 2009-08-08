@@ -73,6 +73,11 @@ abstract class tx_ptlist_list implements tx_ptlist_iListable, tx_ptlist_iFiltera
 	 * @var string 	csl of columnDescriptionIdentifiers of the columns that should be hidden
 	 */
 	protected $hideColumns;
+	
+	/**
+	 * @var array configuration array. Should be populated within the inheriting class
+	 */
+	protected $conf = array();
 
 
 
@@ -108,10 +113,21 @@ abstract class tx_ptlist_list implements tx_ptlist_iListable, tx_ptlist_iFiltera
 	public function update() {
 		
 		$this->getAllFilters()->processSubControllers();
-		// TODO: think of a better solution to this. Maybe calling a "prepareAction" where configuration is read for the getWhereClause...
 
-		// process a second time to assure that filters will influence each other where necessary
-		$this->getAllFilters()->processSubControllers();
+		/**
+		 * TODO: think of a better solution to this! Maybe calling a "prepareAction" where configuration is read for the getWhereClause...
+		 *  
+		 * The dontProcessTwice parameter comes from the configuration set in the inheriting class.
+		 * It should be set to avoid fitler to be processed twice. This brings speed up and e.g. the
+		 * "toggle" functionality in the options filters only work with this option set.
+		 * The drawback is, that filters that have dependencies to each other won't work correctly then
+		 * 
+		 * This is something that should be solved by design!
+		 */
+		if (!$this->conf['dontProcessTwice']) {
+			// process a second time to assure that filters will influence each other where necessary
+			$this->getAllFilters()->processSubControllers();
+		}
 	}
 
 

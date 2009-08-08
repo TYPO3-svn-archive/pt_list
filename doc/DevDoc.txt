@@ -25,6 +25,9 @@ RFT: refactoring / code cleanup
   - (mk) Prevent code duplication in structured list / PDF structured list (make renderer an own object to use different renderers for output)
   
 
++ (fb) FIX: Bug while resetting options filter in toggle mode
++ (fb) ADD: added configuration option dontProcessTwice to avoid filters to be processed twice. See comment in tx_ptlist_list::update() for details about this problem
++ (fb) RFT: moved $conf from class.tx_ptlist_typo3Tables_list.php to abstract class tx_ptlist_list
 + (fb) BUG: fixed bug in filter_options_userInterface_links.tpl: urlencode was applied to the whole additionalParams string instead of the value only
 + (mk) ADD: Added new filter timeSpan2 to select two dates
 + (fb) BUG: added sortingDataDescriptions to the selectClause.
