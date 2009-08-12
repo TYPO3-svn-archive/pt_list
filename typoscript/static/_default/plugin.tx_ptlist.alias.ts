@@ -10,10 +10,11 @@ plugin.tx_ptlist.alias {
 	filter_max = EXT:pt_list/controller/filter/class.tx_ptlist_controller_filter_max.php:tx_ptlist_controller_filter_max
     filter_range = EXT:pt_list/controller/filter/class.tx_ptlist_controller_filter_range.php:tx_ptlist_controller_filter_range
     filter_timeSpan = EXT:pt_list/controller/filter/class.tx_ptlist_controller_filter_timeSpan.php:tx_ptlist_controller_filter_timeSpan
-    filter_firstLetter = EXT:pt_list/controller/filter/class.tx_ptlist_controller_filter_firstLetter.php:tx_ptlist_controller_filter_firstLetter
+    filter_datePicker = EXT:pt_list/controller/filter/class.tx_ptlist_controller_filter_datePicker.php:tx_ptlist_controller_filter_datePicker
 
     filter_options_group = EXT:pt_list/controller/filter/options/class.tx_ptlist_controller_filter_options_group.php:tx_ptlist_controller_filter_options_group
     filter_options_explicit = EXT:pt_list/controller/filter/options/class.tx_ptlist_controller_filter_options_explicit.php:tx_ptlist_controller_filter_options_explicit
+    
 
     # pagerStrategy_*: pager strategy classes implementing the tx_ptlist_iPagerStrategy interface
 	pagerStrategy_default = EXT:pt_list/model/pagerStrategy/class.tx_ptlist_pagerStrategy_default.php:tx_ptlist_pagerStrategy_default
