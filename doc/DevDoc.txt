@@ -24,7 +24,7 @@ RFT: refactoring / code cleanup
   - Configuration plugin.tx_ptlist.controller.list.itemsPerPage should be configurable for each list id
   - (mk) Prevent code duplication in structured list / PDF structured list (make renderer an own object to use different renderers for output)
   
-
++ (jm) ADD: Added new datePicker filter
 + (fb) FIX: Bug while resetting options filter in toggle mode
 + (fb) ADD: added configuration option dontProcessTwice to avoid filters to be processed twice. See comment in tx_ptlist_list::update() for details about this problem
 + (fb) RFT: moved $conf from class.tx_ptlist_typo3Tables_list.php to abstract class tx_ptlist_list
