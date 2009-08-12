@@ -35,7 +35,7 @@ $(function(){ldelim}
           altField: '#actualDate',  // set the form field which contains the alternate date format
           beforeShowDay: addDates,  // callback function
           showOn: "both",           // show calender only when button is pressed
-          buttonImage: "fileadmin/date_picker/jqueryui/development-bundle/demos/datepicker/images/calendar.gif",
+          buttonImage: "typo3conf/ext/pt_list/res/javascript/jqueryui/development-bundle/demos/datepicker/images/calendar.gif",
           buttonImageOnly: "true",  // no button, only the image
           buttonText: "",           // no button text
           changeMonth: "true",      // drop down menu for months

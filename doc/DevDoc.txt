@@ -23,7 +23,8 @@ RFT: refactoring / code cleanup
     - and other list features using tx_ptmvc_view::addItem()
   - Configuration plugin.tx_ptlist.controller.list.itemsPerPage should be configurable for each list id
   - (mk) Prevent code duplication in structured list / PDF structured list (make renderer an own object to use different renderers for output)
-  
+
++ (jm) FIX: Reset image path for datePicker calendar icon  
 + (jm) ADD: Added new datePicker filter
 + (fb) FIX: Bug while resetting options filter in toggle mode
 + (fb) ADD: added configuration option dontProcessTwice to avoid filters to be processed twice. See comment in tx_ptlist_list::update() for details about this problem
