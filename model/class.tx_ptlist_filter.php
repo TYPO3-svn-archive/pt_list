@@ -38,9 +38,14 @@
 /**
  * Inclusion of external ressources
  */
+require_once t3lib_extMgm::extPath('pt_tools').'res/objects/class.tx_pttools_exception.php';
+require_once t3lib_extMgm::extPath('pt_tools').'res/staticlib/class.tx_pttools_assert.php';
+require_once t3lib_extMgm::extPath('pt_tools').'res/staticlib/class.tx_pttools_debug.php';
+require_once t3lib_extMgm::extPath('pt_tools').'res/staticlib/class.tx_pttools_div.php';
 require_once t3lib_extMgm::extPath('pt_tools').'res/abstract/class.tx_pttools_iTemplateable.php';
 require_once t3lib_extMgm::extPath('pt_tools').'res/abstract/class.tx_pttools_iSettableByArray.php';
 require_once t3lib_extMgm::extPath('pt_tools').'res/objects/class.tx_pttools_registry.php';
+
 
 require_once t3lib_extMgm::extPath('pt_mvc').'classes/class.tx_ptmvc_controllerFrontend.php';
 
@@ -393,17 +398,37 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
 	 *
 	 * @param 	array 	parameter array
 	 * @return 	string 	HTML output
-	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>, Rainer Kuhn <kuhn@punkt.de>
 	 * @since	2009-02-06
 	 */
 	public function onValidatedAction(array $params=array()) {
+	    
 		if (TYPO3_DLOG) t3lib_div::devLog('onValidatedAction', 'pt_list', 2, $this->conf);	
 		$this->isActive = true;
 		
-		// Reset sorting state of filtered list, if set in TS
+		// reset sorting state of filtered list, if set in TS
         if ($this->conf['resetListSortingStateOnSubmit'] == 1) {
             $this->resetListSortingState();
         }   
+        
+        // reset other filters if set in filter config
+        if ($this->conf['resetFilters']) {
+            $listObject = tx_pttools_registry::getInstance()->get($this->listIdentifier.'_listObject'); /* @var $listObject tx_ptlist_list */
+            
+            // set resetFilters to "__ALL__" to reset all other filters
+            if ($this->conf['resetFilters'] == '__ALL__') {
+                $exceptFilterId = $this->filterIdentifier;
+                $listObject->getAllFilters()->reset($exceptFilterId); 
+            // reset filters from given filter identifier or comma seprated list of filter identifier
+            } else {
+                $resetFiltersArray = tx_pttools_div::returnArrayFromCsl($this->conf['resetFilters']);
+                if (is_array($resetFiltersArray)) {
+                    foreach ($resetFiltersArray as $filterIdentifier) {
+                        $listObject->getAllFilters()->getItemById($filterIdentifier)->reset();
+                    }
+                }
+            }
+        }
 		
 		// execute user functions
 		if (is_array($this->conf['onValidated.'])) {
@@ -412,15 +437,13 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
 			$sortedKeys = t3lib_TStemplate::sortedKeyList($this->conf['onValidated.'], false);
 			
 			foreach ($sortedKeys as $key) {
-
+			    
 				$funcName = $this->conf['onValidated.'][$key];
-				
 			    tx_pttools_assert::isNotEmptyString($funcName, array('message' => 'No valid "funcName" found!'));
 			    
    			    $userFuncParams = array(
    				    'conf' => $this->conf['onValidated.'][$key.'.']
    				);
-   				
    				t3lib_div::callUserFunction($funcName, $userFuncParams, $this);
    				// function return will be ignored
 			}

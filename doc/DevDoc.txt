@@ -11,6 +11,9 @@ RMV: removed Item
 RFT: refactoring / code cleanup
 ********************************************************************************
 
+ToDo: As of 14.08.2009
+=====
+
 - TODO: check and extend changes for default XSS prevention
   - check already implemented adaptions of rk in tx_ptlist_controller_list (see changelog below) - is this the right place?
   + IMPORTANT: make default XSS prevention configurable for a complete list (e.g. pt_list usage for CSV and PDF)
@@ -24,6 +27,8 @@ RFT: refactoring / code cleanup
   - Configuration plugin.tx_ptlist.controller.list.itemsPerPage should be configurable for each list id
   - (mk) Prevent code duplication in structured list / PDF structured list (make renderer an own object to use different renderers for output)
 
+
++ (rk) ADD: Added new general filter config "resetFilters" to reset other filters when validating the current one
 + (jm) FIX: Reset image path for datePicker calendar icon  
 + (jm) ADD: Added new datePicker filter
 + (fb) FIX: Bug while resetting options filter in toggle mode
