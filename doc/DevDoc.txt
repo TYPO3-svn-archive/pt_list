@@ -11,7 +11,7 @@ RMV: removed Item
 RFT: refactoring / code cleanup
 ********************************************************************************
 
-ToDo: As of 14.08.2009
+ToDo: As of 17.08.2009
 =====
 
 - TODO: check and extend changes for default XSS prevention
@@ -28,6 +28,7 @@ ToDo: As of 14.08.2009
   - (mk) Prevent code duplication in structured list / PDF structured list (make renderer an own object to use different renderers for output)
 
 
++ (rk) CHG: tx_ptlist_controller_filter_string: adapted filter submission handling to "newer" methods of the parent class tx_ptlist_filter
 + (rk) ADD: Added new general filter config "resetFilters" to reset other filters when validating the current one
 + (jm) FIX: Reset image path for datePicker calendar icon  
 + (jm) ADD: Added new datePicker filter

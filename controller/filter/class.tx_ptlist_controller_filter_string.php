@@ -94,9 +94,8 @@ class tx_ptlist_controller_filter_string extends tx_ptlist_filter {
      */
 	public function submitAction() {
 	    
-		$this->isActive = true;
 		$this->value = $this->params['value'];
-		return $this->doAction('default');
+		return parent::submit();
 		
 	}
     
@@ -128,6 +127,20 @@ class tx_ptlist_controller_filter_string extends tx_ptlist_filter {
         $view = $this->getView('filter_string_userInterface');
         $view->addItem($this->value, 'value');
         return $view->render();
+        
+    }
+    
+    /**
+     * This method will be called to determine if the user input validates.
+     * 
+     * @param   void
+     * @return  bool    true (user input validates always here)
+     * @author  2009-01-20
+     * @since   2009-08-17
+     */
+    public function validate() {
+        
+        return true;
         
     }
 	
