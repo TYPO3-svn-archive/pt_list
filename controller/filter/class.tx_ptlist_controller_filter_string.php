@@ -135,7 +135,7 @@ class tx_ptlist_controller_filter_string extends tx_ptlist_filter {
      * 
      * @param   void
      * @return  bool    true (user input validates always here)
-     * @author  2009-01-20
+     * @author  Rainer Kuhn <kuhn@punkt.de>
      * @since   2009-08-17
      */
     public function validate() {
