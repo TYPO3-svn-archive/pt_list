@@ -95,7 +95,7 @@ class tx_ptlist_controller_filter_string extends tx_ptlist_filter {
 	public function submitAction() {
 	    
 		$this->value = $this->params['value'];
-		return parent::submit();
+		return parent::submitAction();
 		
 	}
     
