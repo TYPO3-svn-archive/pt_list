@@ -64,7 +64,7 @@ class tx_ptlist_div {
 	}
 	
 	public function hookEofe() {
-		if (TYPO3_DLOG) t3lib_div::devLog('Processing hook "hook_eofe"', 'pt_list', 1);
+		if (TYPO3_DLOG) t3lib_div::devLog('Processing tslib_fe hook "hook_eofe" in '.__METHOD__, 'pt_list', 1);
 		tx_ptlist_genericDataAccessor::storeAllCachesToSession();
 	}
 

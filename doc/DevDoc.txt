@@ -11,7 +11,7 @@ RMV: removed Item
 RFT: refactoring / code cleanup
 ********************************************************************************
 
-ToDo: As of 17.08.2009
+ToDo: As of 19.08.2009
 =====
 
 - TODO: check and extend changes for default XSS prevention
@@ -27,7 +27,8 @@ ToDo: As of 17.08.2009
   - Configuration plugin.tx_ptlist.controller.list.itemsPerPage should be configurable for each list id
   - (mk) Prevent code duplication in structured list / PDF structured list (make renderer an own object to use different renderers for output)
 
-
++ (rk) CHG: extended devlog entry text for tx_ptlist_div::hookEofe()
++ (mk) FIX: Fixed some problems with structured lists
 + (rk) CHG: tx_ptlist_controller_filter_string: adapted filter submission handling to "newer" methods of the parent class tx_ptlist_filter
 + (rk) ADD: Added new general filter config "resetFilters" to reset other filters when validating the current one
 + (jm) FIX: Reset image path for datePicker calendar icon  
