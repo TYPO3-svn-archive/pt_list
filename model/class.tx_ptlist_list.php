@@ -144,7 +144,6 @@ abstract class tx_ptlist_list implements tx_ptlist_iListable, tx_ptlist_iFiltera
 	 * @since	2009-01-19
 	 */
 	public function setSortingParameters($sortingField, $sortingDirection) {
-
 		tx_pttools_assert::isNotEmptyString($sortingField, array('message' => 'Invalid sortingField parameter'));
 		tx_pttools_assert::isInArray(
 			$sortingDirection,
@@ -174,20 +173,31 @@ abstract class tx_ptlist_list implements tx_ptlist_iListable, tx_ptlist_iFiltera
 	 * @since  2009-04-28
 	 */
 	public function resetSortingParameters() {
-		
+
 		foreach ($this->getAllColumnDescriptions() as $column) { /* @var $column tx_ptlist_columnDescription */
 			if ($column->isSortable()) {
 				
-				// Reset sorting state from column
-				$column->set_sortingState(tx_ptlist_columnDescription::SORTINGSTATE_NONE);
+				// Reset sorting state from column, if there is a default sorting state, reset default state
+				if (isset($this->conf['defaults.']['sortingColumn']) && $column->get_columnIdentifier() == $this->conf['defaults.']['sortingColumn']) {
+					if ($this->conf['defaults.']['sortingDirection'] == 'ASC') {
+				        $column->set_sortingState(tx_ptlist_columnDescription::SORTINGSTATE_ASC);
+					} elseif ($this->conf['defaults.']['sortingDirection'] == 'DESC') {
+						$column->set_sortingState(tx_ptlist_columnDescription::SORTINGSTATE_DESC);
+					} else {
+						$column->set_sortingState(tx_ptlist_columnDescription::SORTINGSTATE_NONE);
+					}
+				} else {
+				    $column->set_sortingState(tx_ptlist_columnDescription::SORTINGSTATE_NONE);
+				}
         
 			}
+			
 		}
 		
 		// Delete sorting states from session
         tx_pttools_sessionStorageAdapter::getInstance()->delete($GLOBALS['TSFE']->fe_user->user['uid'] . '_' . $this->listId . '_sortingColumn');
         tx_pttools_sessionStorageAdapter::getInstance()->delete($GLOBALS['TSFE']->fe_user->user['uid'] . '_' . $this->listId . '_sortingDirection');
-		
+        
 	}
 
 

@@ -489,11 +489,16 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
 	
 	
 	
+	/**
+	 * Resets sorting states of corresponding list
+	 * 
+	 * @return void
+	 * @author Michael Knoll
+	 * @since 2009-06-15
+	 */
 	protected function resetListSortingState() {
-        
 		$listObject = tx_pttools_registry::getInstance()->get($this->listIdentifier.'_listObject'); /* @var $listObject tx_ptlist_list */
 		$listObject->resetSortingParameters();
-		
 	}
 
 	

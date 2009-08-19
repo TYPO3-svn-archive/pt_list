@@ -149,6 +149,18 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 		parent::__construct();
 		
 	}
+	
+	
+	
+	/**
+	 * EXPERIMENTAL: Trying to re-init the controller after changes are made to list object
+	 * 
+	 * @author Michael Knoll <knoll@punkt.de>
+	 * @since  2009-08-19
+	 */
+	public function reInit() {
+		$this->init();
+	}
 
 
 
