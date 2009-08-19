@@ -118,7 +118,7 @@ class tx_ptlist_view_list_itemList_structured extends tx_ptlist_view_list_itemLi
         
         /* Sort list items according to structure */
         $this->reSortListItems();
-
+        
         /* Add headers for structured sections */
         $this->addStructureHeaders();
         
@@ -212,10 +212,10 @@ class tx_ptlist_view_list_itemList_structured extends tx_ptlist_view_list_itemLi
      */
     protected function reSortListItems() {
     	$combinedStructKeys = $this->getArrayKeys($this->itemsArr['listItems'], '__combined_struct_col__');
-    	
-        $secondKeyName = tx_pttools_div::getTS('listConfig.' . $this->listId . '.defaults.sortingColumn');
+    	$secondKeyName = $this->_extConf['listConfig.'][$this->listId . '.']['defaults.']['sortingColumn'];
         $secondKey = $this->getArrayKeys($this->itemsArr['listItems'], $secondKeyName);
-        $sortingDirection = tx_pttools_div::getTS('listConfig.' . $this->listId . '.defaults.sortingDirection') == 'ASC' ? SORT_ASC : SORT_DESC;
+        $sortingDirection = $this->_extConf['listConfig.'][$this->listId . '.']['defaults.']['sortingDirection'] == 'DESC' ? SORT_DESC : SORT_ASC;
+        
         array_multisort($combinedStructKeys, SORT_ASC, $secondKey, $sortingDirection, $this->itemsArr['listItems']);
     }
     

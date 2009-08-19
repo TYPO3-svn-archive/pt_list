@@ -1,4 +1,7 @@
 <?php
+
+
+
 /***************************************************************
 *  Copyright notice
 *
@@ -21,6 +24,8 @@
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
+
+
 
 /**
  * Class definition file for PDF Renderer for pt_list listings
@@ -215,6 +220,7 @@ class tx_ptlist_view_list_itemList_pdf extends tx_ptlist_view {
         $this->addToConfigArray('column_positions_non_scaled', $this->getColumnPositionsNonScaled());
         $this->addToConfigArray('column_alignments', $this->getColumnAlignments());
         $this->addToConfigArray('column_multiline', $this->getColumnMultilines());
+        $this->addToConfigArray('columns_show_column', $this->getShowColumns());
         
     }
     
@@ -314,12 +320,15 @@ class tx_ptlist_view_list_itemList_pdf extends tx_ptlist_view {
             $tmpArray[$key] = $value;
         }
         ksort($tmpArray, SORT_NUMERIC);
+        
         foreach ($tmpArray as $pdfColumnConfig) {
             // Check, whether column should be displayed 
-            if (array_key_exists($pdfColumnConfig['columnIdentifier'], $this->itemsArr['columns'])) {
+            #if (array_key_exists($pdfColumnConfig['columnIdentifier'], $this->itemsArr['columns'])) {
+        	if (array_key_exists('pdf.', $pdfColumnConfig)) {
                 $this->columnPdfConfig[$pdfColumnConfig['columnIdentifier']] = $pdfColumnConfig['pdf.'];
             }
         }
+        
         if (TYPO3_DLOG) t3lib_div::devLog('Column configurations', 'pt_list', 0, array('configuration' => $this->columnPdfConfig));
         
     }
@@ -372,7 +381,9 @@ class tx_ptlist_view_list_itemList_pdf extends tx_ptlist_view {
     	
     	$columnsWidthSum = 0;
     	foreach($this->columnPdfConfig as $key => $columnConfArr) {
-    		$columnsWidthSum += $columnConfArr['width'];
+    		if (array_key_exists('width', $columnConfArr)) {
+    		  $columnsWidthSum += $columnConfArr['width'];
+    		}
     	}
     	return $columnsWidthSum;
     	
@@ -391,12 +402,37 @@ class tx_ptlist_view_list_itemList_pdf extends tx_ptlist_view {
     	
     	$columnsFixedWidthSum = 0;
     	foreach($this->columnPdfConfig as $key => $columnConfArr) {
-    		if ($columnConfArr['dontScale'] == 1) {
-    		    $columnsFixedWidthSum += $columnConfArr['width'];
+    		if (array_key_exists('width', $columnConfArr)) {
+	    		if ($columnConfArr['dontScale'] == 1) {
+	    		    $columnsFixedWidthSum += $columnConfArr['width'];
+	    		}
     		}
     	}
 
     	return $columnsFixedWidthSum;
+    	
+    }
+    
+    
+    
+    /**
+     * Returns an array of bits, whether column
+     * should be displayed or not. Default is 1 (display column)
+     * 
+     * @param  void
+     * @return array   
+     * @author Michael Knoll <knoll@punkt.de>
+     * @since  2009-08-18
+     */
+    protected function getShowColumns() {
+    	
+    	$showColumnsArray = array();
+    	
+    	foreach($this->columnPdfConfig as $columnIdentifier => $columnConfig) {
+            $showColumnsArray[] = (array_key_exists('showColumn', $columnConfig) && $columnConfig['showColumn'] == 0) ? 0 : 1;
+    	}
+    	
+    	return $showColumnsArray;
     	
     }
     
@@ -413,8 +449,10 @@ class tx_ptlist_view_list_itemList_pdf extends tx_ptlist_view {
     	
     	$columnWidthsNonScaled = array();
     	foreach($this->columnPdfConfig as $columnIdentifier => $columnConfig) {
-    		if ($columnConfig['showColumn'] == 1) {
-    		  $columnWidthsNonScaled[] = $columnConfig['width'];
+    		if (array_key_exists('width', $columnConfig)) {
+	    		$columnWidthsNonScaled[] = $columnConfig['width'];
+    		} else {
+    			$columnWidthsNonScaled[] = 0;
     		}
     	}
     	return $columnWidthsNonScaled;
@@ -450,10 +488,14 @@ class tx_ptlist_view_list_itemList_pdf extends tx_ptlist_view {
     	$scaleFactor = $this->getScaleFactor();
     	$columnWidthsScaled = array();
     	foreach($this->columnPdfConfig as $columnIdentifier => $columnConfig) {
-    		if ($columnConfig['dontScale'] != 1) {
-    			$columnWidthsScaled[] = $columnConfig['width'] * $scaleFactor;
+    		if (array_key_exists('width', $columnConfig)) {
+	    		if ($columnConfig['dontScale'] != 1) {
+	    			$columnWidthsScaled[] = $columnConfig['width'] * $scaleFactor;
+	    		} else {
+	    			$columnWidthsScaled[] = $columnConfig['width'];
+	    		}
     		} else {
-    			$columnWidthsScaled[] = $columnConfig['width'];
+    			$columnWidthsScaled[] = 0;
     		}
     	}
     	return $columnWidthsScaled;
@@ -493,7 +535,7 @@ class tx_ptlist_view_list_itemList_pdf extends tx_ptlist_view {
     protected function getColumnPositionsScaled() {
     	
     	$columnPositionsScaled = array();
-    	$oldPos = $oldPos = $this->itemsArr['__config']['margin_left'];
+    	$oldPos = $this->itemsArr['__config']['margin_left'];
         foreach ($this->getColumnWidthsScaled() as $columnWidth) {
             $columnPositionsScaled[] = $oldPos;
             $oldPos += $columnWidth;
@@ -515,7 +557,11 @@ class tx_ptlist_view_list_itemList_pdf extends tx_ptlist_view {
     	
     	$columnAlignments = array();
     	foreach ($this->columnPdfConfig as $columnIdentifier => $columnConfig) {
-    		$columnAlignments[] = $columnConfig['alignment'];
+    		if (array_key_exists('alignment', $columnConfig)) {
+                $columnAlignments[] = $columnConfig['alignment'];
+    		} else {
+    			$columnAlignments[] = 'L';
+    		}
     	}
     	return $columnAlignments;
     	
@@ -535,7 +581,11 @@ class tx_ptlist_view_list_itemList_pdf extends tx_ptlist_view {
     	
     	$columnMultilines = array();
     	foreach ($this->columnPdfConfig as $columnIdentifier => $columnConfig) {
-    		$columnMultilines[] = $columnConfig['multiline'];
+    		if (array_key_exists('multiline', $columnConfig)) {
+    		    $columnMultilines[] = $columnConfig['multiline'];
+    		} else {
+    			$columnMultilines[] = 0;
+    		}
     	}
     	return $columnMultilines;
     	

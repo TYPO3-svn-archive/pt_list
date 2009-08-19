@@ -118,7 +118,7 @@ class tx_ptlist_view_list_itemList_xls extends tx_ptlist_view {
         
 		$row = 0;
         $col = 0;
-		
+        
         // Write Headings for spreadsheet columns
         foreach ($this->getItemById('columns') as $column) {
                 /*

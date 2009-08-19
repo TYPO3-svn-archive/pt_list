@@ -113,9 +113,6 @@ class tx_ptlist_view_list_itemList_structured_pdf extends tx_ptlist_view_list_it
         $this->structureByHeaders   = t3lib_div::trimExplode(',', tx_pttools_div::getTS('plugin.tx_ptlist.listConfig.' . $this->listId . '.structureByHeaders'));
         tx_pttools_assert::isArray($this->structureByHeaders, array('message' => 'No headers for structure by col given for list configuration!'));
         
-        #print_r($this->listId);
-        #print_r($this->_extConf);
-        
         $this->concatString = tx_pttools_div::getTS('plugin.tx_ptlist.listConfig.' . $this->listId . '.concatString') != '' ?
             tx_pttools_div::getTS('plugin.tx_ptlist.listConfig.' . $this->listId . '.concatString') : ' - ';
     }
@@ -163,8 +160,12 @@ class tx_ptlist_view_list_itemList_structured_pdf extends tx_ptlist_view_list_it
     protected function reSortListItems() {
         $combinedStructKeys = $this->getArrayKeys($this->itemsArr['listItems'], '__combined_struct_col__');
         $secondKeyName = $this->_extConf['listConfig.'][$this->listId . '.']['defaults.']['sortingColumn'];
+        
+        // global configuration for this view under "plugin.tx_<condensedExtKey>.view.<viewName>"
+        $tsKey = 'plugin.tx_ptlist.listConfig.' . $this->listId .'.defaults.sortingColumn';
+        $secondKeyName = tx_pttools_div::typoscriptRegistry($tsKey);
         $secondKey = $this->getArrayKeys($this->itemsArr['listItems'], $secondKeyName);
-        $sortingDirection = $this->_extConf['listConfig.'][$this->listId . '.']['defaults.']['sortingDirection'] == 'ASC' ? SORT_ASC : SORT_DESC;
+        $sortingDirection = $this->_extConf['listConfig.'][$this->listId . '.']['defaults.']['sortingDirection'] == 'DESC' ? SORT_DESC : SORT_ASC;
         array_multisort($combinedStructKeys, SORT_ASC, $secondKey, $sortingDirection, $this->itemsArr['listItems']);
     }
     
