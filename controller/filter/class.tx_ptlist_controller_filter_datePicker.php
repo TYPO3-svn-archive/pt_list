@@ -194,6 +194,19 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
 		$limit = '';
 		// Ignore all filters
 		$ignoredFiltersForWhereClause = '__ALL__';
+		
+        
+        // HOOK: allow multiple hooks to append individual additional where clause conditions (added by rk 19.08.09)
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['filter_datePicker']['getEventDates_whereClauseHook'])) {
+            foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['filter_datePicker']['getEventDates_whereClauseHook'] as $funcName) {
+                $params = array(
+                    'where' => $where,
+                );
+                $where .= t3lib_div::callUserFunction($funcName, $params, $this, '');
+                if (TYPO3_DLOG) t3lib_div::devLog(sprintf('Processing hook "%s" for "getEventDates_whereClauseHook" of filter_datePicker', $funcName), $this->extKey, 1, array('params' => $params));
+            }
+        }   
+        
 
 		$data = $listObject->getGroupData($select, $where, $groupBy, $orderBy, $limit, $ignoredFiltersForWhereClause);
 
@@ -250,8 +263,22 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
 			throw new tx_pttools_exceptionConfiguration("No valid date field type set.",
 														"No valid date field type set for eventCalender filter. Type was ".$dateFieldType." but can only be 'date' or 'timestamp'!");
 		}
+        
+        
+        // HOOK: allow multiple hooks to append individual additional where clause conditions (added by rk 19.08.09)
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['filter_datePicker']['getSqlWhereClauseSnippetHook'])) {
+            foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['filter_datePicker']['getSqlWhereClauseSnippetHook'] as $funcName) {
+                $params = array(
+                    'sqlWhereClauseSnippet' => $sqlWhereClauseSnippet,
+                );
+                $sqlWhereClauseSnippet .= t3lib_div::callUserFunction($funcName, $params, $this, '');
+                if (TYPO3_DLOG) t3lib_div::devLog(sprintf('Processing hook "%s" for "getSqlWhereClauseSnippetHook" of filter_datePicker', $funcName), $this->extKey, 1, array('params' => $params));
+            }
+        }   
+        
 
 		return $sqlWhereClauseSnippet;
+		
 	}
 }
 ?>
