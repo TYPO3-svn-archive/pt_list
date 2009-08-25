@@ -301,7 +301,7 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
      * @author  Rainer Kuhn <kuhn@punkt.de>
      * @since   2009-08-25
      */
-    public function resetToTsConfigAction() {
+    public function resetToTsPresetStateAction() {
         
     	$this->reset();
     	$this->setPresetStateFromTs();
@@ -384,7 +384,7 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
 	 */
 	protected function setPresetStateFromTs() {
 	    // setting default filter state   
-	    $this->setIsActiveAndDefaultValueFromArray($this->conf);
+	    $this->setPresetStateFromArray($this->conf);
 	}
 	
 	
@@ -397,7 +397,7 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
      * @author Michael Knoll <knoll@punkt.de>
      * @since  2009-08-25
      */
-	protected function setIsActiveAndDefaultValueFromArray($dataArray) {
+	protected function setPresetStateFromArray($dataArray) {
 	    if (isset($dataArray['isActive'])) {
             $this->isActive = (bool) $dataArray['isActive'];
         }
@@ -637,7 +637,7 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
 		
 		// setting default filter state	
 		// Use proxy method to set isActive and defaultValue, as used in other places also!
-		$this->setIsActiveAndDefaultValueFromArray($this->conf);
+		$this->setPresetStateFromArray($this->conf);
 		
 		// update prefixId as the listIdentifier and the filterIdentifier influence the prefixId
 		$this->prefixId = $this->getPrefixId();
