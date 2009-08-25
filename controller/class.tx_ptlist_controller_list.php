@@ -204,19 +204,19 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 	 */
 	protected function getConfiguration() {
 
-		// get standard configuration from tx_ptmvc_controllerFrontend class
+		// get standard MVC configuration (see tx_ptmvc_controllerFrontend::getConfiguration())
 		parent::getConfiguration();
         
-        // merge local configuration over existing configuration
+        // merge local configuration (set in the constructor) over existing MVC configuration
         if (is_array($this->localConfiguration) && !empty($this->localConfiguration)) {
             $this->conf = t3lib_div::array_merge_recursive_overrule($this->conf, $this->localConfiguration);
-            if (TYPO3_DLOG) t3lib_div::devLog('Merging localConfiguration with existing configuration', 'pt_list', 0, $this->localConfiguration);
+            if (TYPO3_DLOG) t3lib_div::devLog('Merging localConfiguration with existing MVC configuration', 'pt_list', 0, $this->localConfiguration);
             
             // unset the localConfiguration to avoid that the controller will merge settings again
             $this->localConfiguration = array();
         }
 
-		// set some class properties depending on special configuration settings
+		// set some class properties depending on special configuration settings: set list ID for the current list controller from TS config
 		$this->currentlistId = $this->conf['listId'];
 		tx_pttools_assert::isNotEmptyString($this->currentlistId, array('message' => '"currentlistId" must have a string value'));
 
@@ -229,12 +229,13 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 			$this->filterboxId = $this->conf['filterboxId'];
 			tx_pttools_assert::isNotEmptyString($this->filterboxId, array('message' => 'No "filterboxId" found in configuration.'));
 		}
-
-		// merge listId specific configuration over existing configuration "plugin.tx_<condensedExtKey>.controller.<controllerName>.<listPrefix>."
+        
+		// merge listId specific configuration ("plugin.tx_<condensedExtKey>.controller.<controllerName>.<listPrefix>.") over existing configuration ("plugin.tx_<condensedExtKey>.controller.list.") 
 		$listIdSpecificConfiguration = $this->_extConf['controller.'][$this->getControllerName().'.'][$this->listPrefix.'.'];
 		if (is_array($listIdSpecificConfiguration) && !empty($listIdSpecificConfiguration)) {
 			$this->conf = t3lib_div::array_merge_recursive_overrule($this->conf, $listIdSpecificConfiguration);
 		}
+		
 	}
 
 

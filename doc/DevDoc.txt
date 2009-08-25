@@ -11,7 +11,7 @@ RMV: removed Item
 RFT: refactoring / code cleanup
 ********************************************************************************
 
-ToDo: As of 21.08.2009
+ToDo: As of 25.08.2009
 =====
 
 - TODO: check and extend changes for default XSS prevention
@@ -27,6 +27,7 @@ ToDo: As of 21.08.2009
   - Configuration plugin.tx_ptlist.controller.list.itemsPerPage should be configurable for each list id
   - (mk) Prevent code duplication in structured list / PDF structured list (make renderer an own object to use different renderers for output)
 
++ (rk) ADD: added inline comments to tx_ptlist_controller_list::getConfiguration()
 + (rk/dl) ADD: added  "->stdWrap" hint for several fields, added documentation for dataDescriptionDefinition "field" property
 + (mk) FIX: Fixed bug in resetSortingState, default sorting is now reset if configured
 + (rk) ADD: tx_ptlist_controller_filter_datePicker: added SQL where clause hooks in getEventDates() and getSqlWhereClauseSnippet() 
