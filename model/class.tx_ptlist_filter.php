@@ -298,13 +298,13 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
      *
      * @param   void
      * @return  string  HTML output
-     * @author  Michael Knoll <knoll@punkt.de>
+     * @author  Rainer Kuhn <kuhn@punkt.de>
      * @since   2009-08-25
      */
     public function resetToTsConfigAction() {
         
     	$this->reset();
-    	$this->setDefaultValueFromTs();
+    	$this->setPresetStateFromTs();
     	return $this->doAction();
     	
     }
@@ -382,7 +382,7 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
 	 * @author Michael Knoll <knoll@punkt.de>
 	 * @since  2009-08-25
 	 */
-	protected function setDefaultValueFromTs() {
+	protected function setPresetStateFromTs() {
 	    // setting default filter state   
 	    $this->setIsActiveAndDefaultValueFromArray($this->conf);
 	}
