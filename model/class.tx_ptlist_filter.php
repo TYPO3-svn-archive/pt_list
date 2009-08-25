@@ -293,18 +293,20 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
     
     
     /**
-     * Reset action
+     * Reset to Typoscript defaults action: resets the filter to the presets set in the filter's Typoscript configuration
      * - calls '' (default action depending on pluginMode)
      *
      * @param   void
      * @return  string  HTML output
      * @author  Michael Knoll <knoll@punkt.de>
-     * @since   2009-08-19
+     * @since   2009-08-25
      */
     public function resetToTsConfigAction() {
+        
     	$this->reset();
     	$this->setDefaultValueFromTs();
-    	return $this->defaultAction();
+    	return $this->doAction();
+    	
     }
     
 	
@@ -374,7 +376,7 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
 	
 	
 	/**
-	 * Set configuration to default configuration from TS
+	 * Resets the filter to the presets set in the filter's Typoscript configuration
 	 * 
 	 * @return void
 	 * @author Michael Knoll <knoll@punkt.de>
