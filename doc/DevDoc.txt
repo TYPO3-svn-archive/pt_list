@@ -27,6 +27,7 @@ ToDo: As of 25.08.2009
   - Configuration plugin.tx_ptlist.controller.list.itemsPerPage should be configurable for each list id
   - (mk) Prevent code duplication in structured list / PDF structured list (make renderer an own object to use different renderers for output)
 
++ (mk) RFT: Added proxy method for setting default value and isActive in tx_ptlist_filter
 + (mk) ADD: Added tx_ptlist_filter::resetToTsConfigAction for resetting a filter to the TS default configuration
 + (mk) FIX: Structured lists do not show sorting headers anymore. Structured lists have correct odd/even classes for headers now (always starts with odd on header)
 + (mk) ADD: Added some documentation on structured lists

@@ -382,8 +382,21 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
 	 */
 	protected function setDefaultValueFromTs() {
 	    // setting default filter state   
-	    $dataArray = $this->conf;
-        if (isset($dataArray['isActive'])) {
+	    $this->setIsActiveAndDefaultValueFromArray($this->conf);
+	}
+	
+	
+	
+	/**
+	 * Helper method for setting isActive state and default value from array
+	 * 
+	 * @param  array   $dataArray      Array of configuration data
+	 * @return void 
+     * @author Michael Knoll <knoll@punkt.de>
+     * @since  2009-08-25
+     */
+	protected function setIsActiveAndDefaultValueFromArray($dataArray) {
+	    if (isset($dataArray['isActive'])) {
             $this->isActive = (bool) $dataArray['isActive'];
         }
         if (isset($dataArray['value'])) {
@@ -621,21 +634,8 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
 		*/
 		
 		// setting default filter state	
-		if (isset($dataArray['isActive'])) {
-			$this->isActive = (bool) $dataArray['isActive'];
-		}
-		if (isset($dataArray['value'])) {
-			if (TYPO3_DLOG) t3lib_div::devLog('Setting default value from configuration', 'pt_list', 1, $dataArray['value']);
-			if ($dataArray['value.']['isSerialized']) {
-				$dataArray['value'] = unserialize($dataArray['value']);
-				unset($dataArray['value.']['isSerialized']);
-			}
-			$dataArray['value'] = $this->cObj->stdWrap($dataArray['value'], $dataArray['value.']);
-			$this->value = $dataArray['value'];
-		} elseif (is_array($dataArray['value.'])) {
-			if (TYPO3_DLOG) t3lib_div::devLog('Setting default value from configuration (array)', 'pt_list', 1, $dataArray['value.']);
-			$this->value = $dataArray['value.'];
-		}
+		// Use proxy method to set isActive and defaultValue, as used in other places also!
+		$this->setIsActiveAndDefaultValueFromArray($this->conf);
 		
 		// update prefixId as the listIdentifier and the filterIdentifier influence the prefixId
 		$this->prefixId = $this->getPrefixId();
