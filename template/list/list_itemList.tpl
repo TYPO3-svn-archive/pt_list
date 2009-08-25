@@ -26,9 +26,6 @@
 *}
 
 
-{debug}
-
-
 <table class="tx-ptlist-list tx-ptlist-list-standard {$listIdentifier}">
 
 
