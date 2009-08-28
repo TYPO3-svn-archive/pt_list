@@ -541,8 +541,11 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 		$view->addItem($this->getColumnContents(), 'listItems', false);  // do not filter HTML here since the column contents may already be rendered as HTML (e.g. from Typoscript wraps) and the database data is already HTML filtered (see getColumnContents())
 
 		$view->addItem($this->currentListObject->getAllFilters(true, 'renderInList', true)->getMarkerArray(), 'filterbox', false);
-
-		$view->addItem($this->getAggregateRows(), 'aggregateRows', false);
+        $view->addItem($this->getAggregateRows(), 'aggregateRows', false);
+        
+        // (added by rk 28.08.09) # TODO: Replace this by a translation mechanism
+        $view->addItem($this->currentListObject->get_noElementsFoundText(), 'noElementsFoundText', false); // do not filter HTML here since the display text may already be formatted as HTML (e.g. from Typoscript configuration)
+        
 		
 		// render
 		return $view->render();

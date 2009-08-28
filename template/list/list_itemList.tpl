@@ -29,9 +29,7 @@
 <table class="tx-ptlist-list tx-ptlist-list-standard {$listIdentifier}">
 
 
-
     {******** List headers for columns ********}
-
 
 
 	<tr>
@@ -66,9 +64,7 @@
 	</tr>
 	
 	
-	
 	{******** List rows ********}
-	
 	
 	
 	{assign var="odd_even" value="odd"}
@@ -113,22 +109,27 @@
     	{else}
     	   {assign var="odd_even" value="odd"}
     	{/if}
+        
+        
 	{foreachelse}
-	
-	
+    
 	    {******** No elements found ********}
-	
+        
+        
     	<tr>
     		<td colspan="{$smarty.foreach.columnHeaders.total}">
     		    {* TODO ry21: Replace this by translation handling in pt_mvc! *}
-    		    {if $no_elements_found_text != ""}
-    		        <center>{$no_elements_found_text|ll:0}</center>
+    		    {if $noElementsFoundText != ""}
+    		        <center>{$noElementsFoundText|ll:0}</center>
     		    {else}
     			    <center>{"noItemsFound"|ll}</center>
     			{/if}
     		</td>
     	</tr>
+        
 	{/foreach}
+
+
 
 	{foreach from=$aggregateRows item=row}
     	<tr class="tx-ptlist-aggregate-row">

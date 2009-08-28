@@ -79,6 +79,13 @@ abstract class tx_ptlist_list implements tx_ptlist_iListable, tx_ptlist_iFiltera
 	 */
 	protected $conf = array();
 
+    /**
+     * @var     string  individual text do display if no elements have been found for a list request (this property may be set by inheriting list classes)
+     * @author  Rainer Kuhn <kuhn@punkt.de>
+     * @since   2009-08-28
+     */
+    protected $noElementsFoundText;
+
 
 
 	/***************************************************************************
@@ -392,6 +399,21 @@ abstract class tx_ptlist_list implements tx_ptlist_iListable, tx_ptlist_iFiltera
 	public function get_hideColumns() {
 		return $this->hideColumns;
 	}
+
+	
+	
+	
+    /**
+     * Returns the text do display if no elements have been found for a list request
+     *
+     * @param   void
+     * @return  string  text do display if no elements have been found for a list request
+     * @author  Rainer Kuhn <kuhn@punkt.de>
+     * @since   2009-08-28
+     */
+    public function get_noElementsFoundText() {
+        return $this->noElementsFoundText;
+    }
 
 
 }

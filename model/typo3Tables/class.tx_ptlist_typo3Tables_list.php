@@ -24,18 +24,26 @@ require_once t3lib_extMgm::extPath('pt_tools') . 'res/abstract/class.tx_pttools_
 class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iSettableByArray {
 
 	/**
-	 * @var string	where clause from configuration
+	 * @var string	base SQL WHERE clause from configuration
 	 */
 	protected $baseWhereClause;
 
+    /**
+     * @var string  base SQL GROUP BY clause from configuration
+     */
 	protected $baseGroupByClause;
 
+    /**
+     * @var string  base SQL FROM clause from configuration
+     */
 	protected $baseFromClause;
 
 	/**
  	 * @var array	involved tables
 	 */
 	protected $tables = array();
+	
+	
 
 	/***************************************************************************
 	 * Implementing abstract methods from the "tx_ptlist_list" class
@@ -90,17 +98,20 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 		$this->tables = t3lib_div::trimExplode(',', $dataArray['tables']);
 		tx_pttools_assert::isNotEmptyArray($this->tables, array('message' => 'No tables found in configuration!'));
 
-		// where clause
+		// SQL base where clause
 		$this->baseWhereClause = $GLOBALS['TSFE']->cObj->stdWrap($dataArray['baseWhereClause'], $dataArray['baseWhereClause.']);
 		if (empty($this->baseWhereClause)) {
 			$this->baseWhereClause = '1=1';	
 		}
 
-		// group by clause
+		// SQL base group by clause
 		$this->baseGroupByClause = $GLOBALS['TSFE']->cObj->stdWrap($dataArray['baseGroupByClause'], $dataArray['baseGroupByClause.']);
 
-		// from clause
+		// SQL base from clause
 		$this->baseFromClause = $GLOBALS['TSFE']->cObj->stdWrap($dataArray['baseFromClause'], $dataArray['baseFromClause.']);
+		
+        // text do display if no elements have been found for a list request (added by rk 2009-08-28)  # TODO: Replace this by a translation mechanism
+        $this->noElementsFoundText = $GLOBALS['TSFE']->cObj->stdWrap($dataArray['noElementsFoundText'], $dataArray['noElementsFoundText.']);
 
 		// setup dataDescriptions
 		$this->dataDescriptions = new tx_ptlist_dataDescriptionCollection();
@@ -332,7 +343,7 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 	public function get_baseFromClause() {
 		return $this->baseFromClause;
 	}
-
+    
 }
 
 ?>
