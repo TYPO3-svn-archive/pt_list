@@ -273,6 +273,27 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
             return $this->doAction('isNotActive');
         }
     }
+    
+    
+    
+    /**
+     * Override this method, set your value property there and then call this method afterwards
+     *
+     * @return  string HTML output
+     * @author  Fabrizio Branca <mail@fabrizio-branca.de>
+     * @since   2009-02-06
+     */
+    public function submitAction() {
+        $output = '';
+        
+        // do validation
+        if ($this->validate()) {
+            $output = $this->doAction('onValidated');
+        } else {
+            $output = $this->doAction('onNotValidated');
+        }
+        return $output;
+    }
 
     
     
@@ -289,7 +310,104 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
         $this->reset();
         return $this->doAction();
     }
-	
+    
+    
+    
+    /**
+     * This method will be called if the user input was validated succesfully by the default "submitAction".
+     * If you do not want to return the default method pass an array with the key "doNotReturnDefaultAction" set to true
+     *
+     * @param   array   parameter array
+     * @return  string  HTML output
+     * @author  Fabrizio Branca <mail@fabrizio-branca.de>, Rainer Kuhn <kuhn@punkt.de>
+     * @since   2009-02-06
+     */
+    public function onValidatedAction(array $params=array()) {
+        
+        if (TYPO3_DLOG) t3lib_div::devLog('onValidatedAction', 'pt_list', 2, $this->conf);  
+        $this->isActive = true;
+        
+        // reset sorting state of filtered list, if set in TS
+        if ($this->conf['resetListSortingStateOnSubmit'] == 1) {
+            $this->resetListSortingState();
+        }   
+        
+        // reset other filters if set in filter config
+        if ($this->conf['resetFilters']) {
+            $listObject = tx_pttools_registry::getInstance()->get($this->listIdentifier.'_listObject'); /* @var $listObject tx_ptlist_list */
+            
+            // set resetFilters to "__ALL__" to reset all other filters
+            if ($this->conf['resetFilters'] == '__ALL__') {
+                $exceptFilterId = $this->filterIdentifier;
+                $listObject->getAllFilters()->reset($exceptFilterId); 
+            // reset filters from given filter identifier or comma seprated list of filter identifier
+            } else {
+                $resetFiltersArray = tx_pttools_div::returnArrayFromCsl($this->conf['resetFilters']);
+                if (is_array($resetFiltersArray)) {
+                    foreach ($resetFiltersArray as $filterIdentifier) {
+                        $listObject->getAllFilters()->getItemById($filterIdentifier)->reset();
+                    }
+                }
+            }
+        }
+        
+        // execute user functions
+        if (is_array($this->conf['onValidated.'])) {
+            if (TYPO3_DLOG) t3lib_div::devLog('onValidated userfunctions', 'pt_list', 2, $this->conf['onValidated.']);
+
+            $sortedKeys = t3lib_TStemplate::sortedKeyList($this->conf['onValidated.'], false);
+            
+            foreach ($sortedKeys as $key) {
+                
+                $funcName = $this->conf['onValidated.'][$key];
+                tx_pttools_assert::isNotEmptyString($funcName, array('message' => 'No valid "funcName" found!'));
+                
+                $userFuncParams = array(
+                    'conf' => $this->conf['onValidated.'][$key.'.']
+                );
+                t3lib_div::callUserFunction($funcName, $userFuncParams, $this);
+                // function return will be ignored
+            }
+        }
+        
+        return ($params['doNotReturnDefaultAction'] == true) ? '' : $this->doAction('');
+    }
+    
+    
+    
+    /**
+     * This method will be called if the user input was not validated succesfully by the default "submitAction"
+     * If you do not want to return the default method pass an array with the key "doNotReturnDefaultAction" set to true
+     *
+     * @param   array   parameter array
+     * @return  string  HTML output
+     * @author  Fabrizio Branca <mail@fabrizio-branca.de>
+     * @since   2009-02-06
+     */
+    public function onNotValidatedAction(array $params=array()) {
+        $this->isActive = false;
+        // TODO: remove string in the output
+        return ($params['doNotReturnDefaultAction'] == true) ? '' : 'Not validated<br />' . $this->doAction('');
+    }
+    
+    
+    
+    /**
+     * This method will be called to generate the output for the filter breadcrumb.
+     * If you want additional functionality or a different output overwrite this method.
+     *
+     * @param   void
+     * @return  string HTML ouput
+     * @author  Fabrizio Branca <mail@fabrizio-branca.de>
+     * @since   2009-02-06
+     */
+    public function breadcrumbAction() {
+        $view = $this->getView('filter_breadcrumb');
+        $view->addItem($this->label, 'label');
+        $view->addItem($this->value, 'value');
+        return $view->render();
+    }
+    
     
     
     /**
@@ -418,27 +536,6 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
 	
 	
 	/**
-	 * Override this method, set your value property there and then call this method afterwards
-	 *
-	 * @return 	string HTML output
-	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
-	 * @since	2009-02-06
-	 */
-	public function submitAction() {
-		$output = '';
-		
-		// do validation
-		if ($this->validate()) {
-			$output = $this->doAction('onValidated');
-		} else {
-			$output = $this->doAction('onNotValidated');
-		}
-		return $output;
-	}
-	
-	
-	
-	/**
 	 * This method will be called to determine if the user input validates.
 	 * Overwrite this method in your inheriting class if you use the default "submitAction".
 	 * 
@@ -449,103 +546,6 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
 	 */
 	public function validate() {
 		throw new tx_pttools_exception('No "validate" method implemented!');
-	}
-	
-	
-	
-	/**
-	 * This method will be called if the user input was validated succesfully by the default "submitAction".
-	 * If you do not want to return the default method pass an array with the key "doNotReturnDefaultAction" set to true
-	 *
-	 * @param 	array 	parameter array
-	 * @return 	string 	HTML output
-	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>, Rainer Kuhn <kuhn@punkt.de>
-	 * @since	2009-02-06
-	 */
-	public function onValidatedAction(array $params=array()) {
-	    
-		if (TYPO3_DLOG) t3lib_div::devLog('onValidatedAction', 'pt_list', 2, $this->conf);	
-		$this->isActive = true;
-		
-		// reset sorting state of filtered list, if set in TS
-        if ($this->conf['resetListSortingStateOnSubmit'] == 1) {
-            $this->resetListSortingState();
-        }   
-        
-        // reset other filters if set in filter config
-        if ($this->conf['resetFilters']) {
-            $listObject = tx_pttools_registry::getInstance()->get($this->listIdentifier.'_listObject'); /* @var $listObject tx_ptlist_list */
-            
-            // set resetFilters to "__ALL__" to reset all other filters
-            if ($this->conf['resetFilters'] == '__ALL__') {
-                $exceptFilterId = $this->filterIdentifier;
-                $listObject->getAllFilters()->reset($exceptFilterId); 
-            // reset filters from given filter identifier or comma seprated list of filter identifier
-            } else {
-                $resetFiltersArray = tx_pttools_div::returnArrayFromCsl($this->conf['resetFilters']);
-                if (is_array($resetFiltersArray)) {
-                    foreach ($resetFiltersArray as $filterIdentifier) {
-                        $listObject->getAllFilters()->getItemById($filterIdentifier)->reset();
-                    }
-                }
-            }
-        }
-		
-		// execute user functions
-		if (is_array($this->conf['onValidated.'])) {
-			if (TYPO3_DLOG) t3lib_div::devLog('onValidated userfunctions', 'pt_list', 2, $this->conf['onValidated.']);
-
-			$sortedKeys = t3lib_TStemplate::sortedKeyList($this->conf['onValidated.'], false);
-			
-			foreach ($sortedKeys as $key) {
-			    
-				$funcName = $this->conf['onValidated.'][$key];
-			    tx_pttools_assert::isNotEmptyString($funcName, array('message' => 'No valid "funcName" found!'));
-			    
-   			    $userFuncParams = array(
-   				    'conf' => $this->conf['onValidated.'][$key.'.']
-   				);
-   				t3lib_div::callUserFunction($funcName, $userFuncParams, $this);
-   				// function return will be ignored
-			}
-		}
-		
-		return ($params['doNotReturnDefaultAction'] == true) ? '' : $this->doAction('');
-	}
-	
-	
-	
-	/**
-	 * This method will be called if the user input was not validated succesfully by the default "submitAction"
-	 * If you do not want to return the default method pass an array with the key "doNotReturnDefaultAction" set to true
-	 *
-	 * @param 	array 	parameter array
-	 * @return 	string 	HTML output
-	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
-	 * @since	2009-02-06
-	 */
-	public function onNotValidatedAction(array $params=array()) {
-		$this->isActive = false;
-		// TODO: remove string in the output
-		return ($params['doNotReturnDefaultAction'] == true) ? '' : 'Not validated<br />' . $this->doAction('');
-	}
-	
-	
-	
-	/**
-	 * This method will be called to generate the output for the filter breadcrumb.
-	 * If you want additional functionality or a different output overwrite this method.
-	 *
-	 * @param 	void
-	 * @return 	string HTML ouput
-	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
-	 * @since	2009-02-06
-	 */
-	public function breadcrumbAction() {
-		$view = $this->getView('filter_breadcrumb');
-		$view->addItem($this->label, 'label');
-		$view->addItem($this->value, 'value');
-		return $view->render();
 	}
 	
 	
