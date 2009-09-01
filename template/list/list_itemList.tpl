@@ -68,11 +68,17 @@
 	
 	
 	{assign var="odd_even" value="odd"}
+	{assign var="firstHeader" value="1"}
 	{foreach from=$listItems item=row name="rows"}
 	
 	    {if $row.is_structure_header == 1}
-	       <tr class="odd">
-	       {assign var="odd_even" value="odd"}
+	       {if $firstHeader > 1}
+	           <tr><td class="fill" colspan="{$spanned_cols_by_header}">&nbsp;</td></tr>
+	           <tr class="odd">
+	           {assign var="odd_even" value="odd"}
+	       {else}
+	           {assign var="firstHeader" value="2"}
+	       {/if}
 	    {else}
 	       {if $odd_even == "odd"}<tr class="odd">{else}<tr class="even">{/if}
 	    {/if}

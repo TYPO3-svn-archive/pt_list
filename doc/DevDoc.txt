@@ -30,7 +30,7 @@ ToDo: As of 28.08.2009
 
 
 
-
++ (mk) CHG: Added empty row before structure header in structured list
 + (rk) ADD/RFT: added TS stdWrap toolbox to "noElementsFoundText" configuration, refactored "noElementsFoundText" implementation
 + (rk) RFT: tx_ptlist_filter: renamed setDefaultValueFromTs() to setPresetStateFromTs(), resetToTsConfigAction() to resetToTsPresetStateAction() and setIsActiveAndDefaultValueFromArray() to setPresetStateFromArray()
 + (mk) RFT: Added proxy method for setting default value and isActive in tx_ptlist_filter
