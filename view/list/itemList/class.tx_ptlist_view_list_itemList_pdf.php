@@ -136,6 +136,9 @@ class tx_ptlist_view_list_itemList_pdf extends tx_ptlist_view {
             // ->set_languageKey($conf['languageKey'])
             ->addMarkers($this->itemsArr)
             ->createXml()
+            #print_r($this->itemsArr);
+            #print_r($xmlRenderer->get_xml());
+            #exit();
             ->renderPdf($this->pdfFilename, $this->downloadType);
        // stop execution to avoid some content to be rendered after this output by TYPO3
        exit();
