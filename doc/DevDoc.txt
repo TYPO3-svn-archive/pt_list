@@ -18,15 +18,11 @@ ToDo: As of 28.08.2009
   - check already implemented adaptions of rk in tx_ptlist_controller_list (see changelog below) - is this the right place?
   + IMPORTANT: make default XSS prevention configurable for a complete list (e.g. pt_list usage for CSV and PDF)
     (Alternative, but not-so-easy-to-implement: make default XSS prevention configurable for each dataDescriptionIdentifier via Typoscript) 
-    
   - IMPORTANT: check for further default prevention actions
   - check new default XSS prevention behaviour of pt_mvc for unwanted effects, for 
     + breadcrumbs, 
     - bookmarks 
     - and other list features using tx_ptmvc_view::addItem()
-  - Configuration plugin.tx_ptlist.controller.list.itemsPerPage should be configurable for each list id
-  - (mk) Prevent code duplication in structured list / PDF structured list (make renderer an own object to use different renderers for output)
-
 
 
 
@@ -177,7 +173,4 @@ $this->conf =
 
 TODO:
 =====
-
-- (mk) Write some documentation about PDF generation
-- (mk) Write some documentation about structured lists
 - (mk) Refactor tx_ptlist_controller_list::init()
