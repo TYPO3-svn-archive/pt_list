@@ -174,10 +174,10 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
 
 		switch ($dateFieldType) {
 		case 'date':
-			$select = "DISTINCT DATE_FORMAT($field, '%d') AS day, DATE_FORMAT($field, '%m') AS month, DATE_FORMAT($field, '%Y') AS year";
+			$select = "DISTINCT DATE_FORMAT($field, '%e') AS day, DATE_FORMAT($field, '%c') AS month, DATE_FORMAT($field, '%Y') AS year";
 			break;
 		case 'timestamp':
-			$select = "DISTINCT FROM_UNIXTIME($field, '%d') AS day, FROM_UNIXTIME($field, '%m') AS month, FROM_UNIXTIME($field, '%Y') AS year";
+			$select = "DISTINCT FROM_UNIXTIME($field, '%e') AS day, FROM_UNIXTIME($field, '%c') AS month, FROM_UNIXTIME($field, '%Y') AS year";
 			break;
 		default:
 			throw new tx_pttools_exceptionConfiguration("No valid date field type set.",
