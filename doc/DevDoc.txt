@@ -25,6 +25,7 @@ ToDo: As of 28.08.2009
     - and other list features using tx_ptmvc_view::addItem()
 
 
++ (jm) ADD: Added fullQuoteStr() to getSqlWhereClauseSnippet fields in date picker
 + (jm) FIX: Replaced date specifiers for day and month in SQL query of date picker filter
 + (mk) CHG: Added empty row before structure header in structured list
 + (rk) ADD/RFT: added TS stdWrap toolbox to "noElementsFoundText" configuration, refactored "noElementsFoundText" implementation

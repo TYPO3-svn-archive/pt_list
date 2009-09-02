@@ -251,19 +251,20 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
 		// Determine field type of date field (timestamp or date format; default: timestamp).
 		// This information has to be given in the TypoScript config property `dateFieldType'.
 		$dateFieldType = $this->conf['dateFieldType'] == '' ? 'timestamp' : $this->conf['dateFieldType'];
+ 
+        $table = $this->dataDescriptions->getItemByIndex(0)->get_table();
 
 		switch ($dateFieldType) {
 		case 'date':
-			$sqlWhereClauseSnippet = "DATE_FORMAT(".$dbColumn.", '%Y-%m-%d') = '".$date."'";
+			$sqlWhereClauseSnippet = "DATE_FORMAT(" . $dbColumn . ", '%Y-%m-%d') = " . $GLOBALS['TYPO3_DB']->fullQuoteStr($date, $table); // prevents SQL injection!
 			break;
 		case 'timestamp':
-			$sqlWhereClauseSnippet = "FROM_UNIXTIME(".$dbColumn.", '%Y-%m-%d') = '".$date."'";
+			$sqlWhereClauseSnippet = "FROM_UNIXTIME(" . $dbColumn . ", '%Y-%m-%d') = " . $GLOBALS['TYPO3_DB']->fullQuoteStr($date, $table); // prevents SQL injection!
 			break;
 		default:
 			throw new tx_pttools_exceptionConfiguration("No valid date field type set.",
 														"No valid date field type set for eventCalender filter. Type was ".$dateFieldType." but can only be 'date' or 'timestamp'!");
-		}
-        
+		}       
         
         // HOOK: allow multiple hooks to append individual additional where clause conditions (added by rk 19.08.09)
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['filter_datePicker']['getSqlWhereClauseSnippetHook'])) {
@@ -276,7 +277,6 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
             }
         }   
         
-
 		return $sqlWhereClauseSnippet;
 		
 	}
