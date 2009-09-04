@@ -30,16 +30,16 @@ $(function(){ldelim}
           {if $datePickerMode eq 'inline'}
           onSelect: loadUrl,
           {/if}
-          defaultDate: defaultDate, // set the date to highlight on first opening
-          altFormat: 'yy-mm-dd',    // set date format which is sent behind the scenes
-          altField: '#actualDate',  // set the form field which contains the alternate date format
-          beforeShowDay: addDates,  // callback function
-          showOn: "both",           // show calender only when button is pressed
-          buttonImage: "typo3conf/ext/pt_list/res/javascript/jqueryui/development-bundle/demos/datepicker/images/calendar.gif",
-          buttonImageOnly: "true",  // no button, only the image
-          buttonText: "",           // no button text
-          changeMonth: "true",      // drop down menu for months
-          changeYear: "true"        // drop down menu for years
+          defaultDate: defaultDate,      // set the date to highlight on first opening
+          altFormat: 'yy-mm-dd',         // set date format which is sent behind the scenes
+          altField: '#actualDate',       // set the form field which contains the alternate date format
+          beforeShowDay: addDates,       // callback function
+          showOn: "both",                // show calender only when button is pressed
+          buttonImage: "{$buttonImage}", // path to calendar icon
+          buttonImageOnly: "true",       // no button, only the image
+          buttonText: "",                // no button text
+          changeMonth: {$changeMonth},   // drop down menu for months
+          changeYear: {$changeYear},     // drop down menu for years
       {rdelim};
 
       // set date picker defaults

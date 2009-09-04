@@ -79,6 +79,9 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
 	/**
 	 * Is not active action
 	 *
+	 * Sets various date picker features which are defined in TypoScript
+	 * configuration
+	 *
 	 * @param		void
 	 * @return		string	HTML output
 	 * @author		Joachim Mathes <mathes@punkt.de>
@@ -99,18 +102,30 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
 		}
 		$datesJSON = "{'dates':[".implode(',', $datesArray)."]}";
 
-		// Get date picker mode
+		// Set date picker mode
 		$datePickerMode = $this->conf['datePickerMode'] == '' ? 'inline' : $this->conf['datePickerMode'];
+
+        // Set the changeMonth mode, i.e. if the month can be changed by selecting from a drop-down list
+        $changeMonth = $this->conf['changeMonth'] == '' ? 'true' : $this->conf['changeMonth'];
+
+        // Set the changeYear mode, i.e. if the year can be changed by selecting from a drop-down list
+        $changeYear = $this->conf['changeYear'] == '' ? 'true' : $this->conf['changeYear'];
+
+        // Set the path to the calendar icon, which is displayed in inline mode
+        $buttonImage = $this->conf['buttonImage'] == '' ? t3lib_extMgm::extRelPath('pt_list').'res/javascript/jqueryui/development-bundle/demos/datepicker/images/calendar.gif' : $this->conf['buttonImage'];
 
 		// Set default date
 		$defaultDate = $this->value['date'] == '' ? date('Y-m-d') : $this->value['date'];
 		$defaultDate = explode('-', $defaultDate);
 		$defaultDate[1]--; // peculiar JavaScript date feature
-
+        
 		// Set View items for Smarty template
 		$view->addItem($this->submitLabel, 'submitLabel');
 		$view->addItem($datesJSON, 'datesJSON', false);
 		$view->addItem($datePickerMode, 'datePickerMode');
+		$view->addItem($changeMonth, 'changeMonth');
+		$view->addItem($changeYear, 'changeYear');
+		$view->addItem($buttonImage, 'buttonImage');
 		$view->addItem($defaultDate, 'defaultDate');
 
 		return $view->render();
