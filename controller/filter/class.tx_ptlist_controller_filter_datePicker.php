@@ -28,7 +28,7 @@ require_once t3lib_extMgm::extPath('pt_list').'view/filter/datePicker/class.tx_p
 /**
  * Class implementing a Datepicker filter
  *
- * @version		$Id: class.tx_ptlist_controller_filter_timeSpan.php 20112 2009-05-09 11:57:47Z fabriziobranca $
+ * @version		$Id$
  * @author		Joachim Mathes
  * @since		2009-07-14
  */
@@ -278,7 +278,7 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
 			break;
 		default:
 			throw new tx_pttools_exceptionConfiguration("No valid date field type set.",
-														"No valid date field type set for eventCalender filter. Type was ".$dateFieldType." but can only be 'date' or 'timestamp'!");
+														"No valid date field type set for datePicker filter. Type was " . $dateFieldType . " but can only be 'date' or 'timestamp'!");
 		}       
         
         // HOOK: allow multiple hooks to append individual additional where clause conditions (added by rk 19.08.09)
