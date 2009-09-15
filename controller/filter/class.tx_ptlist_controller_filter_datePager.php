@@ -24,6 +24,7 @@
 
 require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_filter.php';
 require_once t3lib_extMgm::extPath('pt_list').'view/filter/datePager/class.tx_ptlist_view_filter_datePager_userInterface.php';
+require_once t3lib_extMgm::extPath('pt_tools').'res/staticlib/class.tx_pttools_div.php';
 
 /**
  * Class implementing a Date Pager filter
@@ -34,10 +35,8 @@ require_once t3lib_extMgm::extPath('pt_list').'view/filter/datePager/class.tx_pt
  */
 class tx_ptlist_controller_filter_datePager extends tx_ptlist_filter {
 
-    /**
-     *
-     */
 	protected $value = array();
+    protected $firstDayOfWeek = 1; // set index to monday which is the first day of the week according to DIN 1355 
 
 	/**
 	 * MVC init method
@@ -96,11 +95,12 @@ class tx_ptlist_controller_filter_datePager extends tx_ptlist_filter {
 		$view = $this->getView('filter_datePager_userInterface');
 
         // Get Typoscript configuration values
-        $span['range'] = $this->conf['range'] == '' ? 'day' : $this->conf['range'];
+        $span['entity'] = $this->conf['entity'] == '' ? 'day' : $this->conf['entity'];
         $span['nextValue'] = isset($this->value['nextValue']) ? intval($this->value['nextValue']) : 1;
         $span['prevValue'] = isset($this->value['prevValue']) ? intval($this->value['prevValue']) : -1;
         $span['labelPrevious'] = $this->conf['labelPrevious'] == '' ? '<' : $GLOBALS['TSFE']->cObj->stdWrap($this->conf['labelPrevious'],  $this->conf['labelPrevious.']);
         $span['labelNext'] = $this->conf['labelNext'] == '' ? '>' : $GLOBALS['TSFE']->cObj->stdWrap($this->conf['labelNext'],  $this->conf['labelNext.']);
+        $span['header'] = $this->renderHeader();
 
    		// Set View items for Smarty template
 		$view->addItem($span, 'span');
@@ -157,8 +157,6 @@ class tx_ptlist_controller_filter_datePager extends tx_ptlist_filter {
 			throw new tx_pttools_exceptionConfiguration("No valid 'mode' set in GET parameters.");
         }
 
-
-
 		// Let the parent action do the submission.
 		// It calls the validate() function.
 		return parent::submitAction();
@@ -180,33 +178,136 @@ class tx_ptlist_controller_filter_datePager extends tx_ptlist_filter {
 
         $table = $this->dataDescriptions->getItemByIndex(0)->get_table();
 		$column =  $table . '.' . $this->dataDescriptions->getItemByIndex(0)->get_field();
-
-        $range = $this->conf['range'] == '' ? 'day' : $this->conf['range'];
-
+        $dateFieldType = $this->conf['dateFieldType'];
+        $entity = $this->conf['entity'] == '' ? 'day' : $this->conf['entity'];
 
 		// Determine field type of date field (timestamp or date format; default: timestamp).
 		// This information has to be given in the TypoScript config property 'dateFieldType'.
-        $sqlFunction = $this->conf['dateFieldType'] == 'date' ? 'DATE_FORMAT' : 'FROM_UNIXTIME';
+        switch ($dateFieldType) {
+        case 'date':
+            $sqlFunction = 'DATE_FORMAT';
+            break;
+        case 'timestamp':
+            $sqlFunction = 'FROM_UNIXTIME';
+            break;
+		default:
+			throw new tx_pttools_exceptionConfiguration("No valid 'dateFieldType' set in Typoscript configuration.");            
+        }
 
         // mktime parameters: hour, minute, second, month, day, year
-		switch ($range) {
+		switch ($entity) {
 		case 'day':
-			$sqlWhereClauseSnippet = $sqlFunction . "(" . $column . ", '%Y-%m-%d') = '" . date('Y-m-d', mktime(0, 0 ,0, date('m'), date('d') + intval($this->value['value']), date('Y'))) . "'";
+			$sqlWhereClauseSnippet = $sqlFunction . "(" . $column . ", '%Y-%m-%d') = '" . date('Y-m-d', mktime(0, 0 ,0, date('n'), date('j') + intval($this->value['value']), date('Y'))) . "'";
 			break;
 		case 'week':
-			$sqlWhereClauseSnippet = "WEEKOFYEAR(" . $sqlFunction . "(" . $column . ", '%Y-%m-%d')) = '" . date('W', mktime(0, 0 ,0, date('m'), date('d') + 7 * intval($this->value['value']), date('Y'))) . "' AND " . $sqlFunction . "(" . $column . ", '%Y') = '" . date('Y', mktime(0, 0 ,0, date('m'), date('d') + 7 * intval($this->value['value']), date('Y'))) . "'";
+			$sqlWhereClauseSnippet = "WEEKOFYEAR(" . $sqlFunction . "(" . $column . ", '%Y-%m-%d')) = '" . date('W', mktime(0, 0 ,0, date('n'), date('j') + 7 * intval($this->value['value']), date('Y'))) . "' AND " . $sqlFunction . "(" . $column . ", '%Y') = '" . date('Y', mktime(0, 0 ,0, date('n'), date('j') + 7 * intval($this->value['value']), date('Y'))) . "'";
 			break;
 		case 'month':
-            $sqlWhereClauseSnippet = $sqlFunction . "(" . $column . ", '%Y-%m') = '" . date('Y-m', mktime(0, 0, 0 , date('m') + intval($this->value['value']), date('d'), date('Y'))) . "'";
+            $sqlWhereClauseSnippet = $sqlFunction . "(" . $column . ", '%Y-%m') = '" . date('Y-m', mktime(0, 0, 0 , date('n') + intval($this->value['value']), date('j'), date('Y'))) . "'";
 			break;
 		case 'year':
-			$sqlWhereClauseSnippet =  $sqlFunction . "(" . $column . ", '%Y') = '" . date('Y', mktime(0, 0, 0, date('m'), date('d'), date('Y') + intval($this->value['value']))) . "'";
+			$sqlWhereClauseSnippet =  $sqlFunction . "(" . $column . ", '%Y') = '" . date('Y', mktime(0, 0, 0, date('n'), date('j'), date('Y') + intval($this->value['value']))) . "'";
 			break;
 		default:
-			throw new tx_pttools_exceptionConfiguration("No valid 'range' set in Typoscript configuration.");
+			throw new tx_pttools_exceptionConfiguration("No valid 'entity' set in Typoscript configuration.");
 		}
 
 		return $sqlWhereClauseSnippet;
+    }
+
+
+	/**
+	 * Renders the header text for the filter
+	 *
+	 * The TS variables {field:begin} and {field:end} are replaced by their
+	 * respective values depending on the chosen date entity.
+	 *
+	 * @param   void
+	 * @return  string	rendered header
+	 * @author  Joachim Mathes <mathes@punkt.de>
+	 * @since   2009-09-15
+	 */
+    protected function renderHeader() {
+
+        // Get configuration from TypoScript
+        $entity = $this->conf['entity'] == '' ? 'day' : $this->conf['entity'];
+        $beginFormat = $this->conf['beginFormat'] == '' ? 'Y-m-d' : $this->conf['beginFormat'];
+        $endFormat = $this->conf['endFormat'] == '' ? 'Y-m-d' : $this->conf['endFormat'];
+
+        $firstDayOfWeek = $this->firstDayOfWeek;
+
+        // Evaluate day, week or month number depending on 'entity'
+		switch ($entity) {
+		case 'day':
+            $dateEntityBegin =  date('d',
+                                     mktime(0, 0, 0,
+                                            date('n'),
+                                            date('j') + intval($this->value['value']),
+                                            date('Y')));
+            $dateEntityEnd =  date('d',
+                                   mktime(0, 0, 0,
+                                          date('n'),
+                                          date('j') + intval($this->value['value']),
+                                          date('Y')));
+			break;
+		case 'week':
+			$value = date('W', mktime(0, 0, 0, date('n'), date('j') + 7 * intval($this->value['value']), date('Y')));
+            $dateEntityBegin = date($beginFormat,
+                                    mktime(0, 0, 0,
+                                           date('n'),
+                                           date('j') + 7 * intval($this->value['value']) - date('w') + $firstDayOfWeek,
+                                           date('Y')));
+            $dateEntityEnd = date($endFormat,
+                                  mktime(0, 0, 0,
+                                         date('n'),
+                                         date('j') + 7 * intval($this->value['value']) - date('w') + $firstDayOfWeek  + 6,
+                                         date('Y')));
+			break;
+		case 'month':
+            $dateEntityBegin = date($beginFormat,
+                                    mktime(0, 0, 0,
+                                           date('n') + intval($this->value['value']),
+                                           1,
+                                           date('Y')));
+            $dateEntityEnd = date($endFormat,
+                                  mktime(0, 0, 0,
+                                         date('n') + intval($this->value['value']),
+                                         date('t'),
+                                         date('Y')));
+			break;
+		case 'year':
+            $dateEntityBegin = date($beginFormat,
+                                    mktime(0, 0, 0,
+                                           1, 1, date('Y')));
+            $dateEntityEnd = date($endFormat,
+                                  mktime(0, 0, 0,
+                                         12, 31, date('Y')));
+			break;
+		default:
+			throw new tx_pttools_exceptionConfiguration("No valid 'entity' set in Typoscript configuration.");
+		}
+
+        $renderValues = array('begin' => $dateEntityBegin,
+                              'end' => $dateEntityEnd);
+
+		// Rendering configuration
+		// Fields will be rendered with the tx_ptlist_div::renderValues() method. Have a look at the comment there for details
+		if (isset($this->conf['header']) && isset($this->conf['header.'])) {
+			$renderConfig['renderObj'] = $this->conf['header'];
+			$renderConfig['renderObj.'] = $this->conf['header.'];
+		}
+		if (isset($this->conf['renderUserFunctions.'])) {
+			$renderConfig['renderUserFunctions.'] = $this->conf['renderUserFunctions.'];
+		}
+
+        if (isset($renderConfig)) {
+            $header = tx_ptlist_div::renderValues($renderValues, $renderConfig);
+        }
+        else {
+            $header = '';
+        }
+
+        return $header;
     }
 
 

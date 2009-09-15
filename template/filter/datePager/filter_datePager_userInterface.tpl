@@ -1,5 +1,6 @@
 {*debug*}
 <div class="tx-ptlist-datePager">
+  <div class="tx-ptlist-datePager-header">{$span.header}</div>
   <span class="tx-ptlist-datePager-browse tx-ptlist-datePager-previous">
     <a href="{url parameter=$currentPage additionalParams='&%1$s[action]=submit&%1$s[prevValue]=%2$s&%1$s[mode]=prev'|vsprintf:$prefixId:$span.prevValue setup='lib.tx_ptlist.typolinks.datePager'}">
       {$span.labelPrevious}
