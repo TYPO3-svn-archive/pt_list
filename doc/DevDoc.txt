@@ -24,7 +24,7 @@ ToDo: As of 28.08.2009
     - bookmarks 
     - and other list features using tx_ptmvc_view::addItem()
 
-
++ (jm) FIX: Fixed tag id in Date Picker template. Caused conflicts with Tidy extension.
 + (jm) ADD: Added new Date Pager filter functionality
 + (jm) ADD: Added new Date Pager filter
 + (jm) ADD: Added new TS options for date picker filter

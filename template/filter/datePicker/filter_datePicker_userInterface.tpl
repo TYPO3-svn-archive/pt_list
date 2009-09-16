@@ -75,17 +75,17 @@ $(function(){ldelim}
 
       {if $datePickerMode eq 'inline'}
       function loadUrl(date, instance){ldelim}
-          document.datePicker.submit();
+          document.datePickerForm.submit();
           {rdelim}
       {/if}
   {rdelim});
 </script>
 
-<form method="post" name="datePicker" action="{url parameter=$currentPage additionalParams='&%1$s[action]=submit'|vsprintf:$prefixId setup='lib.tx_ptlist.typolinks.datePicker}">
+<form id="datePickerForm" name="datePickerForm" method="post" action="{url parameter=$currentPage additionalParams='&%1$s[action]=submit'|vsprintf:$prefixId setup='lib.tx_ptlist.typolinks.datePicker}">
   <input type="hidden" name="{$prefixId}[date]" id="actualDate" />
 
 {if $datePickerMode eq 'overlay'}
-  <input type="text" name="void" id="datePicker" />&nbsp;
+  <input type="text" id="datePicker" />&nbsp;
   <br /><br />
   <input type="submit" value="{$submitLabel}" />
 {elseif $datePickerMode eq 'inline'}
