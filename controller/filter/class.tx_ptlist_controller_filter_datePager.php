@@ -231,20 +231,20 @@ class tx_ptlist_controller_filter_datePager extends tx_ptlist_filter {
 
         // Get configuration from TypoScript
         $entity = $this->conf['entity'] == '' ? 'day' : $this->conf['entity'];
-        $beginFormat = $this->conf['beginFormat'] == '' ? 'Y-m-d' : $this->conf['beginFormat'];
-        $endFormat = $this->conf['endFormat'] == '' ? 'Y-m-d' : $this->conf['endFormat'];
+        $beginFormat = $this->conf['beginFormat'] == '' ? '%G-%m-%d' : $this->conf['beginFormat'];
+        $endFormat = $this->conf['endFormat'] == '' ? '%G-%m-%d' : $this->conf['endFormat'];
 
         $firstDayOfWeek = $this->firstDayOfWeek;
 
         // Evaluate day, week or month number depending on 'entity'
 		switch ($entity) {
 		case 'day':
-            $dateEntityBegin =  date('d',
+            $dateEntityBegin = strftime($beginFormat,
                                      mktime(0, 0, 0,
                                             date('n'),
                                             date('j') + intval($this->value['value']),
                                             date('Y')));
-            $dateEntityEnd =  date('d',
+            $dateEntityEnd = strftime($endFormat,
                                    mktime(0, 0, 0,
                                           date('n'),
                                           date('j') + intval($this->value['value']),
@@ -252,34 +252,34 @@ class tx_ptlist_controller_filter_datePager extends tx_ptlist_filter {
 			break;
 		case 'week':
 			$value = date('W', mktime(0, 0, 0, date('n'), date('j') + 7 * intval($this->value['value']), date('Y')));
-            $dateEntityBegin = date($beginFormat,
+            $dateEntityBegin = strftime($beginFormat,
                                     mktime(0, 0, 0,
                                            date('n'),
                                            date('j') + 7 * intval($this->value['value']) - date('w') + $firstDayOfWeek,
                                            date('Y')));
-            $dateEntityEnd = date($endFormat,
+            $dateEntityEnd = strftime($endFormat,
                                   mktime(0, 0, 0,
                                          date('n'),
                                          date('j') + 7 * intval($this->value['value']) - date('w') + $firstDayOfWeek  + 6,
                                          date('Y')));
 			break;
 		case 'month':
-            $dateEntityBegin = date($beginFormat,
+            $dateEntityBegin = strftime($beginFormat,
                                     mktime(0, 0, 0,
                                            date('n') + intval($this->value['value']),
                                            1,
                                            date('Y')));
-            $dateEntityEnd = date($endFormat,
+            $dateEntityEnd = strftime($endFormat,
                                   mktime(0, 0, 0,
                                          date('n') + intval($this->value['value']),
                                          date('t'),
                                          date('Y')));
 			break;
 		case 'year':
-            $dateEntityBegin = date($beginFormat,
+            $dateEntityBegin = strftime($beginFormat,
                                     mktime(0, 0, 0,
                                            1, 1, date('Y')));
-            $dateEntityEnd = date($endFormat,
+            $dateEntityEnd = strftime($endFormat,
                                   mktime(0, 0, 0,
                                          12, 31, date('Y')));
 			break;
