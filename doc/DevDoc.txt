@@ -24,6 +24,27 @@ ToDo: As of 28.08.2009
     - bookmarks 
     - and other list features using tx_ptmvc_view::addItem()
 
+
+Version 0.0.2-dev
+=================
+
++ (mk) RFT: Added comments on all filter classes
++ (mk) RFT: Did some refactoring on 'tx_ptlist_controller_filter_options_base'
++ (mk) RFT: Adapted maximum filter
++ (mk) RFT: Adapted minium filter 
++ (mk) RFT: Changed myDemoList TS to show submit labels for filters
++ (mk) RFT: Adapted string filter template for new naming convention
++ (mk) RFT: Changed name of filter config in template. Variable is now called 'filterconf' instead of 'filter' which made no sense
++ (mk) RFT: Changed 'string' filter to new behaviour of filter controller class
++ (mk) RFT: Added template method 'preSubmit()' to filter controller to run functionality that sould be done BEFORE filter is submited (e.g. set values from forms etc.)
++ (mk) RFT: Added new generic filter userInterface class 'class.tx_ptlist_view_filter_userInterface.php' for filter user interfaces
++ (mk) RFT: Changed filter main controller class to avoid code duplication
+
+
+
+Version 0.0.1
+=============
+
 + (jm) CHG: Switched from date() function to strftime() function in Date Pager filter, to get 'locale' functionality. 
 + (jm) FIX: Fixed tag id in Date Picker template. Caused conflicts with Tidy extension.
 + (jm) ADD: Added new Date Pager filter functionality

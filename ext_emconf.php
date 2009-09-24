@@ -14,7 +14,7 @@ $EM_CONF[$_EXTKEY] = array(
 	'title' => 'Generic list handler',
 	'description' => '',
 	'category' => 'plugin',
-	'author' => 'Fabrizio Branca, Rainer Kuhn',
+	'author' => 'Fabrizio Branca, Rainer Kuhn, Michael Knoll',
 	'author_email' => 't3extensions@punkt.de',
 	'shy' => '',
 	'dependencies' => 'pt_tools,pt_mvc,smarty',
@@ -29,7 +29,7 @@ $EM_CONF[$_EXTKEY] = array(
 	'clearCacheOnLoad' => 0,
 	'lockType' => '',
 	'author_company' => 'punkt.de GmbH',
-	'version' => '0.0.1dev',
+	'version' => '0.0.2dev',
 	'constraints' => array(
 		'depends' => array(
 			'pt_tools' => '0.4.2-',
@@ -39,8 +39,8 @@ $EM_CONF[$_EXTKEY] = array(
 		'conflicts' => array(
 		),
 		'suggests' => array(
-		  'static_info_tables' => '',
-          'pt_xml2pdf' => '',
+		  'static_info_tables (Only neede for demo-list application)' => '',
+          'pt_xml2pdf (Only needed, if you want to creat PDF documents with pt_list)' => '',
           'PEAR Spreadsheet_Excel_Writer (THIS IS JUST A HINT, please ignore if your server is correctly configured)' => '',
 		),
 	),

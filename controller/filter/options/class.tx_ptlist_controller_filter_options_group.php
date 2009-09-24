@@ -22,15 +22,32 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+
+
+/**
+ * Class definition file for group filter
+ * 
+ * @version     $Id$
+ * @author     Fabrizio Branca <mail@fabrizio-branca.de>
+ * @since       2009-01-23
+ */
+
+
+
+/**
+ * Inclusion of external ressources
+ */
 require_once t3lib_extMgm::extPath('pt_list').'controller/filter/options/class.tx_ptlist_controller_filter_options_base.php';
+
 
 
 /**
  * Group filter class
- *
- * @version 	$Id$
+ * 
  * @author		Fabrizio Branca <mail@fabrizio-branca.de>
  * @since		2009-01-23
+ * @package     Typo3
+ * @subpackage  pt_list
  */
 class tx_ptlist_controller_filter_options_group extends tx_ptlist_controller_filter_options_base {
 

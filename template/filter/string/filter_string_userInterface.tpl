@@ -2,5 +2,5 @@
 	<input type="text" name="{$prefixId}[value]" value="{$value}" />
 	<br />
 	<br />
-	<input type="submit" value="{$filter.submitValue|ll:0}" />
+	<input type="submit" value="{$filterconf.submitValue|ll:0}" />
 </form>

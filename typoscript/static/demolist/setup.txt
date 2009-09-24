@@ -227,6 +227,7 @@ plugin.tx_ptlist.listConfig.myDemoList {
 		10 {
 			filterIdentifier = stringCountryCapital
 			label = String search country/capital
+			submitValue = Search
 			
 			# this is a csl of dataDescriptionIdentifier this filter refers to
 			dataDescriptionIdentifier = name_local, name_en, capital
@@ -236,12 +237,14 @@ plugin.tx_ptlist.listConfig.myDemoList {
 			filterIdentifier = minPhoneNumber
 			label = Minimum Phone Number
 			dataDescriptionIdentifier = phone
+			submitValue = Search
 		}
 		30 < plugin.tx_ptlist.alias.filter_max
 		30 {
 			filterIdentifier = minIsoNo
 			label = Maximum Iso Number
 			dataDescriptionIdentifier = isoNo
+			submitValue = Search
 		}
 		40 < plugin.tx_ptlist.alias.filter_options_group
 		40 {
@@ -250,12 +253,13 @@ plugin.tx_ptlist.listConfig.myDemoList {
 			dataDescriptionIdentifier = continent
 			mode = checkbox
 			multiple = 1
-			/*
-			advmultiselectConf {
-				# can be an integer or "all" to set the size of the select box that way, that all items can be seen without scrolling
-				size = all
-			}
-			*/
+			submitValue = Search
+			
+			# advmultiselectConf {
+			#	# can be an integer or "all" to set the size of the select box that way, that all items can be seen without scrolling
+			#	size = all
+			# }
+			
 		}
 		50 < plugin.tx_ptlist.alias.filter_options_group
 		50 {
@@ -263,6 +267,7 @@ plugin.tx_ptlist.listConfig.myDemoList {
 			label = Select region
 			dataDescriptionIdentifier = subcontinent
 			dependsOn = groupContinents
+			submitValue = Search
 		}
 	}
 	

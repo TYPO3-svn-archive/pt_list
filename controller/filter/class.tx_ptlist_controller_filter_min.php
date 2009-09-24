@@ -22,19 +22,40 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+
+/**
+ * Class definition file for a "minium" filter for pt_list
+ * 
+ * @author    Fabrizio Branca <mail@fabrizi-branca.de>
+ * @since     2009-01-26
+ */
+
+
+
+/**
+ * Inclusion of external ressources
+ */
 require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_filter.php';
 require_once t3lib_extMgm::extPath('pt_list').'view/filter/min/class.tx_ptlist_view_filter_min_userInterface.php';
+
+
 
 /**
  * Class implementing a "minimum" filter
  * 
  * @version  	$Id$
  * @author		Fabrizio Branca <mail@fabrizio-branca.de>
+ * @package     Typo3
+ * @subpackage  pt_list
  * @since		2009-01-26
  */
 class tx_ptlist_controller_filter_min extends tx_ptlist_filter {
 	
 	
+	
+	/***************************************************************************
+     * Overwriting pt_mvc default behaviour
+     **************************************************************************/
 	
 	/**
 	 * MVC init method:
@@ -52,6 +73,10 @@ class tx_ptlist_controller_filter_min extends tx_ptlist_filter {
 	}
 	
 	
+	
+	/***************************************************************************
+     * Controller action methods 
+     **************************************************************************/
 	
 	/**
 	 * Displays the user interface in active state
@@ -78,28 +103,35 @@ class tx_ptlist_controller_filter_min extends tx_ptlist_filter {
 	 * @since	2009-01-19
 	 */
 	public function isNotActiveAction() {
-		$view = $this->getView('filter_min_userInterface');
+		$view = $this->getView($this->getFilterViewName());
 		$view->addItem($this->value, 'value');
 		return $view->render();
 	}
 	
 	
 	
+	/***************************************************************************
+     * Template methods
+     **************************************************************************/
+	
 	/**
-	 * Submit action
+	 * Template method for functionionality to be run before submit action
 	 *
 	 * @param 	void
 	 * @return 	string	HTML output
-	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
-	 * @since	2009-01-19
+	 * @author	Michael Knoll
+	 * @since	2009-09-23
 	 */
-	public function submitAction() {
+	public function preSubmit() {
 		$this->isActive = true;
 		$this->value = $this->params['value'];
-		return $this->doAction('default');
 	}
 
 	
+	/***************************************************************************
+     * Domain-Logic
+     * Methods defined in parent abstract class "tx_ptlist_filter" 
+     **************************************************************************/
 	
 	/**
 	 * Get sql where clause snippet
@@ -110,9 +142,31 @@ class tx_ptlist_controller_filter_min extends tx_ptlist_filter {
 	 * @since	2009-01-19
 	 */
 	public function getSqlWhereClauseSnippet() {
-		$sqlWhereClauseSnippet = sprintf('%s.%s >= %s', $this->dataDescriptions->getItemByIndex(0)->get_table(), $this->dataDescriptions->getItemByIndex(0)->get_field(), intval($this->value));
+		$sqlWhereClauseSnippet = sprintf(
+		    '%s.%s >= %s', 
+		    $this->dataDescriptions->getItemByIndex(0)->get_table(), 
+		    $this->dataDescriptions->getItemByIndex(0)->get_field(), 
+		    intval($this->value)
+	    );
 		return $sqlWhereClauseSnippet;
 	}
+    
+    
+    
+    /***************************************************************************
+     * Helper methods 
+     **************************************************************************/
+    
+    /**
+     * Returns the view name for this filter
+     *
+     * @return      string      View name of this filter in PEAR-convention
+     * @author      Michael Knoll <knoll@punkt.de>
+     * @since       2009-09-23
+     */
+    protected function getFilterViewName() {
+        return 'filter_min_userInterface';
+    }
 	
 }
 

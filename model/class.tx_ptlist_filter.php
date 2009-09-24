@@ -46,212 +46,223 @@ require_once t3lib_extMgm::extPath('pt_tools').'res/abstract/class.tx_pttools_iT
 require_once t3lib_extMgm::extPath('pt_tools').'res/abstract/class.tx_pttools_iSettableByArray.php';
 require_once t3lib_extMgm::extPath('pt_tools').'res/objects/class.tx_pttools_registry.php';
 
-
 require_once t3lib_extMgm::extPath('pt_mvc').'classes/class.tx_ptmvc_controllerFrontend.php';
 
 require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_dataDescriptionCollection.php';
 require_once t3lib_extMgm::extPath('pt_list').'view/filter/class.tx_ptlist_view_filter_breadcrumb.php';
+require_once t3lib_extMgm::extPath('pt_list').'view/filter/class.tx_ptlist_view_filter_userInterface.php';
 
 
 
 /**
- * Filter class
+ * Abstract Filter class implementing all domain and controller logic for a 
+ * pt_list filter class. This class cannot be instantiated but must be 
+ * extended.
  * 
- * @author	Fabrizio Branca <mail@fabrizio-branca.de>
- * @since	2009-01-20
+ * Can be used as parent class for all filter classes.
+ * 
+ * @todo DOMAIN logic and CONTROLLER logic is mixed up here. Perhaps there should be 
+ * a filter modell class and a filter controller class.
+ * 
+ * @author  Fabrizio Branca <mail@fabrizio-branca.de>
+ * @since   2009-01-20
  * @package TYPO3
  * @subpackage pt_list
  */
 abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements tx_pttools_iTemplateable, Serializable, tx_pttools_iSettableByArray {
-	
-	/**
-	 * @var string
-	 */
-	protected $listIdentifier;
-	
-	/**
-	 * @var string
-	 */
-	protected $filterIdentifier;
-	
-	/**
-	 * @var string
-	 */
-	protected $filterboxIdentifier = 'defaultFilterbox';
-	
-	/**
-	 * @var tx_ptlist_dataDescriptionCollection
-	 */
-	protected $dataDescriptions;
-	
-	/**
-	 * @var bool
-	 */
-	protected $hasUserInterface = true;
-	
-	/**
-	 * @var string
-	 */
-	protected $label;
-	
-	/**
-	 * @var string
-	 */
-	protected $submitLabel;
-	
-	/**
-	 * @var bool
-	 */
-	protected $isActive = false;
-	
-	/**
-	 * @var mixed	current filter value
-	 */
-	protected $value; 
-	
-	/**
-	 * @var string
-	 */
-	protected $dependsOn;
-	
-	/**
-	 * @var string	csl of columnDescriptionIdentifiers
-	 */
-	protected $hideColumns;
+    
+    /**
+     * @var string
+     */
+    protected $listIdentifier;
+    
+    /**
+     * @var string
+     */
+    protected $filterIdentifier;
+    
+    /**
+     * @var string
+     */
+    protected $filterboxIdentifier = 'defaultFilterbox';
+    
+    /**
+     * @var tx_ptlist_dataDescriptionCollection
+     */
+    protected $dataDescriptions;
+    
+    /**
+     * @var bool
+     */
+    protected $hasUserInterface = true;
+    
+    /**
+     * @var string
+     */
+    protected $label;
+    
+    /**
+     * @var string
+     */
+    protected $submitLabel;
+    
+    /**
+     * @var bool
+     */
+    protected $isActive = false;
+    
+    /**
+     * @var mixed   current filter value
+     */
+    protected $value; 
+    
+    /**
+     * @var string
+     */
+    protected $dependsOn;
+    
+    /**
+     * @var string  csl of columnDescriptionIdentifiers
+     */
+    protected $hideColumns;
 
-	/**
-	 * @var bool	if true, the sql statement will be inverted
-	 */
-	protected $invert = false;
-	
-	
-	
-	/**
-	 * Overwriting default property value from tx_ptmvc_controllerFrontend:
-	 * As filter controllers are not called directly from TYPO3 as frontend plugins (they are called by tx_ptlist_controller_list)
-	 * they do not have any flexform configuration and the do not have any cObj attached (which would cause an error when trying to 
-	 * retrieve the flexform configuration)
-	 * 
-	 * @var bool
-	 */
-	protected $mergeConfAndFlexform = false;
-	
-	
-	/***************************************************************************
-	 * Overwriting methods from the tx_ptmvc_controller class
-	 **************************************************************************/
-
-	/**
-	 * Class constructor
-	 *
-	 * @param 	string	list identifier
-	 * @param 	string	filter identifier
-	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
-	 * @since	2009-01-20
-	 */
-	public function __construct($listIdentifier='', $filterIdentifier='') {
-		$this->listIdentifier = $listIdentifier;
-		$this->filterIdentifier = $filterIdentifier;
-        $this->dataDescriptions = new tx_ptlist_dataDescriptionCollection();
-		parent::__construct();
-	}
-	
-	
-	
-	/**
-	 * Overwriting the getPrefixId() method to generate a custom prefixId depending on the list identifier and the filter identifier
-	 * 
-	 * @param 	void
-	 * @return 	string 	prefixId
-	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
-	 * @since	2009-01-20
-	 */
-	protected function getPrefixId() {
-		
-		// tx_pttools_assert::isNotEmptyString($this->filterIdentifier, array('message' => 'No "filterIdentifier" found!'));
-		// tx_pttools_assert::isNotEmptyString($this->listIdentifier, array('message' => 'No "listIdentifier" found!'));
-		$prefixId = parent::getPrefixId();
-		$prefixId .= '_' . $this->listIdentifier . '_' . $this->filterIdentifier;
-		return $prefixId;
-	}
-	
-	
-	
-	/**
-	 * Get configuration
-	 * 
-	 * @param 	void
-	 * @return 	void
-	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
-	 * @since	2009-01-26
-	 */
-	protected function getConfiguration() {
-		
-		/*
-		
-		// get standard configuration first
-		parent::getConfiguration();
-		
-		if (is_array($this->conf[$this->filterIdentifier.'.'])) {
-			$this->conf = t3lib_div::array_merge_recursive_overrule($this->conf, $this->conf[$this->filterIdentifier.'.']);
-			unset($this->conf[$this->filterIdentifier.'.']);
-		}
-
-		*/
-		
-		// Configuration will be set via setPropertiesFromArray()
-		
-		
-		/**
-		 * TODO: this mechanism could be used generally to overwrite controller specific configuration with ttcontent specific configuration
-		 * e.g. plugin.tx_ptlist_controller.list {
-		 * }
-		 *  could be overwritten by 
-		 * 
-		 * plugin.tx_ptlist_controller.list.tt_content_122 {
-		 * }
-		 * 
-		 * Problem: stdWarp and complex subarrays should be resolved before being merged
-		 */ 
-	}
-	
-	
-	
-	/**
-	 * Configuration of filter will be passed to template as 'filter'
-	 * 
-	 * @param  string          $viewName   Name of view
-	 * @return tx_ptmvc_view               View for filter user interface
-	 * @author Michael Knoll <knoll@punkt.de>
-	 * @since  2009-07-17
-	 */
-	public function getView($viewName='') {
-		
-		$view = parent::getView($viewName);
-		$view->addItem($this->conf, 'filter');
-		return $view;
-		
-	}
-	
-	
-	/***************************************************************************
-	 * Abstract methods for this abstract class 
-	 **************************************************************************/
-	
-	/**
-	 * Get the where clause snippet for this filter
-     * +++++ IMPORTANT: avoid SQL injections in your implementation!!! +++++
-	 * 
-	 * @param	void
-	 * @return 	string	where clause snippet (without "AND")
-	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
-	 * @since	2009-01-19
-	 */
-	abstract function getSqlWhereClauseSnippet();
-	
+    /**
+     * @var bool    if true, the sql statement will be inverted
+     */
+    protected $invert = false;
+    
+    
+    
+    /**
+     * Overwriting default property value from tx_ptmvc_controllerFrontend:
+     * As filter controllers are not called directly from TYPO3 as frontend plugins (they are called by tx_ptlist_controller_list)
+     * they do not have any flexform configuration and they do not have any cObj attached (which would cause an error when trying to 
+     * retrieve the flexform configuration)
+     * 
+     * @var bool
+     */
+    protected $mergeConfAndFlexform = false;
+    
     
     /***************************************************************************
-     * Action methods
+     * Overwriting methods from the tx_ptmvc_controller class
+     **************************************************************************/
+
+    /**
+     * Class constructor
+     *
+     * @param   string  list identifier
+     * @param   string  filter identifier
+     * @author  Fabrizio Branca <mail@fabrizio-branca.de>
+     * @since   2009-01-20
+     */
+    public function __construct($listIdentifier='', $filterIdentifier='') {
+        $this->listIdentifier = $listIdentifier;
+        $this->filterIdentifier = $filterIdentifier;
+        $this->dataDescriptions = new tx_ptlist_dataDescriptionCollection();
+        parent::__construct();
+    }
+    
+    
+    
+    /**
+     * Overwriting the getPrefixId() method to generate a custom prefixId depending on the list identifier and the filter identifier
+     * 
+     * @param   void
+     * @return  string  prefixId
+     * @author  Fabrizio Branca <mail@fabrizio-branca.de>
+     * @since   2009-01-20
+     */
+    protected function getPrefixId() {
+        
+        // tx_pttools_assert::isNotEmptyString($this->filterIdentifier, array('message' => 'No "filterIdentifier" found!'));
+        // tx_pttools_assert::isNotEmptyString($this->listIdentifier, array('message' => 'No "listIdentifier" found!'));
+        $prefixId = parent::getPrefixId();
+        $prefixId .= '_' . $this->listIdentifier . '_' . $this->filterIdentifier;
+        return $prefixId;
+    }
+    
+    
+    
+    /**
+     * Get configuration
+     * 
+     * @param   void
+     * @return  void
+     * @author  Fabrizio Branca <mail@fabrizio-branca.de>
+     * @since   2009-01-26
+     */
+    protected function getConfiguration() {
+        
+        /*
+        
+        // get standard configuration first
+        parent::getConfiguration();
+        
+        if (is_array($this->conf[$this->filterIdentifier.'.'])) {
+            $this->conf = t3lib_div::array_merge_recursive_overrule($this->conf, $this->conf[$this->filterIdentifier.'.']);
+            unset($this->conf[$this->filterIdentifier.'.']);
+        }
+
+        */
+        
+        // Configuration will be set via setPropertiesFromArray()
+        
+        
+        /**
+         * TODO: this mechanism could be used generally to overwrite controller specific configuration with ttcontent specific configuration
+         * e.g. plugin.tx_ptlist_controller.list {
+         * }
+         *  could be overwritten by 
+         * 
+         * plugin.tx_ptlist_controller.list.tt_content_122 {
+         * }
+         * 
+         * Problem: stdWarp and complex subarrays should be resolved before being merged
+         */ 
+    }
+    
+    
+    
+    /**
+     * Configuration of filter will be passed to template as 'filter'
+     * 
+     * TODO change this. Passed configuration should be accessible as "conf" or "config" in template class
+     * 
+     * @param  string          $viewName   Name of view
+     * @return tx_ptmvc_view               View for filter user interface
+     * @author Michael Knoll <knoll@punkt.de>
+     * @since  2009-07-17
+     */
+    public function getView($viewName='') {
+        
+        $view = parent::getView($viewName);
+        $view->addItem($this->conf, 'filterconf');
+        return $view;
+        
+    }
+    
+    
+    /***************************************************************************
+     * Abstract methods for this abstract class 
+     **************************************************************************/
+    
+    /**
+     * Get the where clause snippet for this filter
+     * +++++ IMPORTANT: avoid SQL injections in your implementation!!! +++++
+     * 
+     * TODO use query object to generate SQL queries and avoid SQL injections there!
+     * 
+     * @param   void
+     * @return  string  where clause snippet (without "AND")
+     * @author  Fabrizio Branca <mail@fabrizio-branca.de>
+     * @since   2009-01-19
+     */
+    abstract function getSqlWhereClauseSnippet();
+    
+    
+    /***************************************************************************
+     * Action methods for "Default" Actions
      **************************************************************************/
     
     /**
@@ -273,7 +284,12 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
             return $this->doAction('isNotActive');
         }
     }
+
     
+    
+    /***************************************************************************
+     * Action methods for "Submit" Actions
+     **************************************************************************/
     
     
     /**
@@ -284,7 +300,11 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
      * @since   2009-02-06
      */
     public function submitAction() {
-        $output = '';
+        
+    	// do pre submit-functionality (template method implemented in inheriting classes)
+        $this->preSubmit();
+    	
+    	$output = '';
         
         // do validation
         if ($this->validate()) {
@@ -292,9 +312,10 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
         } else {
             $output = $this->doAction('onNotValidated');
         }
+        
         return $output;
     }
-
+    
     
     
     /**
@@ -421,102 +442,102 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
      */
     public function resetToTsPresetStateAction() {
         
-    	$this->reset();
-    	$this->setPresetStateFromTs();
-    	return $this->doAction();
-    	
+        $this->reset();
+        $this->setPresetStateFromTs();
+        return $this->doAction();
+        
     }
     
-	
-	
-	/***************************************************************************
-	 * Methods implementing the domain logic
-	 **************************************************************************/
-	
-	/**
-	 * Invoke an external filter object to this one, so that value and state can be written to itself
-	 *
-	 * @param 	tx_ptlist_filter 	external filter object (e.g. coming from the session storage)
-	 * @return 	void
-	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
-	 * @since	2009-01-20
-	 */
-	public function invokeFilter(tx_ptlist_filter $filter) {
-		// TODO: is this generic enough to fulfill all needs?
-		$this->isActive = $filter->isActive;
-		$this->value = $filter->value;
-		if (TYPO3_DLOG) t3lib_div::devLog(sprintf('Invoking filter "%s" from session', $filter->get_filterIdentifier()), 'pt_list', 1, array('value' => $filter->value, 'isActive' => $filter->isActive));
-	}
-	
-	
-	
-	/**
-	 * Check if an user has access to this filter by checking if the user has access to all data descriptions used by this filter
-	 *
-	 * @param 	string	comma-separated list of group uids the user is in
-	 * @return 	bool	true, if the user has access to this filter
-	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
-	 * @since	2009-01-20
-	 */
-	public function hasAccess($groupList) {
-		foreach ($this->dataDescriptions as $dataDescription) { /* @var $dataDescription tx_ptlist_dataDescription */
-			if (!$dataDescription->hasAccess($groupList)) {
-				return false;
-			}
-		}
-		return true;
-	}
-	
-	
-	
-	/**
-	 * Resets this filter.
-	 * Overwrite this method for indidual reset actions
-	 * 
-	 * @param	void
-	 * @return 	void
-	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
-	 * @since	2009-01-19
-	 */
-	public function reset() {
-		$this->set_isActive(false);
-		$this->value = NULL;
-		
-		// reset all filters that depend on this one too
-		$filterCollection = tx_pttools_registry::getInstance()->get($this->listIdentifier.'_listObject')->getAllFilters();
-		foreach($filterCollection as $filter) { /* @var $filter tx_ptlist_filter */
-			if ($filter->get_dependsOn() == $this->filterIdentifier) {
-				$filter->reset();
-			}
-		}
-	}
-	
-	
-	
-	/**
-	 * Resets the filter to the presets set in the filter's Typoscript configuration
-	 * 
-	 * @return void
-	 * @author Michael Knoll <knoll@punkt.de>
-	 * @since  2009-08-25
-	 */
-	protected function setPresetStateFromTs() {
-	    // setting default filter state   
-	    $this->setPresetStateFromArray($this->conf);
-	}
-	
-	
-	
-	/**
-	 * Helper method for setting isActive state and default value from array
-	 * 
-	 * @param  array   $dataArray      Array of configuration data
-	 * @return void 
+    
+    
+    /***************************************************************************
+     * Methods implementing the domain logic
+     **************************************************************************/
+    
+    /**
+     * Invoke an external filter object to this one, so that value and state can be written to itself
+     *
+     * @param   tx_ptlist_filter    external filter object (e.g. coming from the session storage)
+     * @return  void
+     * @author  Fabrizio Branca <mail@fabrizio-branca.de>
+     * @since   2009-01-20
+     */
+    public function invokeFilter(tx_ptlist_filter $filter) {
+        // TODO: is this generic enough to fulfill all needs?
+        $this->isActive = $filter->isActive;
+        $this->value = $filter->value;
+        if (TYPO3_DLOG) t3lib_div::devLog(sprintf('Invoking filter "%s" from session', $filter->get_filterIdentifier()), 'pt_list', 1, array('value' => $filter->value, 'isActive' => $filter->isActive));
+    }
+    
+    
+    
+    /**
+     * Check if an user has access to this filter by checking if the user has access to all data descriptions used by this filter
+     *
+     * @param   string  comma-separated list of group uids the user is in
+     * @return  bool    true, if the user has access to this filter
+     * @author  Fabrizio Branca <mail@fabrizio-branca.de>
+     * @since   2009-01-20
+     */
+    public function hasAccess($groupList) {
+        foreach ($this->dataDescriptions as $dataDescription) { /* @var $dataDescription tx_ptlist_dataDescription */
+            if (!$dataDescription->hasAccess($groupList)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    
+    
+    /**
+     * Resets this filter.
+     * Overwrite this method for indidual reset actions
+     * 
+     * @param   void
+     * @return  void
+     * @author  Fabrizio Branca <mail@fabrizio-branca.de>
+     * @since   2009-01-19
+     */
+    public function reset() {
+        $this->set_isActive(false);
+        $this->value = NULL;
+        
+        // reset all filters that depend on this one too
+        $filterCollection = tx_pttools_registry::getInstance()->get($this->listIdentifier.'_listObject')->getAllFilters();
+        foreach($filterCollection as $filter) { /* @var $filter tx_ptlist_filter */
+            if ($filter->get_dependsOn() == $this->filterIdentifier) {
+                $filter->reset();
+            }
+        }
+    }
+    
+    
+    
+    /**
+     * Resets the filter to the presets set in the filter's Typoscript configuration
+     * 
+     * @return void
      * @author Michael Knoll <knoll@punkt.de>
      * @since  2009-08-25
      */
-	protected function setPresetStateFromArray($dataArray) {
-	    if (isset($dataArray['isActive'])) {
+    protected function setPresetStateFromTs() {
+        // setting default filter state   
+        $this->setPresetStateFromArray($this->conf);
+    }
+    
+    
+    
+    /**
+     * Helper method for setting isActive state and default value from array
+     * 
+     * @param  array   $dataArray      Array of configuration data
+     * @return void 
+     * @author Michael Knoll <knoll@punkt.de>
+     * @since  2009-08-25
+     */
+    protected function setPresetStateFromArray($dataArray) {
+        if (isset($dataArray['isActive'])) {
             $this->isActive = (bool) $dataArray['isActive'];
         }
         if (isset($dataArray['value'])) {
@@ -531,232 +552,250 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
             if (TYPO3_DLOG) t3lib_div::devLog('Setting default value from configuration (array)', 'pt_list', 1, $dataArray['value.']);
             $this->value = $dataArray['value.'];
         }
-	}
-	
-	
-	
-	/**
-	 * This method will be called to determine if the user input validates.
-	 * Overwrite this method in your inheriting class if you use the default "submitAction".
-	 * 
-	 * @param 	void
-	 * @return 	bool	true if the user input validates, false otherwise
-	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
-	 * @since	2009-02-06
-	 */
-	public function validate() {
-		throw new tx_pttools_exception('No "validate" method implemented!');
-	}
-	
-	
-	
-	/**
-	 * Resets sorting states of corresponding list
-	 * 
-	 * @return void
-	 * @author Michael Knoll
-	 * @since 2009-06-15
-	 */
-	protected function resetListSortingState() {
-		$listObject = tx_pttools_registry::getInstance()->get($this->listIdentifier.'_listObject'); /* @var $listObject tx_ptlist_list */
-		$listObject->resetSortingParameters();
-	}
+    }
+    
+    
+    
+    /**
+     * This method will be called to determine if the user input validates.
+     * By overwriting this class, you can implement your own validation logic.
+     * 
+     * @param   void
+     * @return  bool    true if the user input validates, false otherwise
+     * @author  Fabrizio Branca <mail@fabrizio-branca.de>
+     * @since   2009-02-06
+     */
+    public function validate() {
+        return true;
+    }
+    
+    
+    
+    /**
+     * Resets sorting states of corresponding list
+     * 
+     * @return void
+     * @author Michael Knoll
+     * @since 2009-06-15
+     */
+    protected function resetListSortingState() {
+        $listObject = tx_pttools_registry::getInstance()->get($this->listIdentifier.'_listObject'); /* @var $listObject tx_ptlist_list */
+        $listObject->resetSortingParameters();
+    }
 
-	
-	
+    
+    
+    /***************************************************************************
+     * Template methods (to be overwritten in inheriting classes)
+     **************************************************************************/
+    
+    /**
+     * This is a template method to be implemented in inheriting classes.
+     * 
+     * Add all functionality that should be run before submit action here.
+     * 
+     * @param   void
+     * @return  void
+     * @author  Michael Knoll
+     * @since   2009-09-23
+     */
+    protected function preSubmit() {
+        // Template Method to be implemented in inheriting classes      
+    }
+
+    
+    
     /***************************************************************************
      * Methods implementing "tx_pttools_iSettableByArray" interface
      **************************************************************************/
-	
-	/**
-	 * Set properties from array
-	 *
-	 * @param 	array 	dataArray
-	 * @return 	void
-	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
-	 * @since	2009-01-21
-	 */
-	public function setPropertiesFromArray(array $dataArray) {
-		if (TYPO3_DLOG) t3lib_div::devLog('Setting properties from array in ' . __CLASS__, 'pt_list', 0, $dataArray);
-		
-		// set configuration from outside instead of getting it the usual way via getConfiguration()
-		$this->conf = $dataArray;
-		
-		if (isset($dataArray['listIdentifier'])) {
-			$this->listIdentifier = $dataArray['listIdentifier'];
-		}
-		if (isset($dataArray['filterIdentifier'])) {
-			$this->filterIdentifier = $dataArray['filterIdentifier'];
-		}
-		if (isset($dataArray['filterboxIdentifier'])) {
-			$this->filterboxIdentifier = $dataArray['filterboxIdentifier'];
-		}
-		if (isset($dataArray['hasUserInterface'])) {
-			$this->hasUserInterface = (bool) $dataArray['hasUserInterface'];
-		}
-		if (isset($dataArray['label'])) {
-			$this->label = $dataArray['label'];
-		}
-		if (isset($dataArray['submitLabel'])) {
-			$this->submitLabel = $dataArray['submitLabel'];
-		}
-		if (isset($dataArray['dependsOn'])) {
-			$this->dependsOn = $dataArray['dependsOn'];
-		}
-		if (isset($dataArray['invert'])) {
-			$this->invert = (bool)$dataArray['invert'];
-		}
-		if (isset($dataArray['hideColumns'])) {
-			$this->hideColumns = $dataArray['hideColumns'];
-		}
-		if (isset($dataArray['dataDescriptionIdentifier'])) {
-			$dataDescriptionIdentifiers = array();
-			$registry = tx_pttools_registry::getInstance();
-			if ($dataArray['dataDescriptionIdentifier'] == '*') {
-				foreach($registry[$this->listIdentifier.'_listObject']->getAllDataDescriptions()->getAccessibleDataDescriptions($GLOBALS['TSFE']->gr_list) as $dataDescription) { /* @var $dataDescription tx_ptlist_dataDescription */
-					$dataDescriptionIdentifiers[] = $dataDescription->get_identifier();
-				}
-			} else {
-				$dataDescriptionIdentifiers = t3lib_div::trimExplode(',', $dataArray['dataDescriptionIdentifier'], true);
-			}
-			foreach ($dataDescriptionIdentifiers as $dataDescriptionIdentifier) {
-				tx_pttools_assert::isNotEmptyString($dataDescriptionIdentifier, array('message' => 'Empty "dataDescriptionIdentifier"!'));
-				$this->dataDescriptions->addItem($registry[$this->listIdentifier.'_listObject']->getAllDataDescriptions()->getItemById($dataDescriptionIdentifier));
-			}
-		}
-		/*
-		if (!empty($dataArray['dataDescriptionIdentifier'])) {
-			$dataDescriptionIdentifiers = t3lib_div::trimExplode(',', $dataArray['dataDescriptionIdentifier']);
-			$this->dataDescriptions = new tx_ptlist_dataDescriptionCollection();
-			$registry = tx_pttools_registry::getInstance();
-			foreach ($dataDescriptionIdentifiers as $dataDescriptionIdentifier) {
-				$this->dataDescriptions->addItem($registry[$this->listIdentifier.'_listObject']->getAllDataDescriptions()->getItemById($dataDescriptionIdentifier));
-			}
-		} 
-		*/
-		
-		// setting default filter state	
-		// Use proxy method to set isActive and defaultValue, as used in other places also!
-		$this->setPresetStateFromArray($this->conf);
-		
-		// update prefixId as the listIdentifier and the filterIdentifier influence the prefixId
-		$this->prefixId = $this->getPrefixId();
-	}
-	
-	
-	
-	/***************************************************************************
-	 * Methods implementing the "tx_pttools_iTemplateable" interface 
-	 **************************************************************************/
-	
-	/**
-	 * Returns a marker array
-	 * 
-	 * @param 	void
-	 * @return 	array
-	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
-	 * @since	2009-01-15
-	 */
-	public function getMarkerArray() {
-		$markerArray = array(
-			'name' => get_class($this),
-			'label' => $this->label,
-		    'submitLabel' => $this->submitLabel,
-			'isActive' => $this->get_isActive(),
-			'filterPrefixId' => $this->prefixId, 
-			'filterId' => $this->filterIdentifier,
-			'filterClass' => str_replace('_', '-', get_class($this)),
-			'hideResetLink' => ($this->conf['hideResetLink'] == true),
-		);
-
-		// filter html in the markerArray
-		$markerArray = tx_pttools_div::htmlOutputArray($markerArray);
-		
-		// "userInterface" and "breadcrumb" may contain html and will not be filtered here!
-		$markerArray['userInterface'] = $this->lastRenderedContent;
-		$markerArray['breadcrumb'] = $this->doAction('breadcrumb');
-		
-		$markerArray['dataDescriptions'] = array();
-		foreach ($this->dataDescriptions as $dataDescriptions) { /* @var $dataDescriptions tx_ptlist_dataDescription */
-			$markerArray['dataDescriptions'][] = $dataDescriptions->get_identifier();
-		}
-		
-		return $markerArray;
-	}
-	
-	
-	
-	/***************************************************************************
-	 * Methods implementing the "Serializable" interface 
-	 **************************************************************************/
-	
-	/**
-	 * Serialize method
-	 * This method will automatically executed when calling 
-	 * $stringRepresentingObjectImplementingThisClass = serialize($objectImplementingThisClass);
-	 *
-	 * @param 	void
-	 * @return 	string	"safe" string representation of this object
-	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
-	 * @since	2009-01-20
-	 */
-	public function serialize() {
-		tx_pttools_assert::isNotEmptyString($this->listIdentifier, array('message' => 'Empty list identifier'));
-		$state = array(
-			'value' => $this->value,
-			'isActive' => $this->isActive,
-			'listIdentifier' => $this->listIdentifier,
-			'filterIdentifier' => $this->filterIdentifier,
-			'dependsOn' => $this->dependsOn,
-		);
-		$state['dataDescriptions'] = array();
-		if ($this->dataDescriptions instanceof tx_ptlist_dataDescriptionCollection) {
-    		foreach($this->dataDescriptions as $dataDescription) { /* @var $column tx_ptlist_dataDescription */
-    			$state['dataDescriptions'][] = $dataDescription->get_identifier();
-    		}
-	    }
-        
-		// if (TYPO3_DLOG) t3lib_div::devLog(sprintf('Serializing "%s" filter "%s", "%s"', get_class($this), $this->filterIdentifier, $this->listIdentifier), 'pt_list', 1, $state);
-		return serialize($state);
-	}
-	
-		
-	/**
-	 * Unserialize method
-	 * This method will automatically executed when calling 
-	 * $objectImplementingThisClass = unserialize($stringRepresentingObjectImplementingThisClass);
-	 * 
-	 * TODO ry21: Why is filter not unserialized via $this->setPropertiesFromArray($state)???
-	 *
-	 * @param 	string	"safe" string representation of this object (generated by the serialize() method)
-	 * @return 	void
-	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
-	 * @since	2009-01-20
-	 */
-	public function unserialize($serialized) {
-		tx_pttools_assert::isNotEmptyString($serialized);
-		
-		$state = unserialize($serialized);
-		// if (TYPO3_DLOG) t3lib_div::devLog(sprintf('Unserializing "%s" filter', get_class($this)), 'pt_list', 1, $state);
-		
-		$this->value = $state['value'];
-		$this->isActive = $state['isActive'];
-		$this->filterIdentifier = $state['filterIdentifier'];
-		$this->listIdentifier = $state['listIdentifier'];
-		$this->dependsOn = $state['dependsOn'];
-		tx_pttools_assert::isNotEmptyString($this->listIdentifier, array('message' => 'Empty list identifier!'));
-		
-		// retrieve references to columnDescription objects from the listObject found in the registry
-		$registry = tx_pttools_registry::getInstance();
-		$this->dataDescriptions = new tx_ptlist_dataDescriptionCollection();
-		if (is_array($state['dataDescriptions'])) {
-			foreach ($state['dataDescriptions'] as $dataDescriptionIdentifier) {
-	            $this->dataDescriptions->addItem($registry[$this->listIdentifier.'_listObject']->getAllDataDescriptions()->getItemById($dataDescriptionIdentifier));
-	        }
-		}
-	}
     
-	
+    /**
+     * Set properties from array
+     *
+     * @param   array   dataArray
+     * @return  void
+     * @author  Fabrizio Branca <mail@fabrizio-branca.de>
+     * @since   2009-01-21
+     */
+    public function setPropertiesFromArray(array $dataArray) {
+        if (TYPO3_DLOG) t3lib_div::devLog('Setting properties from array in ' . __CLASS__, 'pt_list', 0, $dataArray);
+        
+        // set configuration from outside instead of getting it the usual way via getConfiguration()
+        $this->conf = $dataArray;
+        
+        if (isset($dataArray['listIdentifier'])) {
+            $this->listIdentifier = $dataArray['listIdentifier'];
+        }
+        if (isset($dataArray['filterIdentifier'])) {
+            $this->filterIdentifier = $dataArray['filterIdentifier'];
+        }
+        if (isset($dataArray['filterboxIdentifier'])) {
+            $this->filterboxIdentifier = $dataArray['filterboxIdentifier'];
+        }
+        if (isset($dataArray['hasUserInterface'])) {
+            $this->hasUserInterface = (bool) $dataArray['hasUserInterface'];
+        }
+        if (isset($dataArray['label'])) {
+            $this->label = $dataArray['label'];
+        }
+        if (isset($dataArray['submitLabel'])) {
+            $this->submitLabel = $dataArray['submitLabel'];
+        }
+        if (isset($dataArray['dependsOn'])) {
+            $this->dependsOn = $dataArray['dependsOn'];
+        }
+        if (isset($dataArray['invert'])) {
+            $this->invert = (bool)$dataArray['invert'];
+        }
+        if (isset($dataArray['hideColumns'])) {
+            $this->hideColumns = $dataArray['hideColumns'];
+        }
+        if (isset($dataArray['dataDescriptionIdentifier'])) {
+            $dataDescriptionIdentifiers = array();
+            $registry = tx_pttools_registry::getInstance();
+            if ($dataArray['dataDescriptionIdentifier'] == '*') {
+                foreach($registry[$this->listIdentifier.'_listObject']->getAllDataDescriptions()->getAccessibleDataDescriptions($GLOBALS['TSFE']->gr_list) as $dataDescription) { /* @var $dataDescription tx_ptlist_dataDescription */
+                    $dataDescriptionIdentifiers[] = $dataDescription->get_identifier();
+                }
+            } else {
+                $dataDescriptionIdentifiers = t3lib_div::trimExplode(',', $dataArray['dataDescriptionIdentifier'], true);
+            }
+            foreach ($dataDescriptionIdentifiers as $dataDescriptionIdentifier) {
+                tx_pttools_assert::isNotEmptyString($dataDescriptionIdentifier, array('message' => 'Empty "dataDescriptionIdentifier"!'));
+                $this->dataDescriptions->addItem($registry[$this->listIdentifier.'_listObject']->getAllDataDescriptions()->getItemById($dataDescriptionIdentifier));
+            }
+        }
+        /*
+        if (!empty($dataArray['dataDescriptionIdentifier'])) {
+            $dataDescriptionIdentifiers = t3lib_div::trimExplode(',', $dataArray['dataDescriptionIdentifier']);
+            $this->dataDescriptions = new tx_ptlist_dataDescriptionCollection();
+            $registry = tx_pttools_registry::getInstance();
+            foreach ($dataDescriptionIdentifiers as $dataDescriptionIdentifier) {
+                $this->dataDescriptions->addItem($registry[$this->listIdentifier.'_listObject']->getAllDataDescriptions()->getItemById($dataDescriptionIdentifier));
+            }
+        } 
+        */
+        
+        // setting default filter state 
+        // Use proxy method to set isActive and defaultValue, as used in other places also!
+        $this->setPresetStateFromArray($this->conf);
+        
+        // update prefixId as the listIdentifier and the filterIdentifier influence the prefixId
+        $this->prefixId = $this->getPrefixId();
+    }
+    
+    
+    
+    /***************************************************************************
+     * Methods implementing the "tx_pttools_iTemplateable" interface 
+     **************************************************************************/
+    
+    /**
+     * Returns a marker array
+     * 
+     * @param   void
+     * @return  array
+     * @author  Fabrizio Branca <mail@fabrizio-branca.de>
+     * @since   2009-01-15
+     */
+    public function getMarkerArray() {
+        $markerArray = array(
+            'name' => get_class($this),
+            'label' => $this->label,
+            'submitLabel' => $this->submitLabel,
+            'isActive' => $this->get_isActive(),
+            'filterPrefixId' => $this->prefixId, 
+            'filterId' => $this->filterIdentifier,
+            'filterClass' => str_replace('_', '-', get_class($this)),
+            'hideResetLink' => ($this->conf['hideResetLink'] == true),
+        );
+
+        // filter html in the markerArray
+        $markerArray = tx_pttools_div::htmlOutputArray($markerArray);
+        
+        // "userInterface" and "breadcrumb" may contain html and will not be filtered here!
+        $markerArray['userInterface'] = $this->lastRenderedContent;
+        $markerArray['breadcrumb'] = $this->doAction('breadcrumb');
+        
+        $markerArray['dataDescriptions'] = array();
+        foreach ($this->dataDescriptions as $dataDescriptions) { /* @var $dataDescriptions tx_ptlist_dataDescription */
+            $markerArray['dataDescriptions'][] = $dataDescriptions->get_identifier();
+        }
+        
+        return $markerArray;
+    }
+    
+    
+    
+    /***************************************************************************
+     * Methods implementing the "Serializable" interface 
+     **************************************************************************/
+    
+    /**
+     * Serialize method
+     * This method will automatically executed when calling 
+     * $stringRepresentingObjectInstanciatingThisClass = serialize($objectImplementingThisClass);
+     *
+     * @param   void
+     * @return  string  "safe" string representation of this object
+     * @author  Fabrizio Branca <mail@fabrizio-branca.de>
+     * @since   2009-01-20
+     */
+    public function serialize() {
+        tx_pttools_assert::isNotEmptyString($this->listIdentifier, array('message' => 'Empty list identifier'));
+        $state = array(
+            'value' => $this->value,
+            'isActive' => $this->isActive,
+            'listIdentifier' => $this->listIdentifier,
+            'filterIdentifier' => $this->filterIdentifier,
+            'dependsOn' => $this->dependsOn,
+        );
+        $state['dataDescriptions'] = array();
+        if ($this->dataDescriptions instanceof tx_ptlist_dataDescriptionCollection) {
+            foreach($this->dataDescriptions as $dataDescription) { /* @var $column tx_ptlist_dataDescription */
+                $state['dataDescriptions'][] = $dataDescription->get_identifier();
+            }
+        }
+        
+        // if (TYPO3_DLOG) t3lib_div::devLog(sprintf('Serializing "%s" filter "%s", "%s"', get_class($this), $this->filterIdentifier, $this->listIdentifier), 'pt_list', 1, $state);
+        return serialize($state);
+    }
+    
+        
+    /**
+     * Unserialize method
+     * This method will automatically executed when calling 
+     * $objectInstanciatingThisClass = unserialize($stringRepresentingObjectImplementingThisClass);
+     *
+     * @param   string  "safe" string representation of this object (generated by the serialize() method)
+     * @return  void
+     * @author  Fabrizio Branca <mail@fabrizio-branca.de>
+     * @since   2009-01-20
+     */
+    public function unserialize($serialized) {
+        tx_pttools_assert::isNotEmptyString($serialized);
+        
+        $state = unserialize($serialized);
+        // if (TYPO3_DLOG) t3lib_div::devLog(sprintf('Unserializing "%s" filter', get_class($this)), 'pt_list', 1, $state);
+        
+        $this->value = $state['value'];
+        $this->isActive = $state['isActive'];
+        $this->filterIdentifier = $state['filterIdentifier'];
+        $this->listIdentifier = $state['listIdentifier'];
+        $this->dependsOn = $state['dependsOn'];
+        tx_pttools_assert::isNotEmptyString($this->listIdentifier, array('message' => 'Empty list identifier!'));
+        
+        // retrieve references to columnDescription objects from the listObject found in the registry
+        $registry = tx_pttools_registry::getInstance();
+        $this->dataDescriptions = new tx_ptlist_dataDescriptionCollection();
+        if (is_array($state['dataDescriptions'])) {
+            foreach ($state['dataDescriptions'] as $dataDescriptionIdentifier) {
+                $this->dataDescriptions->addItem($registry[$this->listIdentifier.'_listObject']->getAllDataDescriptions()->getItemById($dataDescriptionIdentifier));
+            }
+        }
+    }
+    
+    
     
     /***************************************************************************
      * Getter / Setter Methods
@@ -772,11 +811,11 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
     }
     
     public function get_filterboxIdentifier() {
-    	return $this->filterboxIdentifier;
+        return $this->filterboxIdentifier;
     }
     
     public function set_filterboxIdentifier($filterboxIdentifier) {
-    	$this->filterboxIdentifier = $filterboxIdentifier;
+        $this->filterboxIdentifier = $filterboxIdentifier;
     }
     
     /**
@@ -801,7 +840,7 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
     }
     
     public function set_submitLabel($submitLabel) {
-    	$this->submitLabel = $submitLabel;
+        $this->submitLabel = $submitLabel;
     }
     
     public function get_isActive() {
@@ -821,19 +860,19 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
     }
     
     public function get_dependsOn() {
-    	return $this->dependsOn;
+        return $this->dependsOn;
     }
     
     public function get_hideColumns() {
-    	return $this->hideColumns;
+        return $this->hideColumns;
     }
 
-	public function get_invert() {
-		return $this->invert;
-	}
+    public function get_invert() {
+        return $this->invert;
+    }
     
-	
-	
+    
+    
 }
 
 

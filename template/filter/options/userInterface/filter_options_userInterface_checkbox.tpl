@@ -6,6 +6,6 @@
 
 	{if !$submitOnChange}
 	<br />
-	<input type="submit" />
+	<input type="submit" value="{$filterconf.submitValue|ll:0}" />
 	{/if}
 </form>
