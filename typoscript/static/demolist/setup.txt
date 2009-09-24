@@ -269,6 +269,7 @@ plugin.tx_ptlist.listConfig.myDemoList {
 			dependsOn = groupContinents
 			submitValue = Search
 		}
+
 	}
 	
 	filters.preFilterbox {

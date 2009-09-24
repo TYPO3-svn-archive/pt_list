@@ -29,7 +29,7 @@
  * 
  * @author   Michael Knoll
  * @since    2009-07-17
- * @version  $Id$
+ * @version  $ID:$
  */
 
 
@@ -87,7 +87,7 @@ class tx_ptlist_controller_filter_timeSpan2 extends tx_ptlist_filter {
 	
 	
 	/****************************************************************************************************************
-	 * Methods implementing filter template methods
+	 * Action Methods
 	 ****************************************************************************************************************/
 	
 	/**
@@ -117,7 +117,7 @@ class tx_ptlist_controller_filter_timeSpan2 extends tx_ptlist_filter {
 	public function isNotActiveAction() {
 		$view = $this->getView('filter_timeSpan2_userInterface');
 		$view->addItem($this->value, 'value');
-		$view->addItem($this->conf, 'filter');
+		$view->addItem($this->conf, 'filterconf');
 		return $view->render();
 
 	}

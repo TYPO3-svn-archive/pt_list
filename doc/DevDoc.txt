@@ -28,6 +28,13 @@ ToDo: As of 28.08.2009
 Version 0.0.2-dev
 =================
 
++ (mk) ADD: Added some documentation on new filters
++ (mk) ADD: Added some aliases for new filters in plugin.tx_ptlist.alias.ts
++ (mk) RFT: Refactored range filter
++ (mk) RFT: Refactored datePicker filter
++ (mk) RFT: Refactored firstLetter filter
++ (mk) RFT: Added some documentation on timespan filter
++ (mk) DEL: Removed jquery stuff from ressources
 + (mk) RFT: Added comments on all filter classes
 + (mk) RFT: Did some refactoring on 'tx_ptlist_controller_filter_options_base'
 + (mk) RFT: Adapted maximum filter

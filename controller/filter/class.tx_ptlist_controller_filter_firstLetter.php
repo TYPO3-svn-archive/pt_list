@@ -23,18 +23,50 @@
 ***************************************************************/
 
 
+
+/**
+ * Class definition file for "firstLetter" filter
+ * 
+ * @version     $ID$
+ * @author      Fabrizio Branca <mail@fabrizio-branca.de>, Ursula Klinger <klinger@punkt.de>
+ * @since       2009-01-23
+ */
+
+
+
+/**
+ * Inclusion of external ressources
+ */
 require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_filter.php';
 require_once t3lib_extMgm::extPath('pt_list').'view/filter/firstLetter/class.tx_ptlist_view_filter_firstLetter_userInterface.php';
+
+
 
 /**
  * First Letter filter class
  * 
- * @version 	$Id$
  * @author		Fabrizio Branca <mail@fabrizio-branca.de>, Ursula Klinger <klinger@punkt.de>
  * @since		2009-01-23
+ * @package     Typo3
+ * @subpackage  pt_list
  */
 class tx_ptlist_controller_filter_firstLetter extends tx_ptlist_filter {
 
+	
+	
+	/**
+	 * Holds an array of possible values for filter labels
+	 *
+	 * @var array
+	 */
+	protected $possibleValues = array();
+	
+	
+	
+	/***************************************************************************
+     * Modifying pt_mvc functionality
+     **************************************************************************/
+	
 	/**
 	 * MVC init method:
 	 * Checks if the column collection contains exactly one column as this filter can be used only with one column at the same time
@@ -49,6 +81,8 @@ class tx_ptlist_controller_filter_firstLetter extends tx_ptlist_filter {
 		parent::init();
 		tx_pttools_assert::isEqual(count($this->dataDescriptions), 1, array('message' => sprintf('This filter can only be used with 1 dataDescription (dataDescription found: "%s"', count($this->dataDescriptions))));
 	}
+	
+	
 	
 	/***************************************************************************
 	 * Action methods
@@ -67,46 +101,12 @@ class tx_ptlist_controller_filter_firstLetter extends tx_ptlist_filter {
 		
 		$view = $this->getView('filter_firstLetter_userInterface');
 
-		// retrieve list object from regitry
-		$listObject = tx_pttools_registry::getInstance()->get($this->listIdentifier.'_listObject'); /* @var $listObject tx_ptlist_list */
-		
-		// prepare parameters for the "getGroupData" call
-		$select = sprintf('UPPER(LEFT(%1$s,1)) as value, UPPER(LEFT(%1$s,1)) as label, count(*) as quantity', $this->dataDescriptions->getItemByIndex(0)->getSelectClause(false));
-		$where  = '';  // sprintf('%s <> ""', $this->dataDescriptions->getItemByIndex(0)->get_identifier());
-		$groupBy = 'value';
-		$orderBy = 'value';
-		$limit = '';
-		$ignoredFiltersForWhereClause = $this->filterIdentifier; // ignores itself while retrieve where clause from (other) filters
-		
-		$possibleValues = $listObject->getGroupData($select, $where, $groupBy, $orderBy, $limit, $ignoredFiltersForWhereClause);
-		
-		if (!empty($this->value)) {
-			// check if current value is under the possible values, if not reset the filter
-			// this could be the case if the set of possible values changes because of restrictions from other filters
-			$valueFound = false;
-			foreach ($possibleValues as $possibleValue) {
-				if ($possibleValue['value'] == $this->value) {
-					$valueFound = true;
-					break; 
-				}
-			}
-			
-			if (!$valueFound) {
-				$this->reset();
-			}
-		}
-		
-		// prepend "all" value to reset the filter
-		array_unshift(
-			$possibleValues,
-			array(
-				'value' => 'reset',
-				'label' => 'LLL:EXT:pt_list/locallang.xml:filter_group_all',
-			)
-		);
+		$this->initializePossibleValues();
+		$this->resetIfNoValueSet();
+		$this->prependAllValueToPossibleValues();
 		
 		// fill view 
-		$view->addItem($possibleValues, 'possibleValues');
+		$view->addItem($this->possibleValues, 'possibleValues');
 		$view->addItem($this->value, 'value');
 		
 		// render!
@@ -118,6 +118,9 @@ class tx_ptlist_controller_filter_firstLetter extends tx_ptlist_filter {
 	/**
 	 * Submit action
 	 * - calls 'default' action afterwards
+	 * 
+	 * submitAction is overwritten here, as there is non-normal
+	 * filter behaviour after submit action is processed.
 	 * 
 	 * @param 	void
 	 * @return 	string	HTML output
@@ -138,6 +141,7 @@ class tx_ptlist_controller_filter_firstLetter extends tx_ptlist_filter {
 	
 	
 	/***************************************************************************
+	 * Domain logic - 
 	 * Methods implementing abstract methods from "tx_ptlist_filter"
 	 **************************************************************************/
 	
@@ -150,9 +154,93 @@ class tx_ptlist_controller_filter_firstLetter extends tx_ptlist_filter {
 	 * @since	2009-01-23
 	 */
 	public function getSqlWhereClauseSnippet() {
-        $sqlWhereClauseSnippet = sprintf('%s.%s LIKE "%s%%"', $this->dataDescriptions->getItemByIndex(0)->get_table(), $this->dataDescriptions->getItemByIndex(0)->get_field(), $this->value);
+        $sqlWhereClauseSnippet = sprintf(
+            '%s.%s LIKE "%s%%"', 
+            $this->dataDescriptions->getItemByIndex(0)->get_table(), 
+            $this->dataDescriptions->getItemByIndex(0)->get_field(), 
+            $this->value
+        );
         return $sqlWhereClauseSnippet;
 	}
+	
+	
+	
+	/***************************************************************************
+     * Helper methods
+     **************************************************************************/
+	
+	
+	
+	/**
+	 * Initializes the possible values array from list object
+	 * 
+	 * @param      void
+	 * @return     void
+	 * @author     Michael Knoll <knoll@punkt.de>
+	 * @since      2009-09-24
+	 */
+	protected function initializePossibleValues() {
+		// retrieve list object from regitry
+        $listObject = tx_pttools_registry::getInstance()->get($this->listIdentifier.'_listObject'); /* @var $listObject tx_ptlist_list */
+        
+        // prepare parameters for the "getGroupData" call
+        $select = sprintf('UPPER(LEFT(%1$s,1)) as value, UPPER(LEFT(%1$s,1)) as label, count(*) as quantity', $this->dataDescriptions->getItemByIndex(0)->getSelectClause(false));
+        $where  = '';  // sprintf('%s <> ""', $this->dataDescriptions->getItemByIndex(0)->get_identifier());
+        $groupBy = 'value';
+        $orderBy = 'value';
+        $limit = '';
+        $ignoredFiltersForWhereClause = $this->filterIdentifier; // ignores itself while retrieve where clause from (other) filters
+        
+        $this->possibleValues = $listObject->getGroupData($select, $where, $groupBy, $orderBy, $limit, $ignoredFiltersForWhereClause);
+	}
+	
+	
+	/**
+	 * Check if current value is under the possible values, if not reset the filter.
+     * This could be the case if the set of possible values changes because of restrictions from other filters.
+     * 
+     * @param       void
+     * @return      void
+     * @author      Michael Knoll <knoll@punkt.de>
+     * @since       2009-09-24
+	 */
+	protected function resetIfNoValueSet() {
+	   if (!empty($this->value)) {
+            
+            $valueFound = false;
+            foreach ($this->possibleValues as $possibleValue) {
+                if ($possibleValue['value'] == $this->value) {
+                    $valueFound = true;
+                    break; 
+                }
+            }
+            
+            if (!$valueFound) {
+                $this->reset();
+            }
+        }
+	}
+	
+	
+	
+	/**
+	 * Prepends an "all" value to the list of possible values to reset the filter 
+	 * 
+	 * @param      void
+	 * @return     void
+	 * @author     Michael Knoll <knoll@punkt.de>
+	 * @since      2009-09-24 
+	 */
+	protected function prependAllValueToPossibleValues() {
+        array_unshift(
+            $this->possibleValues,
+            array(
+                'value' => 'reset',
+                'label' => 'LLL:EXT:pt_list/locallang.xml:filter_group_all',
+            )
+        );
+	}
+	
 	
 }
 

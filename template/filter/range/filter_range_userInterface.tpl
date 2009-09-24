@@ -3,5 +3,5 @@
     <label for="{$prefixId}[maxval]">{"filterRangeMax"|ll}</label><input type="text" name="{$prefixId}[maxval]" value="{$maxval}" size="3" />
     <br />
     <br />
-    <input type="submit"  value="{$filter.submitValue|ll:0}"/>
+    <input type="submit"  value="{$filterconf.submitValue|ll:0}"/>
 </form>
