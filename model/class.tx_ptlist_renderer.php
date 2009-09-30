@@ -1,19 +1,19 @@
 <?php
 /***************************************************************
  *  Copyright notice
- *  
+ *
  *  (c) 2009 Fabrizio Branca (mail@fabrizio-branca.de)
  *  All rights reserved
  *
- *  This script is part of the TYPO3 project. The TYPO3 project is 
+ *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 2 of the License, or
  *  (at your option) any later version.
- * 
+ *
  *  The GNU General Public License can be found at
  *  http://www.gnu.org/copyleft/gpl.html.
- * 
+ *
  *  This script is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -32,8 +32,8 @@ require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_genericData
  * @since		2009-02-10
  */
 class tx_ptlist_renderer {
-	
-	
+
+
 	/**
 	 * Process content with a cObject
 	 *
@@ -47,9 +47,55 @@ class tx_ptlist_renderer {
 		$local_cObj->start($params['values']);
 		return $local_cObj->cObjGetSingle($params['conf']['renderObj'], $params['conf']['renderObj.']);
 	}
-	
-	
-	
+
+
+
+	/**
+	 * Translate field content
+	 *
+	 * @param 	array 	params
+	 * @return 	string 	rendered content
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
+	 * @since	2009-09-28
+	 * @example
+	 * <code>
+	 * renderUserFunctions.10 = EXT:pt_list/model/class.tx_ptlist_renderer.php:tx_ptlist_renderer->translate
+	 * renderUserFunctions.10 {
+	 * 		1 = Bronze
+	 * 		2 = Silver
+	 * 		3 = Gold
+	 * 		4 = Platinum
+	 * 		5 = Active
+	 * 		6 = Honorary
+	 * 		default = unknown
+	 * }
+	 * </code>
+	 */
+	public static function translate(array $params) {
+		$values = $params['values'];
+		$conf = $params['conf'];
+		$currentContent = $params['currentContent'];
+
+		if (!empty($conf['fieldContainingContent'])) {
+			$content = $values[$conf['fieldContainingContent']];
+		} else {
+			$content = $currentContent;
+		}
+
+		$translationMap = $params['conf']['translationMap.'];
+		$keys = array_keys($translationMap);
+
+		if (($key = array_search($content, $keys)) !== false) {
+			return $translationMap[$keys[$key]];
+		} elseif (isset($params['conf']['default'])) {
+			return $conf['default'];
+		} else {
+			return $params['currentContent'];
+		}
+	}
+
+
+
 	/**
 	 * Display edit icon
 	 *
@@ -62,16 +108,16 @@ class tx_ptlist_renderer {
 		$values = $params['values'];
 		$conf = $params['conf'];
 		$currentContent = $params['currentContent'];
-		
+
 		if ($GLOBALS['TSFE']->beUserLogin > 0) {
-			
+
 			// $row = t3lib_BEfunc::getRecord('static_countries', $values['countryuid']);
 			$row = array('uid' => $values[$conf['dataDescriptionIdentifierContainingTheUid']]);
 
 			// force edit icons to be displayed
 			$backupDisplayFieldEditIcons = $GLOBALS['TSFE']->displayFieldEditIcons;
 			$GLOBALS['TSFE']->displayFieldEditIcons = true;
-			
+
 			$currentContent = $GLOBALS['TSFE']->cObj->editIcons(
 				$currentContent,
 				$conf['table'].':'.$conf['fields'],
@@ -80,15 +126,15 @@ class tx_ptlist_renderer {
 				$row,
 				'&viewUrl='.rawurlencode(t3lib_div::getIndpEnv('REQUEST_URI'))
 			);
-			
+
 			// restore original displayFieldEditIcons status
 			$GLOBALS['TSFE']->displayFieldEditIcons = $backupDisplayFieldEditIcons;
 		}
 		return $currentContent;
 	}
 
-	
-	
+
+
 	/**
 	 * Regex replace
 	 *
@@ -100,9 +146,9 @@ class tx_ptlist_renderer {
 	public static function regexReplace(array $params) {
 		return preg_replace($params['conf']['pattern'], $params['conf']['replace'], $params['currentContent']);
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Fetch external data and render it
 	 * For fetching the external data the genericDataAccessor is used which uses a query cache and stores it even to the session
@@ -113,35 +159,35 @@ class tx_ptlist_renderer {
 	 * @since	2009-02-25
 	 */
 	public static function fetchExternalData(array $params) {
-				
+
 		$values = $params['values'];
 		$conf = $params['conf'];
 		// $currentContent = $params['currentContent'];
-			
+
 		$dsn = $conf['dsn'];
-		
+
 		if (is_numeric($dsn)) {
 			$dsn = tx_ptlist_div::getDsnFromDbRecord($dsn);
 		}
-		
+
 		$replaceArray = array();
 		foreach ($values as $key => $value) {
 			$replaceArray['###'.strtoupper($key).'###'] = $value;
 		}
-		
+
 		tx_pttools_assert::isNotEmptyArray($conf['select.'], array('message' => 'No "select" configuration found!'));
-		
+
 		foreach ($conf['select.'] as $tsKey => &$value) {
 			if (substr($tsKey, -1) != '.') {
-				
+
 				// resolve stdWraps
 				$value = $GLOBALS['TSFE']->cObj->stdWrap($conf['select.'][$tsKey], $conf['select.'][$tsKey.'.']);
-				
+
 				// insert values
 				$value = str_replace(array_keys($replaceArray), array_values($replaceArray), $value);
 			}
 		}
-		
+
 		$row = tx_ptlist_genericDataAccessor::getInstance(md5($dsn), $dsn)->select(
 			$conf['select.']['fields'],
 			$conf['select.']['from'],
@@ -152,12 +198,12 @@ class tx_ptlist_renderer {
 			false, // force update
 			0 // max age
 		);
-		
+
 		if (!empty($row[0])) {
 			// merge existing values with the values from the row
 			$values = t3lib_div::array_merge($values, $row[0]);
 		}
-		
+
 		$renderConfig = array(
 			'renderObj' => $conf['renderObj'],
 			'renderObj.' => $conf['renderObj.'],
@@ -165,8 +211,8 @@ class tx_ptlist_renderer {
 		);
 		return tx_ptlist_div::renderValues($values, $renderConfig);
 	}
-	
-	
+
+
 }
 
 ?>
