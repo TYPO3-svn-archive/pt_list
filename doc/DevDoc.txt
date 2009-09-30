@@ -11,10 +11,10 @@ RMV: removed Item
 RFT: refactoring / code cleanup
 ********************************************************************************
 
-ToDo: As of 28.08.2009
+ToDo: As of 30.09.2009
 =====
 
-- TODO: check and extend changes for default XSS prevention
+- [TODO] check and extend changes for default XSS prevention
   - check already implemented adaptions of rk in tx_ptlist_controller_list (see changelog below) - is this the right place?
   + IMPORTANT: make default XSS prevention configurable for a complete list (e.g. pt_list usage for CSV and PDF)
     (Alternative, but not-so-easy-to-implement: make default XSS prevention configurable for each dataDescriptionIdentifier via Typoscript) 
@@ -24,6 +24,9 @@ ToDo: As of 28.08.2009
     - bookmarks 
     - and other list features using tx_ptmvc_view::addItem()
 
+
+
++ (rk) ADD: tx_ptlist_div::getTypoLink_URL(): added possibility to add URL parameters for redirect target page
 + (fb) ADD: tx_ptlist_renderer->translate()
 + (jm) CHG: Switched from date() function to strftime() function in Date Pager filter, to get 'locale' functionality. 
 + (jm) FIX: Fixed tag id in Date Picker template. Caused conflicts with Tidy extension.
@@ -61,19 +64,18 @@ ToDo: As of 28.08.2009
 + (mk) ADD: Possibility to structure a list by certain columns
 + (fb) ADD: apply stdWrap to dataDescription configuration's properties
 + (fb) ADD: string filter now supports "AND" queries: All search words will be concatenated with "and". The resulting expression
-  must be in at least one of the data descriptions. 
-  To simulate a fulltext search you can create a special datadescription only used by the string search by concatenating all fields you 
-  want to search in:
-  Example: 
-  plugin.tx_ptlist.listConfig.profileSearchResults.data.mySearchField {
-		special = CONCAT(fe_users.tx_myext_firstname, '|', fe_users.tx_myext_lastname)
-  }
-  [...]
-  plugin.tx_ptlist.listConfig.profileSearchResults.filters.defaultFilterbox.10 < plugin.tx_ptlist.alias.filter_string
-  plugin.tx_ptlist.listConfig.profileSearchResults.filters.defaultFilterbox.10 {
-  	dataDescriptionIdentifier = mySearchField
-  	filterIdentifier = search
-  }  
+       must be in at least one of the data descriptions. To simulate a fulltext search you can create a special datadescription only used 
+       by the string search by concatenating all fields you want to search in:
+          Example: 
+          plugin.tx_ptlist.listConfig.profileSearchResults.data.mySearchField {
+                special = CONCAT(fe_users.tx_myext_firstname, '|', fe_users.tx_myext_lastname)
+          }
+          [...]
+          plugin.tx_ptlist.listConfig.profileSearchResults.filters.defaultFilterbox.10 < plugin.tx_ptlist.alias.filter_string
+          plugin.tx_ptlist.listConfig.profileSearchResults.filters.defaultFilterbox.10 {
+            dataDescriptionIdentifier = mySearchField
+            filterIdentifier = search
+          }  
 + (mk) ADD: PDF and CSV list now does NOT filter HTML by default. This setting is overwritten by TS plugin.tx_ptlist.view.filterHtml
 + (mk) ADD: Added generic pagers and some documentation on how to use them
 + (mk) FIX: tx_pteublis_controller_sortiment::getContents XSS prevention is now configurable via: plugin.tx_ptlist.view.filterHtml
@@ -118,18 +120,18 @@ ToDo: As of 28.08.2009
 + (fb) CHG: filterBox configuration has changed. Class is no longer a property, but the value of the main key
     Before:
     10 {
-    	class < plugin.tx_ptlist.alias.filter_stringGeneric
-    	filterIdentifier = genericSearch
-    	label = Suche
-    	dataDescriptionIdentifier = 
+        class < plugin.tx_ptlist.alias.filter_stringGeneric
+        filterIdentifier = genericSearch
+        label = Suche
+        dataDescriptionIdentifier = 
     }
     
     Now: 
     10 < plugin.tx_ptlist.alias.filter_stringGeneric
     10 {
-    	filterIdentifier = genericSearch
-    	label = Suche
-    	dataDescriptionIdentifier = 
+        filterIdentifier = genericSearch
+        label = Suche
+        dataDescriptionIdentifier = 
     }
 + (fb) ADD: dsn in listConfig and in renderUserFunction "fetchExternalData" can be a dsn string or a uid pointing to the tx_ptlist_databases table 
 + (fb) ADD: New table "tx_ptlist_databases"
@@ -153,28 +155,28 @@ plugin.tx_<condensedExtKey>.controller.<controllerName>.<prefixId>.
 plugin.tx_<condensedExtKey>.controller.<controllerName>.<listPrefix>.
 
 $this->conf = 
-	[already existing property $this->conf]
-	
-		// tx_ptmvc_controllerFrontend->getConfiguration()
-	[plugin.tx_<condensedExtKey>.controller.<controllerName>.] +
-	[plugin.tx_<condensedExtKey>.controller.<controllerName>.<prefixId>.] +
-	[flexFormSettings] +
-	
-		// tx_ptlist_controller_list->getConfiguration()
-	[localConfiguration set in ->main() or ->__construct()] + 
-	[plugin.tx_<condensedExtKey>.controller.<controllerName>.<listPrefix>.] +
-	
-		// tx_mvc_controller->prepare() 
-	[localConfiguration set in ->main() or ->__construct()] 
-	
-	
+    [already existing property $this->conf]
+    
+        // tx_ptmvc_controllerFrontend->getConfiguration()
+    [plugin.tx_<condensedExtKey>.controller.<controllerName>.] +
+    [plugin.tx_<condensedExtKey>.controller.<controllerName>.<prefixId>.] +
+    [flexFormSettings] +
+    
+        // tx_ptlist_controller_list->getConfiguration()
+    [localConfiguration set in ->main() or ->__construct()] + 
+    [plugin.tx_<condensedExtKey>.controller.<controllerName>.<listPrefix>.] +
+    
+        // tx_mvc_controller->prepare() 
+    [localConfiguration set in ->main() or ->__construct()] 
+    
+    
 Views 
 
 plugin.tx_<condensedExtKey>.view.<viewName>.
 
 $this->conf = 
-	[plugin.tx_<condensedExtKey>.view.<viewName>.] +
-	[<controllerConfig>.view.<viewName>.] 
+    [plugin.tx_<condensedExtKey>.view.<viewName>.] +
+    [<controllerConfig>.view.<viewName>.] 
 
 
 TODO:

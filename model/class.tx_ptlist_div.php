@@ -51,21 +51,39 @@ class tx_ptlist_div {
 	 * @param 	array 	parameter array, expects "$params['conf']['target']" to hold the target where to redirect to
 	 * @param 	tx_ptlist_filter 	calling filter object
 	 * @return 	void
-	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>, Rainer Kuhn <kuhn@punkt.de>
 	 * @since	2009-02-23
 	 */
 	public static function redirectOnValidate(array $params, tx_ptlist_filter $filterObj) {
-
-		tx_pttools_assert::isNotEmptyString($params['conf']['target'], array('message' => 'No "target" found!'));
-		$listControllerObj = tx_pttools_registry::getInstance()->get($filterObj->get_listIdentifier().'_listControllerObject');
-
+	    
+		tx_pttools_assert::isNotEmptyString($params['conf']['target'], array('message' => 'No "target" found for redirect!'));
+		if ($params['conf']['urlParameters'] || $params['conf']['urlParameters.']) {
+		    tx_pttools_assert::isArray($params['conf']['urlParameters.'], array('message'=>'No URL params array given for redirect!'));
+		} else {
+		    $params['conf']['urlParameters.'] = array();
+		}
+		
 		// next action: redirect to target page
-		$listControllerObj->set_forcedNextAction('redirect', array('target' => $GLOBALS['TSFE']->cObj->getTypoLink_URL($params['conf']['target'])));
+        $listControllerObj = tx_pttools_registry::getInstance()->get($filterObj->get_listIdentifier().'_listControllerObject');
+		$listControllerObj->set_forcedNextAction('redirect', array('target' => $GLOBALS['TSFE']->cObj->getTypoLink_URL($params['conf']['target'], $params['conf']['urlParameters.'])));
+		
 	}
 	
+	
+	
+	/**
+     * 
+     *
+     * @param   void
+     * @return  void
+     * @author  Fabrizio Branca <mail@fabrizio-branca.de>
+     * @since   2009
+     */
 	public function hookEofe() {
+	    
 		if (TYPO3_DLOG) t3lib_div::devLog('Processing tslib_fe hook "hook_eofe" in '.__METHOD__, 'pt_list', 1);
 		tx_ptlist_genericDataAccessor::storeAllCachesToSession();
+		
 	}
 
 	
