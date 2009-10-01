@@ -26,7 +26,7 @@
 
 /**
  * Class definition for pt_list controller.
- * 
+ *
  * @version   $Id$
  * @author      Fabrizio Branca <mail@fabrizio-branca.de>
  * @since       2009-01-21
@@ -139,7 +139,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 	 * @since 2009-01-23
 	 */
 	public function __construct(array $localConfiguration=array()) {
-	    
+
 		// save local configuration to a property
 		if (!empty($localConfiguration)) {
 		    $this->localConfiguration = $localConfiguration;
@@ -147,14 +147,14 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 		}
 
 		parent::__construct();
-		
+
 	}
-	
-	
-	
+
+
+
 	/**
 	 * EXPERIMENTAL: Trying to re-init the controller after changes are made to list object
-	 * 
+	 *
 	 * @author Michael Knoll <knoll@punkt.de>
 	 * @since  2009-08-19
 	 */
@@ -206,12 +206,12 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 
 		// get standard MVC configuration (see tx_ptmvc_controllerFrontend::getConfiguration())
 		parent::getConfiguration();
-        
+
         // merge local configuration (set in the constructor) over existing MVC configuration
         if (is_array($this->localConfiguration) && !empty($this->localConfiguration)) {
             $this->conf = t3lib_div::array_merge_recursive_overrule($this->conf, $this->localConfiguration);
             if (TYPO3_DLOG) t3lib_div::devLog('Merging localConfiguration with existing MVC configuration', 'pt_list', 0, $this->localConfiguration);
-            
+
             // unset the localConfiguration to avoid that the controller will merge settings again
             $this->localConfiguration = array();
         }
@@ -229,13 +229,13 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 			$this->filterboxId = $this->conf['filterboxId'];
 			tx_pttools_assert::isNotEmptyString($this->filterboxId, array('message' => 'No "filterboxId" found in configuration.'));
 		}
-        
-		// merge listId specific configuration ("plugin.tx_<condensedExtKey>.controller.<controllerName>.<listPrefix>.") over existing configuration ("plugin.tx_<condensedExtKey>.controller.list.") 
+
+		// merge listId specific configuration ("plugin.tx_<condensedExtKey>.controller.<controllerName>.<listPrefix>.") over existing configuration ("plugin.tx_<condensedExtKey>.controller.list.")
 		$listIdSpecificConfiguration = $this->_extConf['controller.'][$this->getControllerName().'.'][$this->listPrefix.'.'];
 		if (is_array($listIdSpecificConfiguration) && !empty($listIdSpecificConfiguration)) {
 			$this->conf = t3lib_div::array_merge_recursive_overrule($this->conf, $listIdSpecificConfiguration);
 		}
-		
+
 	}
 
 
@@ -289,7 +289,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 			/**
 			 * Take passed list object (must be an instance from tx_ptlist_list).
 			 * e.g. pass a reference to the listObject in the localConfiguration passed to this controller in the constructor
-			 * 
+			 *
 			 * $listController = new tx_ptlist_controller_list(array(
 			 * 		'listObject' => $listObject;
 			 * 		[...]
@@ -505,6 +505,13 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 		$view = $this->getView('list_pager');
 		$view->addItem($this->pager->getMarkerArray(), 'pager');
 
+		$appendToUrl = '';
+		if ($this->conf['appendFilterValuesToUrls']) {
+			$appendToUrl = $this->currentListObject->getAllFilters()->getAllFilterValueAsGetParameterString();
+		}
+		$view->addItem($appendToUrl, 'appendToUrl', false);
+
+
 		return $view->render();
 	}
 
@@ -520,11 +527,11 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 	 */
 	protected function listDefaultAction() {
 
-		// hide columns from configuration 
+		// hide columns from configuration
 		foreach(t3lib_div::trimExplode(',', $this->currentListObject->get_hideColumns(), 1) as $columnIdentifier) {
 			$this->currentListObject->getAllColumnDescriptions()->getItemById($columnIdentifier)->set_hidden(true);
 		}
-	
+
 		// hide columns from filters
 		foreach($this->currentListObject->getAllFilters() as $filter) { /* @var $filter tx_ptlist_filter */
 			if ($filter->get_isActive()) {
@@ -542,11 +549,11 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 
 		$view->addItem($this->currentListObject->getAllFilters(true, 'renderInList', true)->getMarkerArray(), 'filterbox', false);
         $view->addItem($this->getAggregateRows(), 'aggregateRows', false);
-        
+
         // (added by rk 28.08.09) # TODO: Replace this by a translation mechanism
         $view->addItem($this->currentListObject->get_noElementsFoundText(), 'noElementsFoundText', false); // do not filter HTML here since the display text may already be formatted as HTML (e.g. from Typoscript configuration)
-        
-		
+
+
 		// render
 		return $view->render();
 	}
@@ -615,11 +622,11 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 		$view = $this->getView('list_filterbreadcrumb');
 
 		$activeFilterCollection = $this->currentListObject->getAllFilters(true)->where_isActive();
-		
+
 		$view->addItem($activeFilterCollection->count(), 'activeFilterCount');
 		$view->addItem($activeFilterCollection->getMarkerArray(), 'filters', false);
-		// filter breadcrumb elements contain html that should not be filtered here. Check is done in the filters.	
-		
+		// filter breadcrumb elements contain html that should not be filtered here. Check is done in the filters.
+
 		return $view->render();
 	}
 
@@ -909,9 +916,9 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 					if (!isset($itemObj[$dataDescriptionIdentifier])) {
 						throw new tx_pttools_exception(sprintf('Property "%s" not found (via ArrayAccess)', $dataDescriptionIdentifier));
 					}
-					
+
 					/**
-					 * XSS prevention: Use plugin.tx_ptlist.view.csv_rendering.filterHtml = 1 in your TS Setup to 
+					 * XSS prevention: Use plugin.tx_ptlist.view.csv_rendering.filterHtml = 1 in your TS Setup to
 					 * filter all values
 					 */
 					$tsHtmlFiltering = tx_pttools_div::getTS('plugin.tx_ptlist.view.filterHtml');
@@ -919,7 +926,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 					if ( $tsHtmlFiltering == 0 ) {
 			            $filterHtml = false;
 			        }
-			        
+
 			        if ($filterHtml) {
 						// Here only raw data is filtered, BEFORE data is rendered by TS setup
 						$values[$dataDescriptionIdentifier] = tx_pttools_div::htmlOutput($itemObj[$dataDescriptionIdentifier]); // added HTML filtering by default (rk 09.05.2009) - TODO: check implementation at this place and make HTML filtering configurable for each dataDescriptionIdentifier via Typoscript
@@ -927,13 +934,13 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 			        	// Filtering is deactivated by TS
 			        	$values[$dataDescriptionIdentifier] = $itemObj[$dataDescriptionIdentifier];
 			        }
-			        
+
 				}
 				$listItem[$columnDescription->get_columnIdentifier()] = $columnDescription->renderFieldContent($values);
 			}
 			$listItems[] = $listItem;
 		}
-		
+
 		return $listItems;
 	}
 
@@ -956,11 +963,11 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
         return $this->listPrefix;
     }
 
-    
-    
+
+
     /**
      * Returns the current list id
-     * 
+     *
      * @param void
      * @return string list id
      * @author Michael Knoll <knoll@punkt.de>
@@ -969,7 +976,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
     public function get_currentlistId() {
     	return $this->currentlistId;
     }
-    
+
 
 
     /**

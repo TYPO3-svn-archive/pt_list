@@ -45,8 +45,8 @@ class tx_ptlist_filterCollection extends tx_pttools_objectCollection implements 
 	 */
 	protected $listId;
 
-	
-	
+
+
 	/**
 	 * Class constructor
 	 *
@@ -85,13 +85,13 @@ class tx_ptlist_filterCollection extends tx_pttools_objectCollection implements 
         parent::addItem($filterObj, $key);
 
     }
-	
-    
-    
+
+
+
 	/**
-	 * Filters out all filters that aren't active 
+	 * Filters out all filters that aren't active
 	 * and returns a new object collection with references to the original objects
-	 * 
+	 *
 	 * @param void
 	 * @return tx_ptlist_filterCollection
 	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
@@ -99,13 +99,13 @@ class tx_ptlist_filterCollection extends tx_pttools_objectCollection implements 
 	 */
 	public function where_isActive() {
 		$collection = new tx_ptlist_filterCollection($this->listId);
-		
+
 		foreach ($this as $key => $filter) { /* @var filter tx_ptlist_filter */
 			if ($filter->get_isActive() == true) {
 				$collection->addItem($filter);
 			}
 		}
-		
+
 		return $collection;
 	}
 
@@ -130,7 +130,7 @@ class tx_ptlist_filterCollection extends tx_pttools_objectCollection implements 
 	}
 
 
-	
+
 	/**
 	 * Return a filterCollection containing references to those filters that belong to a given filterbox
 	 *
@@ -225,7 +225,7 @@ class tx_ptlist_filterCollection extends tx_pttools_objectCollection implements 
 	}
 
 
-	
+
 	/**
 	 * Get all filterbox ids
 	 *
@@ -242,6 +242,28 @@ class tx_ptlist_filterCollection extends tx_pttools_objectCollection implements 
 			}
 		}
 		return $filterboxIds;
+	}
+
+
+
+	/**
+	 * Accumulate all filter values into  parameter string
+	 *
+	 * @param string csl of filter identifiers not to be included into the string
+	 * @return string
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
+	 * @since	2009-10-01
+	 */
+	public function getAllFilterValueAsGetParameterString($ignoredFilters = '') {
+		$ignoredFilterIdentifiers = t3lib_div::trimExplode(',', $ignoredFilters);
+		$parameterString = '';
+		/* @var $filter tx_ptlist_filter */
+		foreach ($this as $filter) {
+			if (!in_array($filter->get_filterIdentifier(), $ignoredFilterIdentifiers)) {
+				$parameterString .= $filter->getFilterValueAsGetParameterString();
+			}
+		}
+		return $parameterString;
 	}
 
 
@@ -280,7 +302,7 @@ class tx_ptlist_filterCollection extends tx_pttools_objectCollection implements 
 
 		// loop over all filterboxes
 		foreach ($dataArray as $tsKey => $filterboxConfiguration) { /* @var $filterboxConfiguration array */
-			
+
 			tx_pttools_assert::isNotEmptyArray($filterboxConfiguration, array('message' => sprintf('No filterbox configuration found in key "%s"', $tsKey)));
 
 			// retrieve filterboxId from array key
@@ -288,21 +310,21 @@ class tx_ptlist_filterCollection extends tx_pttools_objectCollection implements 
 			$filterboxId = substr($tsKey, 0, -1); /* removing the dot */
 
 			if (TYPO3_DLOG) t3lib_div::devLog(sprintf('Processing configuration for filterbox "%s"', $filterboxId), 'pt_list');
-			
+
 			// first sort array by keys (as we expect single column definitions defined under keys 10., 20., 30., ...)
 			$sortedKeys = t3lib_TStemplate::sortedKeyList($filterboxConfiguration, false);
-			
+
 			// loop over all single filter configurations in the current filterbox
 			foreach ($sortedKeys as $tsKey) {
-				
+
 				$filterClass = $filterboxConfiguration[$tsKey];
 				tx_pttools_assert::isNotEmptyString($filterClass, array('message' => sprintf('No filterClass defined for filter in key "%s" in filterbox "%s"', $tsKey, $filterboxId)));
-				
+
 				$filterConf = $filterboxConfiguration[$tsKey.'.'];
 				tx_pttools_assert::isNotEmptyArray($filterConf, array('message' => sprintf('No filter configuration found for filter in key "%s" in filterbox "%s"', $tsKey, $filterboxId)));
-				
+
 				tx_pttools_assert::isNotEmptyString($filterConf['filterIdentifier'], array('message' => sprintf('No filter identifier found for filter in key "%s" in filterbox "%s"', $tsKey, $filterboxId)));
-				
+
 
 				// check if class file exists
 				$file = implode(':', array_slice(t3lib_div::trimExplode(':', $filterClass), 0, -1));
@@ -344,7 +366,7 @@ class tx_ptlist_filterCollection extends tx_pttools_objectCollection implements 
 		return serialize($serializedFilters);
 	}
 
-	
+
 
 	/**
 	 * Converts a string representation into the original object

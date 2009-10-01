@@ -109,9 +109,9 @@ abstract class tx_ptlist_controller_filter_options_base extends tx_ptlist_filter
 
 		$possibleValues = $this->getOptions(); /* @var $possibleValues array of array('item' => <value>, 'label' => <label>, 'quantity' => <quantity>) */
 
-		
+
 		// render values
-		
+
 		if ((!empty($this->conf['renderObj']) && !empty($this->conf['renderObj.'])) ||  !empty($this->conf['renderUserFunctions.'])) {
 			$renderConfig = array(
 				'renderObj' => $this->conf['renderObj'],
@@ -175,6 +175,15 @@ abstract class tx_ptlist_controller_filter_options_base extends tx_ptlist_filter
 		$view->addItem((bool)$this->conf['multiple'], 'multiple');
 		$view->addItem((bool)$this->conf['submitOnChange'], 'submitOnChange');
 
+		// append filter state values to all urls
+		$appendFilterValuesToUrls = tx_pttools_div::getTS('plugin.tx_ptlist.controller.list.appendFilterValuesToUrls');
+		$appendToUrl = '';
+		if ($appendFilterValuesToUrls) {
+			$listObject = tx_pttools_registry::getInstance()->get($this->listIdentifier.'_listObject'); /* @var $listObject tx_ptlist_list */
+			$appendToUrl = $listObject->getAllFilters()->getAllFilterValueAsGetParameterString($this->filterIdentifier);
+		}
+		$view->addItem($appendToUrl, 'appendToUrl', false);
+
 		if (empty($this->conf['selectBoxSize'])) {
 			$selectBoxSize = 1;
 		} elseif (strtolower($this->conf['selectBoxSize']) == 'all') {
@@ -215,16 +224,16 @@ abstract class tx_ptlist_controller_filter_options_base extends tx_ptlist_filter
 	public function submitAction() {
 		$this->isActive = true;
 		if (is_array($this->params['value'])) {
-		
+
 			// multiple selection mode
 			$this->value = array();
 			foreach ($this->params['value'] as $key => $value) {
 				$this->value[$key] = urldecode($value);
 			}
-			
+
 		} elseif (isset($this->params['value'])) {
-		
-			// single selection mode	
+
+			// single selection mode
 			$this->params['value'] = urldecode($this->params['value']);
 
 			if (!is_array($this->value)) $this->value = array();
@@ -267,7 +276,7 @@ abstract class tx_ptlist_controller_filter_options_base extends tx_ptlist_filter
 	public function breadcrumbAction() {
 		$view = $this->getView('filter_breadcrumb');
 		$view->addItem($this->label, 'label');
-		
+
 		$renderConfig = array(
 			'renderObj' => $this->conf['renderObj'],
 			'renderObj.' => $this->conf['renderObj.'],
@@ -305,7 +314,7 @@ abstract class tx_ptlist_controller_filter_options_base extends tx_ptlist_filter
 
 		$field = $this->dataDescriptions->getItemByIndex(0)->getSelectClause(false);
 		tx_pttools_assert::isNotEmptyString($field, array('message' => '"getSelectClause" returned invalid string!'));
-		
+
 		tx_pttools_assert::isNotEmptyArray($this->value, array('message' => 'Value array is empty!'));
 
 		if ($this->conf['multiple'] == true) {

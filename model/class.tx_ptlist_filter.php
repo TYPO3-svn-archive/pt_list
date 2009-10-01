@@ -156,6 +156,28 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
 		parent::__construct();
 	}
 
+	/**
+	 * Returns the action.
+	 * If the dropActionParameter configuration is set this controller action "submit" will be executed
+	 * without being given as parameter on the presence of a value
+	 *
+	 * @param	void
+	 * @return 	string	action
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
+	 * @since	2009-10-01
+	 */
+	protected function getAction() {
+		$action = parent::getAction();
+		if (empty($action)) {
+			if ($this->conf['dropActionParameter'] == 1) {
+				if (!empty($this->params['value'])) {
+					$action = 'submit';
+				}
+			}
+		}
+		return $action;
+	}
+
 
 
 	/**
@@ -560,6 +582,36 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
 	protected function resetListSortingState() {
 		$listObject = tx_pttools_registry::getInstance()->get($this->listIdentifier.'_listObject'); /* @var $listObject tx_ptlist_list */
 		$listObject->resetSortingParameters();
+	}
+
+
+
+	/**
+	 * Get the filter value(s) as parameter string intended to be appended to an url to pass
+	 * filter states in cases where no sessions should be used.
+	 * Override this method in your inheriting filter if you store your values in a different way
+	 *
+	 * @param void
+	 * @return string
+	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
+	 * @since 2009-10-01
+	 */
+	public function getFilterValueAsGetParameterString() {
+		$parameterString = '';
+		if (!empty($this->value)) {
+			if (is_scalar($this->value)) {
+				$parameterString .= '&'.$this->prefixId.'[value]='.$this->value;
+			} elseif (is_array($this->value)) {
+				if (count($this->value) > 1) {
+					foreach ($this->value as $value) {
+						$parameterString .= '&'.$this->prefixId.'[value][]='.$value;
+					}
+				} else {
+					$parameterString .= '&'.$this->prefixId.'[value]='.reset($this->value);
+				}
+			}
+		}
+		return $parameterString;
 	}
 
 

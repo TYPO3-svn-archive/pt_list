@@ -24,6 +24,12 @@ ToDo: As of 30.09.2009
     - bookmarks 
     - and other list features using tx_ptmvc_view::addItem()
 
++ (fb) ADD: added filter configuration option: "dropActionParameter" and list controller configuration option "appendFilterValuesToUrls"
+       + This is needed to make lists crawlable and cacheable 
+       + Updated the manual. See there for detailed information under
+         + "Plugin Configuration" -> "plugin.tx_ptlist.controller.list" -> "appendFilterValuesToUrls"
+         + and "List Configuration – Details" -> "->filterDefinition" -> "dropActionParameter"
+         + and "How to make you list crawlable and cacheable"
 + (fb) ADD: some phpdoc code comment
 + (fb) ADD: preset array values for filters support stdWrap now 
 + (rk) ADD: tx_ptlist_div::getTypoLink_URL(): added possibility to add URL parameters for redirect target page
