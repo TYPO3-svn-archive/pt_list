@@ -8,7 +8,7 @@
  * via $filter.<tsValue>
  *********************************************}
 
-{debug}
+{*debug*}
  
 <form method="post" action="{url parameter=$currentPage additionalParams='&%1$s[action]=submit&%1$s[value]=custom'|vsprintf:$prefixId setup='lib.tx_ptlist.typolinks.timeSpan'}">
 	<label for="date_from">Von:</label> <input type="text" value="{$value.from}" name="{$prefixId}[from]" class="date-pick dp-applied"  id="date_from">
