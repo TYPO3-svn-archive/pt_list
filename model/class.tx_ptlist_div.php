@@ -1,19 +1,19 @@
 <?php
 /***************************************************************
  *  Copyright notice
- *  
+ *
  *  (c) 2009 Fabrizio Branca (mail@fabrizio-branca.de)
  *  All rights reserved
  *
- *  This script is part of the TYPO3 project. The TYPO3 project is 
+ *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 2 of the License, or
  *  (at your option) any later version.
- * 
+ *
  *  The GNU General Public License can be found at
  *  http://www.gnu.org/copyleft/gpl.html.
- * 
+ *
  *  This script is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -39,11 +39,11 @@ require_once t3lib_extMgm::extPath('pt_tools').'res/objects/class.tx_pttools_reg
  * @subpackage  tx_ptlist
  */
 class tx_ptlist_div {
-	
+
 	protected static $renderCache = array();
 
-	
-	
+
+
 	/**
 	 * Redirects on validate, by setting the "forcedNextAction" of the filter's listObject to the redirect action
 	 *
@@ -55,24 +55,25 @@ class tx_ptlist_div {
 	 * @since	2009-02-23
 	 */
 	public static function redirectOnValidate(array $params, tx_ptlist_filter $filterObj) {
-	    
+
 		tx_pttools_assert::isNotEmptyString($params['conf']['target'], array('message' => 'No "target" found for redirect!'));
 		if ($params['conf']['urlParameters'] || $params['conf']['urlParameters.']) {
 		    tx_pttools_assert::isArray($params['conf']['urlParameters.'], array('message'=>'No URL params array given for redirect!'));
 		} else {
 		    $params['conf']['urlParameters.'] = array();
 		}
-		
+
 		// next action: redirect to target page
         $listControllerObj = tx_pttools_registry::getInstance()->get($filterObj->get_listIdentifier().'_listControllerObject');
 		$listControllerObj->set_forcedNextAction('redirect', array('target' => $GLOBALS['TSFE']->cObj->getTypoLink_URL($params['conf']['target'], $params['conf']['urlParameters.'])));
-		
+
 	}
-	
-	
-	
+
+
+
 	/**
-     * 
+     * This hook will be called at the "end of frontend". All caches used by the generic data accessor will be stored to the session here.
+     * This is used for speeding up the genericDataAccessor as this can be used to fetch data from external databases that might be very slow
      *
      * @param   void
      * @return  void
@@ -80,13 +81,13 @@ class tx_ptlist_div {
      * @since   2009
      */
 	public function hookEofe() {
-	    
+
 		if (TYPO3_DLOG) t3lib_div::devLog('Processing tslib_fe hook "hook_eofe" in '.__METHOD__, 'pt_list', 1);
 		tx_ptlist_genericDataAccessor::storeAllCachesToSession();
-		
+
 	}
 
-	
+
 
 	/**
 	 * Renders an array of values for a given configuration via php userfunction or TYPO3 content object and stores it into an own cache
@@ -115,41 +116,41 @@ class tx_ptlist_div {
 	 * @since	2009-02-21
 	 */
 	public static function renderValues(array $values, array $config=array(), $forceCacheUpdate=false) {
-		
+
 		$cacheId = md5(serialize(func_get_args()));
-		
+
 		if ($forceCacheUpdate || !isset(self::$renderCache[$cacheId])) {
-		
+
 			// values will be concatenated with ", " by default
 			$renderedContent = implode(', ', $values);
-			
+
 			if (!empty($config)) {
-		
+
 				// apply (php) renderer to field Content
 				if (is_array($config['renderUserFunctions.'])) {
-					
+
 					$sortedKeys = t3lib_TStemplate::sortedKeyList($config['renderUserFunctions.'], false);
-					
+
 					$params = array();
 					$params['values'] = $values;
-					
+
 					$dummRef = ''; // as this method is called statically we create a dummy variable that will be passed to the user function
-					
+
 					foreach ($sortedKeys as $key) {
 						$rendererUserFunc = $config['renderUserFunctions.'][$key];
 						$params['currentContent'] = $renderedContent;
 						$params['conf'] = $config['renderUserFunctions.'][$key.'.']; // pass the configuration found under "<key>." to the userfunction
 						$renderedContent = t3lib_div::callUserFunction($rendererUserFunc, $params, $dummRef);
 					}
-					
+
 				}
-		
+
 				// render typoscript cObj if defined
 				if (!empty($config['renderObj.'])) {
-		
+
 					$local_cObj = t3lib_div::makeInstance('tslib_cObj');
 					$local_cObj->start($values);
-		
+
 					$config['renderObj.']['setCurrent'] = $renderedContent;
 					// $renderedContent = $GLOBALS['TSFE']->cObj->cObjGetSingle($this->cObj['name'], $this->cObj['conf']);
 					$renderedContent = $local_cObj->cObjGetSingle($config['renderObj'], $config['renderObj.']);
@@ -160,9 +161,9 @@ class tx_ptlist_div {
 
 		return self::$renderCache[$cacheId];
 	}
-	
 
-    
+
+
     /**
      * Reads a database record from the TYPO3 database where dsn information for the external database
      * is stored and constructs a dsn
@@ -177,14 +178,14 @@ class tx_ptlist_div {
     	$record = $GLOBALS['TSFE']->sys_page->checkRecord('tx_ptlist_databases', $uid, 0);
     	return sprintf('mysql://%s:%s@%s/%s', $record['username'], $record['pass'], $record['host'], $record['db']);
     }
-    
-    
-    
+
+
+
     /**
      * Parses a dsn string into an array
-     * 
+     *
  	 * phptype(dbsyntax)://username:password@protocol+hostspec/database?option=8&another=true
- 	 * 
+ 	 *
      * @see http://euk1.php.net/package/DB/docs/latest/DB/DB.html#methodparseDSN
      * @param 	string	dsn string
      * @return 	array	parsed string
@@ -309,7 +310,7 @@ class tx_ptlist_div {
 
         return $parsed;
     }
-    
+
 
 }
 
