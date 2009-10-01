@@ -11,8 +11,10 @@ RMV: removed Item
 RFT: refactoring / code cleanup
 ********************************************************************************
 
-ToDo: As of 28.08.2009
-=====
+
+
+ToDo: As of 01.10.2009
+======================
 
 - TODO: check and extend changes for default XSS prevention
   - check already implemented adaptions of rk in tx_ptlist_controller_list (see changelog below) - is this the right place?
@@ -23,6 +25,8 @@ ToDo: As of 28.08.2009
     + breadcrumbs, 
     - bookmarks 
     - and other list features using tx_ptmvc_view::addItem()
+- (fb&mk) Refactor tx_ptlist_controller_list::init()
+
 
 
 Version 0.0.2-dev
@@ -202,8 +206,3 @@ plugin.tx_<condensedExtKey>.view.<viewName>.
 $this->conf = 
 	[plugin.tx_<condensedExtKey>.view.<viewName>.] +
 	[<controllerConfig>.view.<viewName>.] 
-
-
-TODO:
-=====
-- (mk) Refactor tx_ptlist_controller_list::init()
