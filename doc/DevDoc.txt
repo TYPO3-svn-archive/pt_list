@@ -24,6 +24,7 @@ ToDo: As of 01.10.2009
     - bookmarks 
     - and other list features using tx_ptmvc_view::addItem()
 
++ (rk) FIX: commented non-compatible tx_pttools_div::stdWrapArray line (currently not available in SVN)
 + (rk) FIX: removed Smarty debug command from filter_timeSpan2_userInterface.tpl
 + (fb) ADD: added filter configuration option: "dropActionParameter" and list controller configuration option "appendFilterValuesToUrls"
        + This is needed to make lists crawlable and cacheable 
