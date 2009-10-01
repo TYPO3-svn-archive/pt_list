@@ -23,7 +23,14 @@ ToDo: As of 01.10.2009
     + breadcrumbs, 
     - bookmarks 
     - and other list features using tx_ptmvc_view::addItem()
+    
+- [TODO] FB: Crawlable/Cacheable
+  - retrieve appendString from all components (pager, list) and not only from filterCollection
+  - append appendString to all url (incl. sorting links in the list)
+  - check / modify current filters and include the appendString to all urls that are generated
 
++ (fb) FIX: ADD: preset array values for filters support stdWrap now (sorry for forgetting to commit tx_pttools_div::stdWrapArray :)
+       + added documentation to the manual
 + (rk) FIX: commented non-compatible tx_pttools_div::stdWrapArray line (currently not available in SVN)
 + (rk) FIX: removed Smarty debug command from filter_timeSpan2_userInterface.tpl
 + (fb) ADD: added filter configuration option: "dropActionParameter" and list controller configuration option "appendFilterValuesToUrls"

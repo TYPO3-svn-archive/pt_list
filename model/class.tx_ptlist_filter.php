@@ -551,8 +551,7 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
             $this->value = $dataArray['value'];
         } elseif (is_array($dataArray['value.'])) {
             if (TYPO3_DLOG) t3lib_div::devLog('Setting default value from configuration (array)', 'pt_list', 1, $dataArray['value.']);
-            $this->value = $dataArray['value.'];
-            #$this->value = tx_pttools_div::stdWrapArray($dataArray['value.']);
+            $this->value = tx_pttools_div::stdWrapArray($dataArray['value.']);
         }
 	}
 
