@@ -50,7 +50,7 @@ require_once t3lib_extMgm::extPath('pt_mvc').'classes/class.tx_ptmvc_controllerF
 
 require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_dataDescriptionCollection.php';
 require_once t3lib_extMgm::extPath('pt_list').'view/filter/class.tx_ptlist_view_filter_breadcrumb.php';
-require_once t3lib_extMgm::extPath('pt_list').'view/filter/class.tx_ptlist_view_filter_userInterface.php';
+#require_once t3lib_extMgm::extPath('pt_list').'view/filter/class.tx_ptlist_view_filter_userInterface.php';
 
 
 
