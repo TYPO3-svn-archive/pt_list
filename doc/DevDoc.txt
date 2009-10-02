@@ -11,10 +11,11 @@ RMV: removed Item
 RFT: refactoring / code cleanup
 ********************************************************************************
 
-ToDo: As of 01.10.2009
-=====
 
-- [TODO] check and extend changes for default XSS prevention
+ToDo: As of 02.10.2009
+======================
+
+- TODO: check and extend changes for default XSS prevention
   - check already implemented adaptions of rk in tx_ptlist_controller_list (see changelog below) - is this the right place?
   + IMPORTANT: make default XSS prevention configurable for a complete list (e.g. pt_list usage for CSV and PDF)
     (Alternative, but not-so-easy-to-implement: make default XSS prevention configurable for each dataDescriptionIdentifier via Typoscript) 
@@ -23,11 +24,55 @@ ToDo: As of 01.10.2009
     + breadcrumbs, 
     - bookmarks 
     - and other list features using tx_ptmvc_view::addItem()
-    
 - [TODO] FB: Crawlable/Cacheable
   - retrieve appendString from all components (pager, list) and not only from filterCollection
   - append appendString to all url (incl. sorting links in the list)
   - check / modify current filters and include the appendString to all urls that are generated
+- (fb&mk) Refactor tx_ptlist_controller_list::init()
+- (mk) Change TS for filters that use jQuery
+- (mk) XML Export
+- (mk) Change the way of how CSS for datepicker filter is included
+- (mk) Change the way of how JS for datepicker filter is included
+       At the moment, datepicker TS includes JS files "directly" from pt_jqueryui-extension.
+       Think of mechanism to do this via JS manager (see pt_jqueryui DevDoc) 
+- (mk) DatePicker and Timespan2 Filter don't work together because of dates from datepicker Filter
+       influence Timespan's datepicker. Think of a better solution (--> jm)
+
+
+
+Version 0.0.2-dev
+=================
+
++ (mk) RFT: Changed TimeSpan2 Filter to use pt_jqueryui files
++ (mk) ADD: Registered static template for DatePicker Filter in ext_localconf.php
++ (mk) FIX: Fixed bug in DatePicker Filter (no tablename in where clause caused ambiguous SQL statements)
++ (mk) RFT: Changed inclusion of CSS for datepicker to use CSS file from pt_jqueryui extension
++ (mk) RFT: Changed datepicker filter to use pt_jqueryui for jQuery inclusion
++ (mk) ADD: Added assertion that pt_jqueryui is loaded when datepicker filter is used
++ (mk) ADD: Added template for developing filters: /controller/filter/developmentTemplate/class.FILTER_TEMPLATE.php
++ (mk) ADD: Added some documentation on new filters
++ (mk) ADD: Added some aliases for new filters in plugin.tx_ptlist.alias.ts
++ (mk) RFT: Refactored range filter
++ (mk) RFT: Refactored datePicker filter
++ (mk) RFT: Refactored firstLetter filter
++ (mk) RFT: Added some documentation on timespan filter
++ (mk) DEL: Removed jquery stuff from ressources
++ (mk) RFT: Added comments on all filter classes
++ (mk) RFT: Did some refactoring on 'tx_ptlist_controller_filter_options_base'
++ (mk) RFT: Adapted maximum filter
++ (mk) RFT: Adapted minium filter 
++ (mk) RFT: Changed myDemoList TS to show submit labels for filters
++ (mk) RFT: Adapted string filter template for new naming convention
++ (mk) RFT: Changed name of filter config in template. Variable is now called 'filterconf' instead of 'filter' which made no sense
++ (mk) RFT: Changed 'string' filter to new behaviour of filter controller class
++ (mk) RFT: Added template method 'preSubmit()' to filter controller to run functionality that sould be done BEFORE filter is submited (e.g. set values from forms etc.)
++ (mk) RFT: Added new generic filter userInterface class 'class.tx_ptlist_view_filter_userInterface.php' for filter user interfaces
++ (mk) RFT: Changed filter main controller class to avoid code duplication
+
+
+
+Version 0.0.1
+=============
 
 + (fb) FIX: ADD: preset array values for filters support stdWrap now (sorry for forgetting to commit tx_pttools_div::stdWrapArray :)
        + added documentation to the manual
@@ -192,8 +237,3 @@ plugin.tx_<condensedExtKey>.view.<viewName>.
 $this->conf = 
     [plugin.tx_<condensedExtKey>.view.<viewName>.] +
     [<controllerConfig>.view.<viewName>.] 
-
-
-TODO:
-=====
-- (mk) Refactor tx_ptlist_controller_list::init()

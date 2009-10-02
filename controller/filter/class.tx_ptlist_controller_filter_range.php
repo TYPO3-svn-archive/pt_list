@@ -21,6 +21,9 @@
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
+
+
+
 /** 
  * Range filter controller class for the 'pt_list' extension
  *
@@ -32,6 +35,9 @@
 
 
 
+/**
+ * Inclusion of external ressources
+ */
 require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_filter.php';
 require_once t3lib_extMgm::extPath('pt_list').'view/filter/range/class.tx_ptlist_view_filter_range_userInterface.php';
 
@@ -47,17 +53,19 @@ require_once t3lib_extMgm::extPath('pt_list').'view/filter/range/class.tx_ptlist
  */
 class tx_ptlist_controller_filter_range extends tx_ptlist_filter {
     
+	
+	
     /***************************************************************************
+     * Domain - Logic
      * Methods defined in parent abstract class "tx_ptlist_filter" 
      **************************************************************************/
-    
     
     /**
      * Returns the SQL WHERE clause snippet for this filter
      * +++++ IMPORTANT: avoid SQL injections in your implementation!!! +++++
      *
      * @param   void
-     * @return  string HTML output
+     * @return  string SQL-WHERE clause
      * @author  Rainer Kuhn <kuhn@punkt.de>
      * @since   2009-01-23
      */
@@ -88,23 +96,6 @@ class tx_ptlist_controller_filter_range extends tx_ptlist_filter {
      **************************************************************************/
 	
     /**
-     * Processes the filter form submission
-     *
-     * @param   void
-     * @return  string HTML output
-     * @author  Rainer Kuhn <kuhn@punkt.de>
-     * @since   2009-01-23
-     */
-	public function submitAction() {
-        $this->value = array(
-        	'minval' => $this->params['minval'],
-        	'maxval' => $this->params['maxval']
-        );
-		return parent::submitAction();
-		
-	}
-    
-    /**
      * Displays the user interface in active state (calls isNotActiveAction in this case)
      *
      * @param   void
@@ -118,6 +109,8 @@ class tx_ptlist_controller_filter_range extends tx_ptlist_filter {
         return $this->doAction('isNotActive');
         
     }
+    
+    
     
     /**
      * Displays the user interface in inactive state
@@ -137,6 +130,14 @@ class tx_ptlist_controller_filter_range extends tx_ptlist_filter {
     }
     
     
+    
+    /**
+     * Validating submitted filter values
+     *
+     * @return  boolean  Returns true, if submitted values validate
+     * @author  Rainer Kuhn <kuhn@punkt.de>
+     * @since   2009-01-20
+     */
     public function validate() {
     	if (TYPO3_DLOG) t3lib_div::devLog('Range validation', 'pt_list', 1, $this->value);
     	
@@ -178,6 +179,27 @@ class tx_ptlist_controller_filter_range extends tx_ptlist_filter {
 		$view->addItem($value, 'value');
 		return $view->render();
 	}
+	
+	
+	
+	/***************************************************************************
+     * Template Methods
+     **************************************************************************/
+	
+    /**
+     * Processes the filter form submission
+     *
+     * @param   void
+     * @return  void
+     * @author  Rainer Kuhn <kuhn@punkt.de>
+     * @since   2009-01-23
+     */
+    public function preSubmit() {
+        $this->value = array(
+            'minval' => $this->params['minval'],
+            'maxval' => $this->params['maxval']
+        );
+    }
 	
 	
 }

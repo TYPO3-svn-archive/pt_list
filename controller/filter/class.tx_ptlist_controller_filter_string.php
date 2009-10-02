@@ -21,17 +21,23 @@
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
+
+
+
 /** 
  * String filter controller class for the 'pt_list' extension
  *
  * $Id$
  *
- * @author  Rainer Kuhn <kuhn@punkt.de>
+ * @author  Rainer Kuhn <kuhn@punkt.de>, Michael Knoll <knoll@punkt.de>
  * @since   2009-01-20
  */ 
 
 
 
+/**
+ * Inclusion of external ressources
+ */
 require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_filter.php';
 require_once t3lib_extMgm::extPath('pt_list').'view/filter/string/class.tx_ptlist_view_filter_string_userInterface.php';
 
@@ -46,7 +52,7 @@ require_once t3lib_extMgm::extPath('pt_list').'view/filter/string/class.tx_ptlis
  * @subpackage  tx_ptlist
  */
 class tx_ptlist_controller_filter_string extends tx_ptlist_filter {
-    
+	
     /***************************************************************************
      * Methods defined in parent abstract class "tx_ptlist_filter" 
      **************************************************************************/
@@ -66,10 +72,10 @@ class tx_ptlist_controller_filter_string extends tx_ptlist_filter {
         $sqlWhereClauseSnippets = array();
         
         foreach ($this->dataDescriptions as $dataDescription) {  /* @var $dataDescription tx_ptlist_dataDescription */
-        	$sqlWhereClauseSnippetsAndParts = array();
-        	foreach (t3lib_div::trimExplode(' ', $this->value, true) as $part) {
-        		$sqlWhereClauseSnippetsAndParts[] = sprintf('%s LIKE "%%%s%%"', $dataDescription->getSelectClause(false), $GLOBALS['TYPO3_DB']->quoteStr($part, $dataDescription->get_table()));
-        	}
+            $sqlWhereClauseSnippetsAndParts = array();
+            foreach (t3lib_div::trimExplode(' ', $this->value, true) as $part) {
+                $sqlWhereClauseSnippetsAndParts[] = sprintf('%s LIKE "%%%s%%"', $dataDescription->getSelectClause(false), $GLOBALS['TYPO3_DB']->quoteStr($part, $dataDescription->get_table()));
+            }
             $sqlWhereClauseSnippets[] = ' ( ' . implode(' AND ', $sqlWhereClauseSnippetsAndParts) . ' ) ';
         }
         $sqlWhereClauseSnippet = implode(' OR ', $sqlWhereClauseSnippets);
@@ -81,26 +87,32 @@ class tx_ptlist_controller_filter_string extends tx_ptlist_filter {
     
     
     /***************************************************************************
-     * Controller action methods 
+     * Template methods
      **************************************************************************/
-	
-    /**
-     * Processes the filter form submission
-     *
-     * @param   void
-     * @return  string HTML output
-     * @author  Rainer Kuhn <kuhn@punkt.de>
-     * @since   2009-01-20
-     */
-	public function submitAction() {
-	    
-		$this->value = $this->params['value'];
-		return parent::submitAction();
-		
-	}
     
     /**
-     * Displays the user interface in active state (calls isNotActiveAction in this case)
+     * Method implementing all stuff that needs to be done BEFORE submit action is 
+     * run. This is a template method!
+     *
+     * @param   void
+     * @return  void
+     * @author  Michael Knoll
+     * @since   2009-09-23
+     */
+    public function preSubmit() {
+        
+        $this->value = $this->params['value'];
+        
+    }
+    
+    
+    
+    /***************************************************************************
+     * Controller action methods 
+     **************************************************************************/
+    
+    /**
+     * Displays the user interface in active state.
      *
      * @param   void
      * @return  string HTML output
@@ -109,10 +121,12 @@ class tx_ptlist_controller_filter_string extends tx_ptlist_filter {
      */
     public function isActiveAction() {
         
-        // in this case we redirect to the "isActive" action as we do not want a different interface when the filter is active
+        // default case: no difference between 'isActive' and 'isNotActive'
         return $this->doAction('isNotActive');
         
     }
+    
+    
     
     /**
      * Displays the user interface in inactive state
@@ -124,28 +138,30 @@ class tx_ptlist_controller_filter_string extends tx_ptlist_filter {
      */
     public function isNotActiveAction() {
         
-        $view = $this->getView('filter_string_userInterface');
+        $view = $this->getView($this->getFilterViewName());
         $view->addItem($this->value, 'value');
         return $view->render();
         
     }
     
+    
+    
+    /***************************************************************************
+     * Helper methods 
+     **************************************************************************/
+    
     /**
-     * This method will be called to determine if the user input validates.
-     * 
-     * @param   void
-     * @return  bool    true (user input validates always here)
-     * @author  Rainer Kuhn <kuhn@punkt.de>
-     * @since   2009-08-17
+     * Returns the view name for this filter
+     *
+     * @return      string      View name of this filter in PEAR-convention
+     * @author      Michael Knoll <knoll@punkt.de>
+     * @since       2009-09-23
      */
-    public function validate() {
-        
-        return true;
-        
+    protected function getFilterViewName() {
+    	return 'filter_string_userInterface';
     }
-	
-	
-	
+    
+    
 }
 
 ?>

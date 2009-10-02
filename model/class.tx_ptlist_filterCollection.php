@@ -221,7 +221,8 @@ class tx_ptlist_filterCollection extends tx_pttools_objectCollection implements 
 				$whereClauses[] = ($filter->get_invert() ? 'NOT ' : ''). '(' . $filter->getSqlWhereClauseSnippet() . ')';
 			}
 		}
-		return implode(' AND ', $whereClauses);
+		$whereClause = implode(' AND ', $whereClauses);
+		return $whereClause;
 	}
 
 

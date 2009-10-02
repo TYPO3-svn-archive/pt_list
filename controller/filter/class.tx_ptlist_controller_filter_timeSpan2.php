@@ -25,6 +25,16 @@
 
 
 /**
+ * Class file definition for timespan filter
+ * 
+ * @author   Michael Knoll
+ * @since    2009-07-17
+ * @version  $ID:$
+ */
+
+
+
+/**
  * Inclusion of external ressources
  */
 require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_filter.php';
@@ -35,7 +45,8 @@ require_once t3lib_extMgm::extPath('pt_list').'view/filter/timeSpan2/class.tx_pt
 /**
  * Class implementing a "timespan" filter
  *
- * @version  	$Id$
+ * @package     Typo3
+ * @subpackage  pt_list
  * @author		Michael Knoll <knoll@punkt.de>
  * @since		2009-07-17
  */
@@ -55,27 +66,29 @@ class tx_ptlist_controller_filter_timeSpan2 extends tx_ptlist_filter {
 	
 	
 	/****************************************************************************************************************
-	 * Methods implementing filter template methods
+     * Modifying MVC functionality
+     ****************************************************************************************************************/
+	
+    /**
+     * MVC init method:
+     * Checks if the column collection contains exactly one column as this filter can be used only with one column at the same time
+     *
+     * @param   void
+     * @return  void
+     * @throws  tx_pttools_exceptionAssertion   if more than one column is attached to the filters columnCollection
+     * @author  Fabrizio Branca <mail@fabrizio-branca.de>
+     * @since   2009-01-23
+     */
+    public function init() {
+        parent::init();
+        tx_pttools_assert::isEqual(count($this->dataDescriptions), 1, array('message' => sprintf('This filter can only be used with 1 dataDescription (dataDescription found: "%s"', count($this->dataDescriptions))));
+    }
+    
+	
+	
+	/****************************************************************************************************************
+	 * Action Methods
 	 ****************************************************************************************************************/
-	
-	
-
-	/**
-	 * MVC init method:
-	 * Checks if the column collection contains exactly one column as this filter can be used only with one column at the same time
-	 *
-	 * @param 	void
-	 * @return 	void
-	 * @throws	tx_pttools_exceptionAssertion	if more than one column is attached to the filters columnCollection
-	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
-	 * @since	2009-01-23
-	 */
-	public function init() {
-		parent::init();
-		tx_pttools_assert::isEqual(count($this->dataDescriptions), 1, array('message' => sprintf('This filter can only be used with 1 dataDescription (dataDescription found: "%s"', count($this->dataDescriptions))));
-	}
-
-	
 	
 	/**
 	 * Displays the user interface in active state
@@ -104,78 +117,9 @@ class tx_ptlist_controller_filter_timeSpan2 extends tx_ptlist_filter {
 	public function isNotActiveAction() {
 		$view = $this->getView('filter_timeSpan2_userInterface');
 		$view->addItem($this->value, 'value');
-		$view->addItem($this->conf, 'filter');
+		$view->addItem($this->conf, 'filterconf');
 		return $view->render();
 
-	}
-
-
-
-	/**
-	 * Returns the amount of rows found for a given timespan
-	 *
-	 * @param 	int		"from" timestamp
-	 * @param 	int		"to" timestamp
-	 * @return 	int		amount of rows
-	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
-	 * @since	2009-02-09
-	 */
-	protected function getRowCountForTimeSpan($from, $to) {
-		// retrieve list object from regitry
-		$listObject = tx_pttools_registry::getInstance()->get($this->listIdentifier.'_listObject'); /* @var $listObject tx_ptlist_list */
-
-		// prepare parameters for the "getGroupData" call
-		$select = 'count(*) as quantity';
-
-		// where
-        $where = $this->getRangeSnippet($from, $to, $this->getDbColumn());
-
-        // ignore filters from configuration
-		$ignoredFiltersForWhereClause = $this->conf['ignoreFilters'];
-
-		// apend itself to the list
-		$ignoredFiltersForWhereClause .= empty($ignoredFiltersForWhereClause) ? '' : ', ';
-		$ignoredFiltersForWhereClause .= $this->filterIdentifier;
-
-		$data = $listObject->getGroupData($select, $where, '', '', '', $ignoredFiltersForWhereClause);
-
-		return $data[0]['quantity'];
-	}
-
-
-	
-	/**
-	 * Validate function
-	 *
-	 * @param 	void
-	 * @return 	bool
-	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
-	 * @since	2009-02-27
-	 */
-	public function validate() {
-		return true;
-	}
-
-	
-	
-	/**
-	 * Submit action
-	 *
-	 * @param 	void
-	 * @return 	string 	HTML output
-	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
-	 * @since	2009-02-27
-	 */
-	public function submitAction() {
-
-		// save the incoming parameters to your value property here
-		$this->value = array(
-			'from' => $this->params['from'],
-			'to' => $this->params['to'],
-		);
-
-		// let the parent action do the submission (validate)
-		return parent::submitAction();
 	}
 
 
@@ -205,6 +149,35 @@ class tx_ptlist_controller_filter_timeSpan2 extends tx_ptlist_filter {
 	}
 	
 	
+
+    /****************************************************************************************************************
+     * Template methods
+     ****************************************************************************************************************/
+    
+    /**
+     * Pre-Submit action
+     *
+     * @param   void
+     * @return  string  HTML output
+     * @author  Fabrizio Branca <mail@fabrizio-branca.de>
+     * @since   2009-02-27
+     */
+    public function preSubmit() {
+
+        // save the incoming parameters to your value property here
+        $this->value = array(
+            'from' => $this->params['from'],
+            'to' => $this->params['to'],
+        );
+
+    }
+	
+
+	
+	/****************************************************************************************************************
+     * Domain Logic -
+     * implementing abstract methods from parent class
+     ****************************************************************************************************************/
 	
     /**
      * Get sql where clause snippet
@@ -232,8 +205,6 @@ class tx_ptlist_controller_filter_timeSpan2 extends tx_ptlist_filter {
 	/****************************************************************************************************************
      * Helper methods
      ****************************************************************************************************************/
-	
-
 
 	/**
 	 * Format timespan
