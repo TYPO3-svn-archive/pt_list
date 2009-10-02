@@ -13,7 +13,7 @@ RFT: refactoring / code cleanup
 
 
 
-ToDo: As of 01.10.2009
+ToDo: As of 02.10.2009
 ======================
 
 - TODO: check and extend changes for default XSS prevention
@@ -26,12 +26,24 @@ ToDo: As of 01.10.2009
     - bookmarks 
     - and other list features using tx_ptmvc_view::addItem()
 - (fb&mk) Refactor tx_ptlist_controller_list::init()
+- (mk) Change TS for filters that use jQuery
+- (mk) XML Export
+- (mk) Change the way of how CSS for datepicker filter is included
+- (mk) Change the way of how JS for datepicker filter is included
+       At the moment, datepicker TS includes JS files "directly" from pt_jqueryui-extension.
+       Think of mechanism to do this via JS manager (see pt_jqueryui DevDoc) 
 
 
 
 Version 0.0.2-dev
 =================
 
++ (mk) ADD: Registered static template for DatePicker Filter in ext_localconf.php
++ (mk) FIX: Fixed bug in DatePicker Filter (no tablename in where clause caused ambiguous SQL statements)
++ (mk) RFT: Changed inclusion of CSS for datepicker to use CSS file from pt_jqueryui extension
++ (mk) RFT: Changed datepicker filter to use pt_jqueryui for jQuery inclusion
++ (mk) ADD: Added assertion that pt_jqueryui is loaded when datepicker filter is used
++ (mk) ADD: Added template for developing filters: /controller/filter/developmentTemplate/class.FILTER_TEMPLATE.php
 + (mk) ADD: Added some documentation on new filters
 + (mk) ADD: Added some aliases for new filters in plugin.tx_ptlist.alias.ts
 + (mk) RFT: Refactored range filter

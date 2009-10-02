@@ -80,6 +80,7 @@ t3lib_extMgm::addStaticFile($_EXTKEY, 'typoscript/static/bookmarks/', 			'[pt_li
 t3lib_extMgm::addStaticFile($_EXTKEY, 'typoscript/static/demolist/', 			'[pt_list] Demo List (static_info_tables)');
 t3lib_extMgm::addStaticFile($_EXTKEY, 'typoscript/static/pdf/',                 '[pt_list] PDF Rendering');
 t3lib_extMgm::addStaticFile($_EXTKEY, 'typoscript/static/filter/timeSpan2/',    '[pt_list] TimeSpan2 Filter (jQuery)');
+t3lib_extMgm::addStaticFile($_EXTKEY, 'typoscript/static/filter/datePicker/',   '[pt_list] DatePicker Filter (jQuery)');
 
 
 ?>

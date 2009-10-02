@@ -70,6 +70,12 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
 	 * @since		2009-01-23
 	 */
 	public function init() {
+		
+		// Make sure, pt_jqueryui extension is installed
+		if (!t3lib_extMgm::isLoaded('pt_jqueryui')) {
+			die('You need to install and load pt_jqueryui to run datepicker filter!');
+		}
+		
 		parent::init();
 		tx_pttools_assert::isEqual(count($this->dataDescriptions),
 				   1,
@@ -247,13 +253,18 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
 		// This information has to be given in the TypoScript config property `dateFieldType'.
 		$dateFieldType = $this->conf['dateFieldType'] == '' ? 'timestamp' : $this->conf['dateFieldType'];
 		$field = $this->dataDescriptions->getItemByIndex(0)->get_field();
+		$table = $this->dataDescriptions->getItemByIndex(0)->get_table();
 
 		switch ($dateFieldType) {
 		case 'date':
-			$select = "DISTINCT DATE_FORMAT($field, '%e') AS day, DATE_FORMAT($field, '%c') AS month, DATE_FORMAT($field, '%Y') AS year";
+			$select = 'DISTINCT DATE_FORMAT(' . $table . '.' . $field . ", '%e') AS day, 
+			                    DATE_FORMAT(" . $table . '.' . $field . ", '%c') AS month, 
+			                    DATE_FORMAT(" . $table . '.' . $field . ", '%Y') AS year";
 			break;
 		case 'timestamp':
-			$select = "DISTINCT FROM_UNIXTIME($field, '%e') AS day, FROM_UNIXTIME($field, '%c') AS month, FROM_UNIXTIME($field, '%Y') AS year";
+			$select = "DISTINCT FROM_UNIXTIME(" . $table . '.' . $field . ", '%e') AS day, 
+			                    FROM_UNIXTIME(" . $table . '.' . $field . ", '%c') AS month, 
+			                    FROM_UNIXTIME(" . $table . '.' . $field . ", '%Y') AS year";
 			break;
 		default:
 			throw new tx_pttools_exceptionConfiguration("No valid date field type set.",
@@ -282,9 +293,9 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
                 if (TYPO3_DLOG) t3lib_div::devLog(sprintf('Processing hook "%s" for "getEventDates_whereClauseHook" of filter_datePicker', $funcName), $this->extKey, 1, array('params' => $params));
             }
         }   
-
+        
 		$data = $listObject->getGroupData($select, $where, $groupBy, $orderBy, $limit, $ignoredFiltersForWhereClause);
-
+		
 		return $data;
 	}
 	

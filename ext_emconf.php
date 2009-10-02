@@ -39,7 +39,8 @@ $EM_CONF[$_EXTKEY] = array(
 		'conflicts' => array(
 		),
 		'suggests' => array(
-		  'static_info_tables (Only neede for demo-list application)' => '',
+		  'static_info_tables (Only needed for demo-list application)' => '',
+		  'pt_jqueryui (Only needed for datepicker filter and timespan2 filter' => '',
           'pt_xml2pdf (Only needed, if you want to creat PDF documents with pt_list)' => '',
           'PEAR Spreadsheet_Excel_Writer (THIS IS JUST A HINT, please ignore if your server is correctly configured)' => '',
 		),
