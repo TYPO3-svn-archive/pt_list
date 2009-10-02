@@ -32,12 +32,15 @@ ToDo: As of 02.10.2009
 - (mk) Change the way of how JS for datepicker filter is included
        At the moment, datepicker TS includes JS files "directly" from pt_jqueryui-extension.
        Think of mechanism to do this via JS manager (see pt_jqueryui DevDoc) 
+- (mk) DatePicker and Timespan2 Filter don't work together because of dates from datepicker Filter
+       influence Timespan's datepicker. Think of a better solution (--> jm)
 
 
 
 Version 0.0.2-dev
 =================
 
++ (mk) RFT: Changed TimeSpan2 Filter to use pt_jqueryui files
 + (mk) ADD: Registered static template for DatePicker Filter in ext_localconf.php
 + (mk) FIX: Fixed bug in DatePicker Filter (no tablename in where clause caused ambiguous SQL statements)
 + (mk) RFT: Changed inclusion of CSS for datepicker to use CSS file from pt_jqueryui extension
