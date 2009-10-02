@@ -43,6 +43,7 @@ ToDo: As of 02.10.2009
 Version 0.0.2-dev
 =================
 
++ (mk) ADD: Added new configuration 'sortingColumnDescriptionOnSubmit' for filters
 + (mk) RFT: Changed TimeSpan2 Filter to use pt_jqueryui files
 + (mk) ADD: Registered static template for DatePicker Filter in ext_localconf.php
 + (mk) FIX: Fixed bug in DatePicker Filter (no tablename in where clause caused ambiguous SQL statements)

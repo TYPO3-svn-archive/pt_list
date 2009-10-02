@@ -50,7 +50,6 @@ require_once t3lib_extMgm::extPath('pt_mvc').'classes/class.tx_ptmvc_controllerF
 
 require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_dataDescriptionCollection.php';
 require_once t3lib_extMgm::extPath('pt_list').'view/filter/class.tx_ptlist_view_filter_breadcrumb.php';
-#require_once t3lib_extMgm::extPath('pt_list').'view/filter/class.tx_ptlist_view_filter_userInterface.php';
 
 
 
@@ -327,6 +326,9 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
         
     	// do pre submit-functionality (template method implemented in inheriting classes)
         $this->preSubmit();
+        
+        // check for 'newListSortingStateOnSubmit' configuration
+        $this->checkAndSetNewListSortingStateOnSubmit();
     	
     	$output = '';
         
@@ -600,12 +602,45 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
      * Resets sorting states of corresponding list
      * 
      * @return void
-     * @author Michael Knoll
+     * @author Michael Knoll <knoll@punkt.de>
      * @since 2009-06-15
      */
     protected function resetListSortingState() {
         $listObject = tx_pttools_registry::getInstance()->get($this->listIdentifier.'_listObject'); /* @var $listObject tx_ptlist_list */
         $listObject->resetSortingParameters();
+    }
+    
+    
+    
+    /**
+     * Set sorting state of corresponding list
+     *
+     * @param   string      $sortingField
+     * @param   string      $sortingDirection
+     * @author Michael Knoll <knoll@punkt.de>
+     * @since 2009-10-02
+     */
+    protected function setListSortingState($sortingField, $sortingDirection) {
+    	$listObject = tx_pttools_registry::getInstance()->get($this->listIdentifier.'_listObject'); /* @var $listObject tx_ptlist_list */
+    	$listObject->setSortingParameters($sortingField, $sortingDirection);
+    }
+    
+    
+    
+    /**
+     * Check for 'NewListSortingStateOnSubmit' configuration 
+     * and set sorting state to this configuration
+     * 
+     * @param   void
+     * @return  void
+     * @author Michael Knoll <knoll@punkt.de>
+     * @since 2009-10-02
+     */
+    protected function checkAndSetNewListSortingStateOnSubmit() {
+    	if (array_key_exists('sortingColumnDescriptionOnSubmit', $this->conf) && $this->conf['sortingColumnDescriptionOnSubmit'] != '') {
+    		$sortingDirection = $this->conf['sortingDirectionOnSubmit'] != '' ? $this->conf['sortingDirectionOnSubmit'] : 'ASC';
+    		$this->setListSortingState($this->conf['sortingColumnDescriptionOnSubmit'], $sortingDirection);
+    	}
     }
     
     
