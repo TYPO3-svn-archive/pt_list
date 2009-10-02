@@ -38,7 +38,7 @@
  */
 require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_filter.php';
 require_once t3lib_extMgm::extPath('pt_list').'view/filter/datePicker/class.tx_ptlist_view_filter_datePicker_userInterface.php';
-
+require_once t3lib_extMgm::extPath('pt_tools').'res/objects/class.tx_pttools_exception.php';
 
 
 /**
@@ -73,7 +73,7 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
 		
 		// Make sure, pt_jqueryui extension is installed
 		if (!t3lib_extMgm::isLoaded('pt_jqueryui')) {
-			die('You need to install and load pt_jqueryui to run datepicker filter!');
+			throw new tx_pttools_exception('You need to install and load pt_jqueryui to run datepicker filter!');
 		}
 		
 		parent::init();

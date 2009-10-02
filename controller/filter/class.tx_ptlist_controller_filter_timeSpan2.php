@@ -39,6 +39,7 @@
  */
 require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_filter.php';
 require_once t3lib_extMgm::extPath('pt_list').'view/filter/timeSpan2/class.tx_ptlist_view_filter_timeSpan2_userInterface.php';
+require_once t3lib_extMgm::extPath('pt_tools').'res/objects/class.tx_pttools_exception.php';
 
 
 
@@ -80,6 +81,12 @@ class tx_ptlist_controller_filter_timeSpan2 extends tx_ptlist_filter {
      * @since   2009-01-23
      */
     public function init() {
+        
+    	// Make sure, pt_jqueryui extension is installed
+        if (!t3lib_extMgm::isLoaded('pt_jqueryui')) {
+            throw new tx_pttools_exception('You need to install and load pt_jqueryui to run datepicker filter!');
+        }
+    	
         parent::init();
         tx_pttools_assert::isEqual(count($this->dataDescriptions), 1, array('message' => sprintf('This filter can only be used with 1 dataDescription (dataDescription found: "%s"', count($this->dataDescriptions))));
     }

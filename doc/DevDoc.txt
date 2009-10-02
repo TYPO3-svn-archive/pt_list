@@ -43,6 +43,8 @@ ToDo: As of 02.10.2009
 Version 0.0.2-dev
 =================
 
++ (mk) CHG: Removed die() if no jquery extension is installed and changed it to throw an exception (DatePicker / TimeSpan2)
++ (mk) CHG: Moved template for filters into doc directory
 + (mk) ADD: Added new configuration 'sortingColumnDescriptionOnSubmit' for filters
 + (mk) RFT: Changed TimeSpan2 Filter to use pt_jqueryui files
 + (mk) ADD: Registered static template for DatePicker Filter in ext_localconf.php
