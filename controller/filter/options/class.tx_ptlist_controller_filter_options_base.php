@@ -37,12 +37,13 @@
 /**
  * Inclusion of external ressources
  */
-require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_filter.php';
-require_once t3lib_extMgm::extPath('pt_list').'view/filter/options/class.tx_ptlist_view_filter_options_userInterface_links.php';
-require_once t3lib_extMgm::extPath('pt_list').'view/filter/options/class.tx_ptlist_view_filter_options_userInterface_select.php';
-require_once t3lib_extMgm::extPath('pt_list').'view/filter/options/class.tx_ptlist_view_filter_options_userInterface_radio.php';
-require_once t3lib_extMgm::extPath('pt_list').'view/filter/options/class.tx_ptlist_view_filter_options_userInterface_checkbox.php';
-require_once t3lib_extMgm::extPath('pt_list').'view/filter/options/class.tx_ptlist_view_filter_options_userInterface_advmultiselect.php';
+$pt_list_path = t3lib_extMgm::extPath('pt_list');
+require_once $pt_list_path.'model/class.tx_ptlist_filter.php';
+require_once $pt_list_path.'view/filter/options/class.tx_ptlist_view_filter_options_userInterface_links.php';
+require_once $pt_list_path.'view/filter/options/class.tx_ptlist_view_filter_options_userInterface_select.php';
+require_once $pt_list_path.'view/filter/options/class.tx_ptlist_view_filter_options_userInterface_radio.php';
+require_once $pt_list_path.'view/filter/options/class.tx_ptlist_view_filter_options_userInterface_checkbox.php';
+require_once $pt_list_path.'view/filter/options/class.tx_ptlist_view_filter_options_userInterface_advmultiselect.php';
 
 
 

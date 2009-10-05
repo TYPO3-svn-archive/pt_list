@@ -43,6 +43,7 @@ ToDo: As of 02.10.2009
 Version 0.0.2-dev
 =================
 
++ (fb) RFT: improved a performance by caching extension paths (in some places)
 + (mk) CHG: Removed die() if no jquery extension is installed and changed it to throw an exception (DatePicker / TimeSpan2)
 + (mk) CHG: Moved template for filters into doc directory
 + (mk) ADD: Added new configuration 'sortingColumnDescriptionOnSubmit' for filters
@@ -85,7 +86,7 @@ Version 0.0.1
        + This is needed to make lists crawlable and cacheable 
        + Updated the manual. See there for detailed information under
          + "Plugin Configuration" -> "plugin.tx_ptlist.controller.list" -> "appendFilterValuesToUrls"
-         + and "List Configuration – Details" -> "->filterDefinition" -> "dropActionParameter"
+         + and "List Configuration ï¿½ Details" -> "->filterDefinition" -> "dropActionParameter"
          + and "How to make you list crawlable and cacheable"
 + (fb) ADD: some phpdoc code comment
 + (fb) ADD: preset array values for filters support stdWrap now 

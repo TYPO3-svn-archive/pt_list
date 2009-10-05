@@ -37,24 +37,26 @@
 /**
  * Inclusion of external ressources
  */
-require_once t3lib_extMgm::extPath('pt_tools').'res/objects/class.tx_pttools_exception.php';
-require_once t3lib_extMgm::extPath('pt_tools').'res/staticlib/class.tx_pttools_assert.php';
-require_once t3lib_extMgm::extPath('pt_tools').'res/staticlib/class.tx_pttools_debug.php';
-require_once t3lib_extMgm::extPath('pt_tools').'res/objects/class.tx_pttools_registry.php';
-require_once t3lib_extMgm::extPath('pt_tools').'res/objects/class.tx_pttools_sessionStorageAdapter.php';
+$pt_tools_path = t3lib_extMgm::extPath('pt_tools');
+require_once $pt_tools_path.'res/objects/class.tx_pttools_exception.php';
+require_once $pt_tools_path.'res/staticlib/class.tx_pttools_assert.php';
+require_once $pt_tools_path.'res/staticlib/class.tx_pttools_debug.php';
+require_once $pt_tools_path.'res/objects/class.tx_pttools_registry.php';
+require_once $pt_tools_path.'res/objects/class.tx_pttools_sessionStorageAdapter.php';
 
-require_once t3lib_extMgm::extPath('pt_list').'view/list/class.tx_ptlist_view_list_itemList.php';
-require_once t3lib_extMgm::extPath('pt_list').'view/list/class.tx_ptlist_view_list_extjsList_headerdata.php';
-require_once t3lib_extMgm::extPath('pt_list').'view/list/class.tx_ptlist_view_list_pager.php';
-require_once t3lib_extMgm::extPath('pt_list').'view/list/class.tx_ptlist_view_list_filterbox.php';
-require_once t3lib_extMgm::extPath('pt_list').'view/list/class.tx_ptlist_view_list_filterbreadcrumb.php';
-require_once t3lib_extMgm::extPath('pt_list').'view/list/class.tx_ptlist_view_list_bookmarks_displayAvailableBookmarks.php';
-require_once t3lib_extMgm::extPath('pt_list').'view/list/class.tx_ptlist_view_list_bookmarks_form.php';
-require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_div.php';
-require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_pager.php';
-require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_filter.php';
-require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_bookmark.php';
-require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_bookmarkCollection.php';
+$pt_list_path = t3lib_extMgm::extPath('pt_list');
+require_once $pt_list_path.'view/list/class.tx_ptlist_view_list_itemList.php';
+require_once $pt_list_path.'view/list/class.tx_ptlist_view_list_extjsList_headerdata.php';
+require_once $pt_list_path.'view/list/class.tx_ptlist_view_list_pager.php';
+require_once $pt_list_path.'view/list/class.tx_ptlist_view_list_filterbox.php';
+require_once $pt_list_path.'view/list/class.tx_ptlist_view_list_filterbreadcrumb.php';
+require_once $pt_list_path.'view/list/class.tx_ptlist_view_list_bookmarks_displayAvailableBookmarks.php';
+require_once $pt_list_path.'view/list/class.tx_ptlist_view_list_bookmarks_form.php';
+require_once $pt_list_path.'model/class.tx_ptlist_div.php';
+require_once $pt_list_path.'model/class.tx_ptlist_pager.php';
+require_once $pt_list_path.'model/class.tx_ptlist_filter.php';
+require_once $pt_list_path.'model/class.tx_ptlist_bookmark.php';
+require_once $pt_list_path.'model/class.tx_ptlist_bookmarkCollection.php';
 
 require_once t3lib_extMgm::extPath('pt_mvc').'classes/class.tx_ptmvc_controllerFrontend.php';
 
