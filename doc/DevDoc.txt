@@ -12,7 +12,7 @@ RFT: refactoring / code cleanup
 ********************************************************************************
 
 
-ToDo: As of 02.10.2009
+ToDo: As of 06.10.2009
 ======================
 
 - [TODO] check and extend changes for default XSS prevention
@@ -43,6 +43,7 @@ ToDo: As of 02.10.2009
 Version 0.0.2-dev
 =================
 
++ (rk) RFT: manual: re-added missing "onValidated" documentation that has been overwritten by someone
 + (fb) RFT: improved a performance by caching extension paths (in some places)
 + (mk) CHG: Removed die() if no jquery extension is installed and changed it to throw an exception (DatePicker / TimeSpan2)
 + (mk) CHG: Moved template for filters into doc directory
