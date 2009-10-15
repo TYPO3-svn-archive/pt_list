@@ -546,7 +546,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 		// create view
 		$view = $this->getView('list_itemList');
 		$view->addItem($this->currentListObject->getListId(), 'listIdentifier');
-		$view->addItem($this->currentListObject->getAllColumnDescriptions(true)->removeHiddenColumns()->getMarkerArray(), 'columns');
+		$view->addItem($this->currentListObject->getAllColumnDescriptions(true)->removeHiddenColumns()->getMarkerArray(), 'columns', false); // do not filter HTML here since the column headers could already contain HTML rendered by Typoscript
 		$view->addItem($this->getColumnContents(), 'listItems', false);  // do not filter HTML here since the column contents may already be rendered as HTML (e.g. from Typoscript wraps) and the database data is already HTML filtered (see getColumnContents())
 
 		$view->addItem($this->currentListObject->getAllFilters(true, 'renderInList', true)->getMarkerArray(), 'filterbox', false);
