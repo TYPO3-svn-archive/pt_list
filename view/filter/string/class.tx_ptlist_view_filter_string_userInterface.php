@@ -37,14 +37,14 @@ require_once t3lib_extMgm::extPath('pt_mvc').'classes/class.tx_ptmvc_view.php';
 
 
 /**
- * String filter view
+ * Default filter view
  *
  * @author      Rainer Kuhn <kuhn@punkt.de>
  * @since       2009-01-20
  * @package     TYPO3
  * @subpackage  tx_ptlist
  */
-class tx_ptlist_view_filter_string_userInterface extends tx_ptmvc_view {
+class tx_ptlist_view_filter_userInterface extends tx_ptmvc_view {
 	
 }
 

@@ -104,7 +104,7 @@ class tx_ptlist_controller_filter_string extends tx_ptlist_filter {
         $this->value = $this->params['value'];
         
     }
-    
+
     
     
     /***************************************************************************
@@ -125,8 +125,7 @@ class tx_ptlist_controller_filter_string extends tx_ptlist_filter {
         return $this->doAction('isNotActive');
         
     }
-    
-    
+   
     
     /**
      * Displays the user interface in inactive state
@@ -143,23 +142,7 @@ class tx_ptlist_controller_filter_string extends tx_ptlist_filter {
         return $view->render();
         
     }
-    
-    
-    
-    /***************************************************************************
-     * Helper methods 
-     **************************************************************************/
-    
-    /**
-     * Returns the view name for this filter
-     *
-     * @return      string      View name of this filter in PEAR-convention
-     * @author      Michael Knoll <knoll@punkt.de>
-     * @since       2009-09-23
-     */
-    protected function getFilterViewName() {
-    	return 'filter_string_userInterface';
-    }
+
     
     
 }
