@@ -288,6 +288,8 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
             foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['filter_datePicker']['getEventDates_whereClauseHook'] as $funcName) {
                 $params = array(
                     'where' => $where,
+                    'listObj' => $listObject,
+                    'filterIdentifier' => $this->get_filterIdentifier()
                 );
                 $where .= t3lib_div::callUserFunction($funcName, $params, $this, '');
                 if (TYPO3_DLOG) t3lib_div::devLog(sprintf('Processing hook "%s" for "getEventDates_whereClauseHook" of filter_datePicker', $funcName), $this->extKey, 1, array('params' => $params));

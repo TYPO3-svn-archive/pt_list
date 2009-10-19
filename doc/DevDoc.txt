@@ -43,6 +43,8 @@ ToDo: As of 06.10.2009
 Version 0.0.2-dev
 =================
 
++ (mk) ADD: Added parameter for date picker getEventDates() hook
++ (mk) FIX: Fixed javascript Bug in datepicker filter
 + (mk) CHG: Removed HTML encoding from list columns. Column labels are no longer encoded as there is no chance of XSS on column descriptions. Now it's possible to use Images etc. in the column descriptions.
 + (rk) RFT: manual: fixed "->columnDescriptionDefinition"documentation: removed ->stdWrap from "columnIdentifier", added ->stdWrap to "label"
 + (rk) RFT: manual: re-added missing "onValidated" documentation that has been overwritten by someone
