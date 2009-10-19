@@ -39,7 +39,7 @@ $(function(){ldelim}
           buttonImageOnly: "true",       // no button, only the image
           buttonText: "",                // no button text
           changeMonth: {$changeMonth},   // drop down menu for months
-          changeYear: {$changeYear},     // drop down menu for years
+          changeYear: {$changeYear}     // drop down menu for years
       {rdelim};
 
       // set date picker defaults
