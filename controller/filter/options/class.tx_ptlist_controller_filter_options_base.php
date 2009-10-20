@@ -167,17 +167,6 @@ abstract class tx_ptlist_controller_filter_options_base extends tx_ptlist_filter
             $appendToUrl = $listObject->getAllFilters()->getAllFilterValueAsGetParameterString($this->filterIdentifier);
         }
         $view->addItem($appendToUrl, 'appendToUrl', false);
-
-        /*if (empty($this->conf['selectBoxSize'])) {
-            $selectBoxSize = 1;
-        } elseif (strtolower($this->conf['selectBoxSize']) == 'all') {
-            $selectBoxSize = count($possibleValues);
-        } else {
-            tx_pttools_assert::isValidUid($this->conf['selectBoxSize'], false, array('message' => 'No valid selectBoxSize!'));
-            $selectBoxSize = $this->conf['selectBoxSize'];
-        }
-        $view->addItem($selectBoxSize, 'selectBoxSize');
-        */
         $view->addItem($selectBoxSize, $this->determineSelectBoxSize());
 
         // render!

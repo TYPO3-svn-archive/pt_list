@@ -24,6 +24,27 @@ ToDo: As of 06.10.2009
     + breadcrumbs, 
     - bookmarks 
     - and other list features using tx_ptmvc_view::addItem()
+    - filters (o = some open questions)
+       o (mk) tx_ptlist_filter (Superclass for all filters)
+       - tx_ptlist_controller_filter_options_base
+       - tx_ptlist_controller_filter_options_explicit
+       - tx_ptlist_controller_filter_options_group
+       - tx_ptlist_controller_filter_datePager
+       - tx_ptlist_controller_filter_datePicker
+       - tx_ptlist_controller_filter_firstLetter
+       - tx_ptlist_controller_filter_max
+       - tx_ptlist_controller_filter_min
+       - tx_ptlist_controller_filter_range
+       - tx_ptlist_controller_filter_string
+       - tx_ptlist_controller_filter_timeSpan
+       - tx_ptlist_controller_filter_timeSpan2
+    - Possibly dangerous parts concerning XSS-prevention:
+       - tx_ptlist_filter::getFilterValueAsGetParameterString() generates getParameterStrings which are used as links in HTML-Source in other places without url-encoding
+       - tx_ptlist_filter::breadcrumbAction() returns HTML-encoded value, so no rendering will be left :-)
+   - IDEA: Introduce 2 new methods into tx_ptlist_filter: (1) getValueHtmlEncoded() (2) getValueUrlEncoded so we can centralize encoding purposes
+- [TODO] SQL Injections
+  - Possible SQL injection in tx_ptlist_controller_filter_options_base::getSqlWhereClauseSnippet()
+    - Values passed to filter are not SQL-escaped. Should be escaped via mysql_real_escape_string()
 - [TODO] FB: Crawlable/Cacheable
   - retrieve appendString from all components (pager, list) and not only from filterCollection
   - append appendString to all url (incl. sorting links in the list)
@@ -37,6 +58,13 @@ ToDo: As of 06.10.2009
        Think of mechanism to do this via JS manager (see pt_jqueryui DevDoc) 
 - (mk) DatePicker and Timespan2 Filter don't work together because of dates from datepicker Filter
        influence Timespan's datepicker. Think of a better solution (--> jm)
+
+
+
+XSS-Prevention actions taken so far:
+==============================
+
++ (mk) CHG: tx_ptlist_filter::getView() adds TS configuration as 'filterconf'. As this values come from TS, no encoding is desired. Set to 'false' 
 
 
 
@@ -55,6 +83,10 @@ TODO for version 0.0.3-dev
 Version 0.0.3-dev
 =================
 
++ (mk) SVN: Merged all changes in trunk up to revision 25620
++ (mk) CHG: Increased version to 0.0.3-dev
++ (mk) ADD: Added abstract class for filter value
++ (mk) ADD: Added tests for filterValue object
 
 
 

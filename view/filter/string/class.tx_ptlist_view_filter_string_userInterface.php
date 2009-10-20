@@ -40,7 +40,7 @@ require_once t3lib_extMgm::extPath('pt_mvc').'classes/class.tx_ptmvc_view.php';
 
 
 /**
- * Default filter view
+ * View for string filter user interface
  *
  * @author      Rainer Kuhn <kuhn@punkt.de>
  * @since       2009-01-20

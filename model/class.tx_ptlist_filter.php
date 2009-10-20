@@ -260,7 +260,7 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
     public function getView($viewName='') {
         
         $view = parent::getView($viewName);
-        $view->addItem($this->conf, 'filterconf');
+        $view->addItem($this->conf, 'filterconf', false);
         return $view;
         
     }
@@ -649,7 +649,9 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
      * Get the filter value(s) as parameter string intended to be appended to an url to pass
      * filter states in cases where no sessions should be used.
      * Override this method in your inheriting filter if you store your values in a different way
-     *
+     * 
+     * TODO XSS what about url encoding the filter values here?
+     * 
      * @param void
      * @return string
      * @author Fabrizio Branca <mail@fabrizio-branca.de>
@@ -755,16 +757,6 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
                 $this->dataDescriptions->addItem($registry[$this->listIdentifier.'_listObject']->getAllDataDescriptions()->getItemById($dataDescriptionIdentifier));
             }
         }
-        /*
-        if (!empty($dataArray['dataDescriptionIdentifier'])) {
-            $dataDescriptionIdentifiers = t3lib_div::trimExplode(',', $dataArray['dataDescriptionIdentifier']);
-            $this->dataDescriptions = new tx_ptlist_dataDescriptionCollection();
-            $registry = tx_pttools_registry::getInstance();
-            foreach ($dataDescriptionIdentifiers as $dataDescriptionIdentifier) {
-                $this->dataDescriptions->addItem($registry[$this->listIdentifier.'_listObject']->getAllDataDescriptions()->getItemById($dataDescriptionIdentifier));
-            }
-        } 
-        */
         
         // setting default filter state 
         // Use proxy method to set isActive and defaultValue, as used in other places also!
