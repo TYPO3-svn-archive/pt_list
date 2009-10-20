@@ -134,7 +134,7 @@ abstract class tx_ptlist_controller_filter_options_base extends tx_ptlist_filter
 			foreach ($possibleValues as $possibleValue) {
 				if ($possibleValue['item'] == $this->value) {
 					$valueFound = true;
-		-			break;
+					break;
 				}
 			}
 
@@ -163,19 +163,12 @@ abstract class tx_ptlist_controller_filter_options_base extends tx_ptlist_filter
 		$appendToUrl = '';
 		if ($appendFilterValuesToUrls) {
 			$listObject = tx_pttools_registry::getInstance()->get($this->listIdentifier.'_listObject'); /* @var $listObject tx_ptlist_list */
+			// TODO XSS-prevention: The result of this method is not URL-Encoded!
 			$appendToUrl = $listObject->getAllFilters()->getAllFilterValueAsGetParameterString($this->filterIdentifier);
 		}
 		$view->addItem($appendToUrl, 'appendToUrl', false);
 
-		if (empty($this->conf['selectBoxSize'])) {
-			$selectBoxSize = 1;
-		} elseif (strtolower($this->conf['selectBoxSize']) == 'all') {
-			$selectBoxSize = count($possibleValues);
-		} else {
-			tx_pttools_assert::isValidUid($this->conf['selectBoxSize'], false, array('message' => 'No valid selectBoxSize!'));
-			$selectBoxSize = $this->conf['selectBoxSize'];
-		}
-		$view->addItem($selectBoxSize, 'selectBoxSize');
+		$view->addItem($selectBoxSize, $this->determineSelectBoxSize());
 
 		// render!
 		return $view->render();
@@ -210,6 +203,8 @@ abstract class tx_ptlist_controller_filter_options_base extends tx_ptlist_filter
     /**
      * This method will be called to generate the output for the filter breadcrumb.
      * If you want additional functionality or a different output overwrite this method.
+     * 
+     * TODO there is no XSS problem with this implementation, but output will be HTML-encoded!
      *
      * @param   void
      * @return  string HTML ouput
@@ -263,7 +258,9 @@ abstract class tx_ptlist_controller_filter_options_base extends tx_ptlist_filter
 	/**
 	 * Get the sql where clause snippet for this filter
 	 * Depending on $this->conf['multiple'] and $this->conf['findInSet']
-	 *
+	 * 
+	 * TODO this function enables SQL injection!!!
+	 * 
 	 * @param 	void
 	 * @return 	string 	where clause snippet
 	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
