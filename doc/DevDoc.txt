@@ -84,7 +84,7 @@ Version 0.0.3-dev
 =================
 
 + (mk) SVN: Merged all changes in trunk up to revision 25620
-+ (mk) CHG: Increased version to 0.0.3-dev
++ (mk) CHG: Increased version to 0.0.3-dev             =====
 + (mk) ADD: Added abstract class for filter value
 + (mk) ADD: Added tests for filterValue object
 

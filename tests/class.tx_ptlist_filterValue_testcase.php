@@ -29,7 +29,7 @@
  */
 require_once t3lib_extMgm::extPath('phpunit').'class.tx_phpunit_testcase.php';
 
-require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_filterValue.php';
+require_once t3lib_extMgm::extPath('pt_list').'model/filter/filterValue/class.tx_ptlist_filterValue.php';
 
 
 /***************************************************************************
@@ -46,7 +46,7 @@ class tx_ptlist_filterValue_testcase_implementation extends tx_ptlist_filterValu
         return null;
     }
     
-    public function getSqlEncoded() {
+    public function getSqlEncodedValue() {
         return null;
     }
 	
@@ -85,9 +85,8 @@ class tx_ptlist_filterValue_testcase extends tx_phpunit_testcase {
      * Tests whether class-definition file is available
      */
     public function test_classDefinitionFileIsAvailable() {
-        
         $this->assertTrue(
-            is_file(t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_filterValue.php'),
+            is_file(t3lib_extMgm::extPath('pt_list').'model/filter/filterValue/class.tx_ptlist_filterValue.php'),
             'Class definition file for filterValue is not available!'
         );
         

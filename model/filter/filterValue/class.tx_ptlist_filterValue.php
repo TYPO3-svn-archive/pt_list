@@ -109,7 +109,7 @@ abstract class tx_ptlist_filterValue {
      * @author         Michael Knoll <knoll@punkt.de>
      * @since          2009-10-19
 	 */
-	abstract public function getSqlEncoded();
+	abstract public function getSqlEncodedValue();
 	
 	
 }
