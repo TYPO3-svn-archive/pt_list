@@ -71,7 +71,6 @@ XSS-Prevention Actions so far:
 Version 0.0.2-dev
 =================
 
-
 + (mk) CHG: Made adding of filterconf from TS non-html-encoded (XSS-prevention)
 + (mk) ADD: Added parameter for date picker getEventDates() hook
 + (mk) FIX: Fixed javascript Bug in datepicker filter
