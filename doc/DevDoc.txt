@@ -40,6 +40,24 @@ ToDo: As of 06.10.2009
 
 
 
+TODO for version 0.0.3-dev
+==========================
+
+- (mk) Introduce autoload-mechanism
+  - perhaps this is no longer necessary in EXTBase so could be done later
+- (mk) Introduce filterValue objects to encapsulate all filter value operations
+- (mk) Refactor filter classes to use filter model object instead of "monster" controller
+- (mk) Introduce query builder to abstract generation of SQL Clauses
+- (mk) Refactor tx_ptlist_controller_list::init()
+- (mk) Introduce factory to build listObjects
+
+
+Version 0.0.3-dev
+=================
+
+
+
+
 Version 0.0.2-dev
 =================
 

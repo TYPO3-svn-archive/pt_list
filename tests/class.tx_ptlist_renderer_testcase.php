@@ -22,6 +22,11 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+
+
+/**
+ * Inclusion of external ressources
+ */
 require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_renderer.php';
 
 require_once t3lib_extMgm::extPath('phpunit').'class.tx_phpunit_testcase.php';
