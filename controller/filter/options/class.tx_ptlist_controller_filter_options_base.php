@@ -50,136 +50,139 @@ require_once $pt_list_path.'view/filter/options/class.tx_ptlist_view_filter_opti
 /**
  * Group filter class
  *
- * @version 	$Id$
- * @author		Fabrizio Branca <mail@fabrizio-branca.de>
- * @since		2009-01-23
+ * @version     $Id$
+ * @author      Fabrizio Branca <mail@fabrizio-branca.de>
+ * @since       2009-01-23
  * @package     Typo3
  * @subpackage  pt_list
  */
 abstract class tx_ptlist_controller_filter_options_base extends tx_ptlist_filter {
 
-	/**
-	 * Holds current filter value(s). As this can be more than one value, this is an array!
-	 *
-	 * @var array
-	 */
-	protected $value = array();
-	
-	
-	
-	/**
-	 * Holds an array of possible values for this filter. 
-	 * array of array('item' => <value>, 'label' => <label>, 'quantity' => <quantity>)
-	 *
-	 * @var array
-	 */
-	protected $possibleValues = array();
+    /**
+     * Holds current filter value(s). As this can be more than one value, this is an array!
+     *
+     * @var array
+     */
+    protected $value = array();
+    
+    
+    
+    /**
+     * Holds an array of possible values for this filter. 
+     * array of array('item' => <value>, 'label' => <label>, 'quantity' => <quantity>)
+     *
+     * @var array
+     */
+    protected $possibleValues = array();
 
-	
-	
-	/***************************************************************************
+    
+    
+    /***************************************************************************
      * Methods modifying standard MVC functionality 
      **************************************************************************/
 
-	/**
-	 * MVC init method:
-	 * Checks if the column collection contains exactly one column as this filter can be used only with one column at the same time
-	 *
-	 * @param 	void
-	 * @return 	void
-	 * @throws	tx_pttools_exceptionAssertion	if more than one column is attached to the filters columnCollection
-	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
-	 * @since	2009-01-23
-	 */
-	public function init() {
-		parent::init();
-		tx_pttools_assert::isEqual(
-		    count($this->dataDescriptions), 
-		    1, 
-		    array('message' => sprintf('This filter can only be used with 1 dataDescription (dataDescriptions found: "%s"', count($this->dataDescriptions)))
-		);
-	}
+    /**
+     * MVC init method:
+     * Checks if the column collection contains exactly one column as this filter can be used only with one column at the same time
+     *
+     * @param   void
+     * @return  void
+     * @throws  tx_pttools_exceptionAssertion   if more than one column is attached to the filters columnCollection
+     * @author  Fabrizio Branca <mail@fabrizio-branca.de>
+     * @since   2009-01-23
+     */
+    public function init() {
+        parent::init();
+        tx_pttools_assert::isEqual(
+            count($this->dataDescriptions), 
+            1, 
+            array('message' => sprintf('This filter can only be used with 1 dataDescription (dataDescriptions found: "%s"', count($this->dataDescriptions)))
+        );
+    }
 
-	
+    
 
-	/***************************************************************************
-	 * Action methods
-	 **************************************************************************/
+    /***************************************************************************
+     * Action methods
+     **************************************************************************/
 
-	/**
-	 * Displays the user interface in active and inactive state.
-	 * (Overwrite tx_ptlist_filter's defaultAction method, which would call an isActiveAction or an isNotActiveAction)
-	 *
-	 * @param 	void
-	 * @return 	string HTML output
-	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
-	 * @since	2009-01-19
-	 */
-	public function defaultAction() {
+    /**
+     * Displays the user interface in active and inactive state.
+     * (Overwrite tx_ptlist_filter's defaultAction method, which would call an isActiveAction or an isNotActiveAction)
+     *
+     * @param   void
+     * @return  string HTML output
+     * @author  Fabrizio Branca <mail@fabrizio-branca.de>
+     * @since   2009-01-19
+     */
+    public function defaultAction() {
 
-		// get array of possible values to be displayed for selection
-		$this->possibleValues = $this->getOptions(); /* @var $possibleValues array of array('item' => <value>, 'label' => <label>, 'quantity' => <quantity>) */
+        // get array of possible values to be displayed for selection
+        $this->possibleValues = $this->getOptions(); /* @var $possibleValues array of array('item' => <value>, 'label' => <label>, 'quantity' => <quantity>) */
 
-		// render values
-		$this->renderPossibleValues();
+        // render values
+        $this->renderPossibleValues();
 
-		// mark active ones as active
-		$this->markActiveValues();
+        // mark active ones as active
+        $this->markActiveValues();
 
-		/*
-		if (!empty($this->value)) {
-			// check if current value is under the possible values, if not reset the filter
-			// this could be the case if the set of possible values changes because of restrictions from other filters
-			$valueFound = false;
-			foreach ($possibleValues as $possibleValue) {
-				if ($possibleValue['item'] == $this->value) {
-					$valueFound = true;
-		-			break;
-				}
-			}
+        /*
+        if (!empty($this->value)) {
+            // check if current value is under the possible values, if not reset the filter
+            // this could be the case if the set of possible values changes because of restrictions from other filters
+            $valueFound = false;
+            foreach ($possibleValues as $possibleValue) {
+                if ($possibleValue['item'] == $this->value) {
+                    $valueFound = true;
+                    break;
+                }
+            }
 
-			if (!$valueFound) {
-				$this->reset();
-			}
-		}
-		*/
+            if (!$valueFound) {
+                $this->reset();
+            }
+        }
+        */
 
-		// prepend "all" value to reset the filter
-		$this->prependAllValueToPossibleValues();
+        // prepend "all" value to reset the filter
+        $this->prependAllValueToPossibleValues();
 
-		// determine view depending on configured mode
+        // determine view depending on configured mode
         $view = $this->getViewByMode();
-		
-		// fill view
-		$view->addItem($this->possibleValues, 'possibleValues');
-		$view->addItem((array)$this->value, 'value');
-		$view->addItem((bool)$this->isActive, 'filterActive');
-		$view->addItem((bool)$this->conf['multiple'], 'multiple');
-		$view->addItem((bool)$this->conf['submitOnChange'], 'submitOnChange');
-		$view->addItem($this->determineSelectBoxSize(), 'selectBoxSize');
-		
-		// append filter state values to all urls
-		$appendFilterValuesToUrls = tx_pttools_div::getTS('plugin.tx_ptlist.controller.list.appendFilterValuesToUrls');
-		$appendToUrl = '';
-		if ($appendFilterValuesToUrls) {
-			$listObject = tx_pttools_registry::getInstance()->get($this->listIdentifier.'_listObject'); /* @var $listObject tx_ptlist_list */
-			$appendToUrl = $listObject->getAllFilters()->getAllFilterValueAsGetParameterString($this->filterIdentifier);
-		}
-		$view->addItem($appendToUrl, 'appendToUrl', false);
+        
+        // fill view
+        $view->addItem($this->possibleValues, 'possibleValues');
+        $view->addItem((array)$this->value, 'value');
+        $view->addItem((bool)$this->isActive, 'filterActive');
+        $view->addItem((bool)$this->conf['multiple'], 'multiple');
+        $view->addItem((bool)$this->conf['submitOnChange'], 'submitOnChange');
+        $view->addItem($this->determineSelectBoxSize(), 'selectBoxSize');
+        
+        // append filter state values to all urls
+        $appendFilterValuesToUrls = tx_pttools_div::getTS('plugin.tx_ptlist.controller.list.appendFilterValuesToUrls');
+        $appendToUrl = '';
+        if ($appendFilterValuesToUrls) {
+            $listObject = tx_pttools_registry::getInstance()->get($this->listIdentifier.'_listObject'); /* @var $listObject tx_ptlist_list */
+            // TODO XSS-prevention: The result of this method is not URL-Encoded!
+            $appendToUrl = $listObject->getAllFilters()->getAllFilterValueAsGetParameterString($this->filterIdentifier);
+        }
+        $view->addItem($appendToUrl, 'appendToUrl', false);
 
-		if (empty($this->conf['selectBoxSize'])) {
-			$selectBoxSize = 1;
-		} elseif (strtolower($this->conf['selectBoxSize']) == 'all') {
-			$selectBoxSize = count($possibleValues);
-		} else {
-			tx_pttools_assert::isValidUid($this->conf['selectBoxSize'], false, array('message' => 'No valid selectBoxSize!'));
-			$selectBoxSize = $this->conf['selectBoxSize'];
-		}
-		$view->addItem($selectBoxSize, 'selectBoxSize');
+        /*if (empty($this->conf['selectBoxSize'])) {
+            $selectBoxSize = 1;
+        } elseif (strtolower($this->conf['selectBoxSize']) == 'all') {
+            $selectBoxSize = count($possibleValues);
+        } else {
+            tx_pttools_assert::isValidUid($this->conf['selectBoxSize'], false, array('message' => 'No valid selectBoxSize!'));
+            $selectBoxSize = $this->conf['selectBoxSize'];
+        }
+        $view->addItem($selectBoxSize, 'selectBoxSize');
+        */
+        $view->addItem($selectBoxSize, $this->determineSelectBoxSize());
 
-		// render!
-		return $view->render();
-	}
+        // render!
+        return $view->render();
+    }
 
 
 
@@ -210,6 +213,8 @@ abstract class tx_ptlist_controller_filter_options_base extends tx_ptlist_filter
     /**
      * This method will be called to generate the output for the filter breadcrumb.
      * If you want additional functionality or a different output overwrite this method.
+     * 
+     * TODO there is no XSS problem with this implementation, but output will be HTML-encoded!
      *
      * @param   void
      * @return  string HTML ouput
@@ -243,76 +248,76 @@ abstract class tx_ptlist_controller_filter_options_base extends tx_ptlist_filter
      * Abstract methods to be implemented in inheriting classes
      **************************************************************************/
 
-	/**
-	 * Get options for this filter
-	 *
-	 * @param 	void
-	 * @return 	array	array of array('item' => <value>, 'label' => <label>, 'quantity' => <quantity>)
-	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
-	 * @since	2009-02-21
-	 */
-	abstract public function getOptions();
+    /**
+     * Get options for this filter
+     *
+     * @param   void
+     * @return  array   array of array('item' => <value>, 'label' => <label>, 'quantity' => <quantity>)
+     * @author  Fabrizio Branca <mail@fabrizio-branca.de>
+     * @since   2009-02-21
+     */
+    abstract public function getOptions();
 
 
 
-	/***************************************************************************
-	 * Domain Logic - 
-	 * Methods implementing abstract methods from "tx_ptlist_filter"
-	 **************************************************************************/
+    /***************************************************************************
+     * Domain Logic - 
+     * Methods implementing abstract methods from "tx_ptlist_filter"
+     **************************************************************************/
 
-	/**
-	 * Get the sql where clause snippet for this filter
-	 * Depending on $this->conf['multiple'] and $this->conf['findInSet']
-	 *
-	 * @param 	void
-	 * @return 	string 	where clause snippet
-	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
-	 * @since	2009-01-23
-	 */
-	public function getSqlWhereClauseSnippet() {
+    /**
+     * Get the sql where clause snippet for this filter
+     * Depending on $this->conf['multiple'] and $this->conf['findInSet']
+     *
+     * @param   void
+     * @return  string  where clause snippet
+     * @author  Fabrizio Branca <mail@fabrizio-branca.de>
+     * @since   2009-01-23
+     */
+    public function getSqlWhereClauseSnippet() {
 
-		$field = $this->dataDescriptions->getItemByIndex(0)->getSelectClause(false);
-		tx_pttools_assert::isNotEmptyString($field, array('message' => '"getSelectClause" returned invalid string!'));
-		
-		tx_pttools_assert::isNotEmptyArray($this->value, array('message' => 'Value array is empty!'));
+        $field = $this->dataDescriptions->getItemByIndex(0)->getSelectClause(false);
+        tx_pttools_assert::isNotEmptyString($field, array('message' => '"getSelectClause" returned invalid string!'));
+        
+        tx_pttools_assert::isNotEmptyArray($this->value, array('message' => 'Value array is empty!'));
 
-		if ($this->conf['multiple'] == true) {
-			if ($this->conf['findInSet'] == true) {
-				$orSnippets = array();
-				foreach ($this->value as $value) {
-					$orSnippets[] = '('.sprintf('FIND_IN_SET("%2$s", %1$s)', $field, $value).')';
-				}
-				$sqlWhereClauseSnippet = '('.implode(' OR ', $orSnippets) .')';
-			} else {
-				$sqlWhereClauseSnippet = sprintf('%1$s IN ("%2$s")', $field, implode('", "', $this->value));
-			}
-		} else {
-			if ($this->conf['findInSet'] == true) {
-				$sqlWhereClauseSnippet = sprintf('FIND_IN_SET("%2$s", %1$s)', $field, $this->value[0]);
-			} else {
-				$sqlWhereClauseSnippet = sprintf('%1$s = "%2$s"', $field, $this->value[0]);
-			}
-		}
+        if ($this->conf['multiple'] == true) {
+            if ($this->conf['findInSet'] == true) {
+                $orSnippets = array();
+                foreach ($this->value as $value) {
+                    $orSnippets[] = '('.sprintf('FIND_IN_SET("%2$s", %1$s)', $field, $value).')';
+                }
+                $sqlWhereClauseSnippet = '('.implode(' OR ', $orSnippets) .')';
+            } else {
+                $sqlWhereClauseSnippet = sprintf('%1$s IN ("%2$s")', $field, implode('", "', $this->value));
+            }
+        } else {
+            if ($this->conf['findInSet'] == true) {
+                $sqlWhereClauseSnippet = sprintf('FIND_IN_SET("%2$s", %1$s)', $field, $this->value[0]);
+            } else {
+                $sqlWhereClauseSnippet = sprintf('%1$s = "%2$s"', $field, $this->value[0]);
+            }
+        }
 
-		return $sqlWhereClauseSnippet;
-	}
+        return $sqlWhereClauseSnippet;
+    }
 
-	
-	
-	/***************************************************************************
+    
+    
+    /***************************************************************************
      * Helper methods
      **************************************************************************/
 
-	/**
-	 * Selects view depending on configured mode
-	 * 
-	 * @param  void
-	 * @return tx_ptmvc_view       View for filterbox
-	 * @author Michael Knoll <knoll@punkt.de>
-	 * @since  2009-09-23
-	 */
-	protected function getViewByMode() {
-	   // select view depeding on configured mode
+    /**
+     * Selects view depending on configured mode
+     * 
+     * @param  void
+     * @return tx_ptmvc_view       View for filterbox
+     * @author Michael Knoll <knoll@punkt.de>
+     * @since  2009-09-23
+     */
+    protected function getViewByMode() {
+       // select view depeding on configured mode
         switch ($this->conf['mode']) {
             case '':
             case 'select': {
@@ -346,21 +351,21 @@ abstract class tx_ptlist_controller_filter_options_base extends tx_ptlist_filter
             default: throw new tx_pttools_exception('"Mode" must be either "links", "radio", "checkbox", "advmultiselect" or "select" (default)!');
         }
         return $view;
-	}
-	
-	
-	
-	/**
-	 * Renders the possible values using a configuration 
-	 * given in 'renderObj' or 'renderUserFunctions'
-	 * 
-	 * @param  void
-	 * @return void
-	 * @since  2009-09-23
-	 * @author Michael Knoll <knoll@punkt.de>
-	 */
-	protected function renderPossibleValues() {
-	    if ((!empty($this->conf['renderObj']) && !empty($this->conf['renderObj.'])) ||  !empty($this->conf['renderUserFunctions.'])) {
+    }
+    
+    
+    
+    /**
+     * Renders the possible values using a configuration 
+     * given in 'renderObj' or 'renderUserFunctions'
+     * 
+     * @param  void
+     * @return void
+     * @since  2009-09-23
+     * @author Michael Knoll <knoll@punkt.de>
+     */
+    protected function renderPossibleValues() {
+        if ((!empty($this->conf['renderObj']) && !empty($this->conf['renderObj.'])) ||  !empty($this->conf['renderUserFunctions.'])) {
             $renderConfig = array(
                 'renderObj' => $this->conf['renderObj'],
                 'renderObj.' => $this->conf['renderObj.'],
@@ -370,36 +375,36 @@ abstract class tx_ptlist_controller_filter_options_base extends tx_ptlist_filter
                 $possibleValue['label'] = tx_ptlist_div::renderValues($possibleValue, $renderConfig);
             }
         }
-	}
-	
-	
-	
-	/**
-	 * Marks values currently active for submitted filter in possible values
-	 * 
-	 * @param     void
-	 * @return    void
-	 * @since     2009-09-23
-	 * @author    Michael Knoll <knoll@punkt.de>
-	 */
-	protected function markActiveValues() {
-	    foreach ($this->possibleValues as &$possibleValue) {
+    }
+    
+    
+    
+    /**
+     * Marks values currently active for submitted filter in possible values
+     * 
+     * @param     void
+     * @return    void
+     * @since     2009-09-23
+     * @author    Michael Knoll <knoll@punkt.de>
+     */
+    protected function markActiveValues() {
+        foreach ($this->possibleValues as &$possibleValue) {
             $possibleValue['active'] = is_array($this->value) && in_array($possibleValue['item'], $this->value);
         }
-	}
-	
+    }
+    
 
-	
-	/**
-	 * Prepends an 'all' value to array of possible values
-	 * 
-	 * @param      void
-	 * @return     void
-	 * @author     Michael Knoll <knoll@punkt.de>
-	 * @since      2009-09-23
-	 */
-	protected function prependAllValueToPossibleValues() {
-	   if ($this->conf['includeEmptyOption']) {
+    
+    /**
+     * Prepends an 'all' value to array of possible values
+     * 
+     * @param      void
+     * @return     void
+     * @author     Michael Knoll <knoll@punkt.de>
+     * @since      2009-09-23
+     */
+    protected function prependAllValueToPossibleValues() {
+       if ($this->conf['includeEmptyOption']) {
             if (!empty($this->conf['includeEmptyOption.']['label'])) {
                 $label = $GLOBALS['TSFE']->sL($this->conf['includeEmptyOption.']['label']);
             } else {
@@ -416,20 +421,20 @@ abstract class tx_ptlist_controller_filter_options_base extends tx_ptlist_filter
                 )
             );
         }
-	}
-	
-	
-	
-	/**
-	 * Reads the filter values from GET/POST parameter
-	 *
-	 * @param  void
-	 * @return void
-	 * @author Michael Knoll <knoll@punkt.de>
-	 * @since  2009-09-23
-	 */
-	protected function setFilterValueFromSubmittedForm() {
-	    // Determine, wheter a) multiple, b) single or c) no values are given from filter form
+    }
+    
+    
+    
+    /**
+     * Reads the filter values from GET/POST parameter
+     *
+     * @param  void
+     * @return void
+     * @author Michael Knoll <knoll@punkt.de>
+     * @since  2009-09-23
+     */
+    protected function setFilterValueFromSubmittedForm() {
+        // Determine, wheter a) multiple, b) single or c) no values are given from filter form
         if (is_array($this->params['value'])) {
         
             // a) multiple selection mode
@@ -446,20 +451,20 @@ abstract class tx_ptlist_controller_filter_options_base extends tx_ptlist_filter
             $this->value = array();
             
         }
-	}
-	
-	
-	
-	/**
-	 * Determines the number of lines to be shown in the select box
-	 *
-	 * @param  void
-	 * @return int     Number of rows for select box
-	 * @author Michael Knoll <knoll@punkt.de>
-	 * @since  2009-09-23
-	 */
-	protected function determineSelectBoxSize() {
-	   if (empty($this->conf['selectBoxSize'])) {
+    }
+    
+    
+    
+    /**
+     * Determines the number of lines to be shown in the select box
+     *
+     * @param  void
+     * @return int     Number of rows for select box
+     * @author Michael Knoll <knoll@punkt.de>
+     * @since  2009-09-23
+     */
+    protected function determineSelectBoxSize() {
+       if (empty($this->conf['selectBoxSize'])) {
             $selectBoxSize = 1;
         } elseif (strtolower($this->conf['selectBoxSize']) == 'all') {
             $selectBoxSize = count($this->possibleValues);
@@ -468,38 +473,38 @@ abstract class tx_ptlist_controller_filter_options_base extends tx_ptlist_filter
             $selectBoxSize = $this->conf['selectBoxSize'];
         }
         return $selectBoxSize;
-	}
-	
-	
-	
-	/**
-	 * Reads multiple values from given GET/POST parameter
-	 * 
-	 * @param  void
-	 * @return void
-	 * @author Michael Knoll <knoll@punkt.de>
-	 * @since  2009-09-23
-	 */
-	protected function readMultipleValuesFromParam() {
-	   $this->value = array();
+    }
+    
+    
+    
+    /**
+     * Reads multiple values from given GET/POST parameter
+     * 
+     * @param  void
+     * @return void
+     * @author Michael Knoll <knoll@punkt.de>
+     * @since  2009-09-23
+     */
+    protected function readMultipleValuesFromParam() {
+       $this->value = array();
        foreach ($this->params['value'] as $key => $value) {
            $this->value[$key] = urldecode($value);
        }
-	}
-	
-	
-	
-	/**
-	 * Reads a single value given from GET/POST parameter
-	 * 
-	 * @param  void
-	 * @return void
-	 * @author Michael Knoll <knoll@punkt.de>
-	 * @since  2009-09-23
-	 */
-	protected function readSingleValueFromParam() {
-		
-	   $this->params['value'] = urldecode($this->params['value']);
+    }
+    
+    
+    
+    /**
+     * Reads a single value given from GET/POST parameter
+     * 
+     * @param  void
+     * @return void
+     * @author Michael Knoll <knoll@punkt.de>
+     * @since  2009-09-23
+     */
+    protected function readSingleValueFromParam() {
+        
+       $this->params['value'] = urldecode($this->params['value']);
 
        if (!is_array($this->value)) $this->value = array();
 
@@ -516,10 +521,10 @@ abstract class tx_ptlist_controller_filter_options_base extends tx_ptlist_filter
        } else {
            $this->value = array($this->params['value']);
        }
-		
-	}
-	
-	
+        
+    }
+    
+    
 }
 
 ?>
