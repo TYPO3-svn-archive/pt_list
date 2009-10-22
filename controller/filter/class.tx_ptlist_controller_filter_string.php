@@ -70,7 +70,9 @@ class tx_ptlist_controller_filter_string extends tx_ptlist_filter {
     public function getSqlWhereClauseSnippet() {
         
         $sqlWhereClauseSnippets = array();
-        
+        if ($this->value == '') {
+             return ' 1 ';
+        }       
         foreach ($this->dataDescriptions as $dataDescription) {  /* @var $dataDescription tx_ptlist_dataDescription */
             $sqlWhereClauseSnippetsAndParts = array();
             foreach (t3lib_div::trimExplode(' ', $this->value, true) as $part) {
