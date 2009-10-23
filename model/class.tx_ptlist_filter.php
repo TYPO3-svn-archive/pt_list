@@ -175,6 +175,16 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
      * @since   2009-10-01
      */
     protected function getAction() {
+    	
+    	// TODO ry21 is this the best place to put the method?
+        // reset filters, if no values are given (re-visiting page)
+        if ($this->conf['resetFilterOnNoSubmit']) {
+            if ( $this->params['value'] == '' ) {
+            	// TODO ry21 check whether this works for all kinds of filter values
+                $this->resetToTsPresetStateAction();
+            }
+        }
+    	
         $action = parent::getAction();
         if (empty($action)) {
             if ($this->conf['dropActionParameter'] == 1) {
