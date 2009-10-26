@@ -12,7 +12,7 @@ RFT: refactoring / code cleanup
 ********************************************************************************
 
 
-ToDo: As of 06.10.2009
+ToDo: As of 26.10.2009
 ======================
 
 - [TODO] check and extend changes for default XSS prevention
@@ -62,15 +62,22 @@ ToDo: As of 06.10.2009
 
 XSS-Prevention Actions so far:
 ==============================
-
-
 + (mk) CHG: tx_ptlist_filter::getView() adds TS configuration as 'filterconf'. As this values come from TS, no encoding is desired. Set to 'false' 
 
 
 
-Version 0.0.2-dev
+
+
+
+Version 0.0.3-dev
 =================
 
+
+
+
+
+Version 0.0.2   [used for online project 26.10.09]
+=============
 + (mk) CHG: Made adding of filterconf from TS non-html-encoded (XSS-prevention)
 + (mk) ADD: Added parameter for date picker getEventDates() hook
 + (mk) FIX: Fixed javascript Bug in datepicker filter
