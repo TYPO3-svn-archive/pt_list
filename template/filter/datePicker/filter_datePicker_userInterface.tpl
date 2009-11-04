@@ -39,7 +39,7 @@ $(function(){ldelim}
           buttonImageOnly: "true",       // no button, only the image
           buttonText: "",                // no button text
           changeMonth: {$changeMonth},   // drop down menu for months
-          changeYear: {$changeYear}     // drop down menu for years
+          changeYear: {$changeYear}      // drop down menu for years
       {rdelim};
 
       // set date picker defaults
@@ -81,8 +81,9 @@ $(function(){ldelim}
   {rdelim});
 </script>
 
-<form id="datePickerForm" name="datePickerForm" method="post" action="{url parameter=$currentPage additionalParams='&%1$s[action]=submit'|vsprintf:$prefixId setup='lib.tx_ptlist.typolinks.datePicker}">
+<form id="datePickerForm" name="datePickerForm" method="post" action="{url parameter=$currentPage setup='lib.tx_ptlist.typolinks.datePicker}">
   <input type="hidden" name="{$prefixId}[date]" id="actualDate" />
+  <input type="hidden" name="{$prefixId}[action]" value="submit" />
 
 {if $datePickerMode eq 'overlay'}
   <input type="text" id="datePicker" />&nbsp;

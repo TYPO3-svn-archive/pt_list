@@ -78,6 +78,7 @@ Version 0.0.3-dev
 
 Version 0.0.2   [used for online project 26.10.09]
 =============
++ (jm) CHG: transferred controller action hint (submit) in DatePicker filter template from form tag to hidden tag
 + (mk) CHG: Made adding of filterconf from TS non-html-encoded (XSS-prevention)
 + (mk) ADD: Added parameter for date picker getEventDates() hook
 + (mk) FIX: Fixed javascript Bug in datepicker filter
