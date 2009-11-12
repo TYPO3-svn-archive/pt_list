@@ -40,6 +40,8 @@
  */
 require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_filter.php';
 require_once t3lib_extMgm::extPath('pt_list').'view/filter/string/class.tx_ptlist_view_filter_string_userInterface.php';
+require_once t3lib_extMgm::extPath('pt_list').'model/filter/filterValue/class.tx_ptlist_filterValueString.php';
+
 
 
 
@@ -52,6 +54,17 @@ require_once t3lib_extMgm::extPath('pt_list').'view/filter/string/class.tx_ptlis
  * @subpackage  tx_ptlist
  */
 class tx_ptlist_controller_filter_string extends tx_ptlist_filter {
+	
+	
+	
+	/**
+	 * Holds a reference to a filterValue object
+	 *
+	 * @var tx_ptlist_filterValueString
+	 */
+	protected $filterValue;
+	
+	
 	
     /***************************************************************************
      * Methods defined in parent abstract class "tx_ptlist_filter" 
@@ -75,8 +88,8 @@ class tx_ptlist_controller_filter_string extends tx_ptlist_filter {
         }       
         foreach ($this->dataDescriptions as $dataDescription) {  /* @var $dataDescription tx_ptlist_dataDescription */
             $sqlWhereClauseSnippetsAndParts = array();
-            foreach (t3lib_div::trimExplode(' ', $this->value, true) as $part) {
-                $sqlWhereClauseSnippetsAndParts[] = sprintf('%s LIKE "%%%s%%"', $dataDescription->getSelectClause(false), $GLOBALS['TYPO3_DB']->quoteStr($part, $dataDescription->get_table()));
+            foreach ($this->filterValue->getSplittedByValueSqlEncoded(',') as $part) {
+                $sqlWhereClauseSnippetsAndParts[] = sprintf('%s LIKE "%%%s%%"', $dataDescription->getSelectClause(false), $part);
             }
             $sqlWhereClauseSnippets[] = ' ( ' . implode(' AND ', $sqlWhereClauseSnippetsAndParts) . ' ) ';
         }
@@ -103,8 +116,22 @@ class tx_ptlist_controller_filter_string extends tx_ptlist_filter {
      */
     public function preSubmit() {
         
-        $this->value = $this->params['value'];
+    	$this->filterValue->setValue($this->params['value']);
         
+    }
+    
+    
+    
+    /**
+     * Overwriting init() method for setting filterValue object
+     * 
+     * @return  void
+     * @author  Michael Knoll
+     * @since   2009-11-12
+     */
+    public function init() {
+    	parent::init();
+    	$this->filterValue = new tx_ptlist_filterValueString();
     }
 
     
@@ -140,7 +167,7 @@ class tx_ptlist_controller_filter_string extends tx_ptlist_filter {
     public function isNotActiveAction() {
         
         $view = $this->getView('filter_string_userInterface');
-        $view->addItem($this->value, 'value');
+        $view->addItem($this->filterValue->getHtmlEncodedValue(), 'value', false);
         return $view->render();
         
     }
