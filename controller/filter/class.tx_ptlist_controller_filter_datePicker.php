@@ -33,7 +33,7 @@ require_once t3lib_extMgm::extPath('pt_list').'view/filter/datePicker/class.tx_p
 /**
  * Class implementing a Datepicker filter
  *
- * TODO: The date logic might better be encapsulated into seperate classes.
+ * TODO: The date logic might better be encapsulated into separate classes.
  *       Therefore filter design has to be discussed with respect to spreading
  *       filter code over several classes.
  * TODO: Implement Ajax functionality, since the given approach will not scale
