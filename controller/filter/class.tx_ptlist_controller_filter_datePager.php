@@ -33,9 +33,11 @@ require_once t3lib_extMgm::extPath('pt_list').'view/filter/datePager/class.tx_pt
 /**
  * Date Pager filter
  *
- * @version  $Id$
- * @author   Joachim Mathes
- * @since    2009-09-08
+ * @package     TYPO3
+ * @subpackage  pt_list
+ * @author      Joachim Mathes
+ * @since       2009-09-08
+ * @version     $Id$
  */
 class tx_ptlist_controller_filter_datePager extends tx_ptlist_filter {
 	protected $value = array();
