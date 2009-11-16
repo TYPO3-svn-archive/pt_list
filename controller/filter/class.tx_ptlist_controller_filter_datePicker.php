@@ -40,12 +40,7 @@ require_once t3lib_extMgm::extPath('pt_list').'view/filter/datePicker/class.tx_p
  * @version     $Id$
  */
 class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
-
-
-
-	/***************************************************************************
-     * Modifying standard pt_mvc functionality
-     **************************************************************************/
+    protected $smartyTemplateVariables = array();
 
 	/**
 	 * MVC init method
@@ -79,58 +74,16 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
 	}
 
 	/**
-	 * Is not active action
+	 * 'Is not active'-action
 	 *
-	 * Sets various date picker features which are defined in TypoScript
-	 * configuration
-	 *
-	 * @param		void
-	 * @return		string	HTML output
-	 * @author		Joachim Mathes <mathes@punkt.de>
-	 * @since		2009-07-21
+	 * @param   void
+	 * @return  string	HTML output
+	 * @author  Joachim Mathes <mathes@punkt.de>
+	 * @since   2009-07-21
 	 */
 	public function isNotActiveAction() {
-
-		// Get View
-		$view = $this->getView('filter_datePicker_userInterface');
-
-		// Get JSON events
-		$datesJSON = $this->getJsonEvents();
-
-		// Set date picker mode
-		$datePickerMode = $this->conf['datePickerMode'] == '' ? 'inline' : $this->conf['datePickerMode'];
-
-        // Set the changeMonth mode, i.e. if the month can be changed by selecting from a drop-down list
-        $changeMonth = $this->conf['changeMonth'] == '' ? 'true' : $this->conf['changeMonth'];
-
-        // Set the changeYear mode, i.e. if the year can be changed by selecting from a drop-down list
-        $changeYear = $this->conf['changeYear'] == '' ? 'true' : $this->conf['changeYear'];
-
-        // Set the path to the calendar icon, which is displayed in inline mode
-        $buttonImage = $this->conf['buttonImage'] == '' ? t3lib_extMgm::extRelPath('pt_list').'res/javascript/jqueryui/development-bundle/demos/datepicker/images/calendar.gif' : $this->conf['buttonImage'];
-
-		// Set default date
-		$defaultDate = $this->value['date'] == '' ? date('Y-m-d') : $this->value['date'];
-		$defaultDate = explode('-', $defaultDate);
-		$defaultDate[1]--; // peculiar JavaScript date feature
-
-		// Set View items for Smarty template
-		$view->addItem($this->submitLabel, 'submitLabel');
-		$view->addItem($datesJSON, 'datesJSON', false);
-		$view->addItem($datePickerMode, 'datePickerMode');
-		$view->addItem($changeMonth, 'changeMonth');
-		$view->addItem($changeYear, 'changeYear');
-		$view->addItem($buttonImage, 'buttonImage');
-		$view->addItem($defaultDate, 'defaultDate');
-
-		return $view->render();
-	}
-
-
-
-    /***************************************************************************
-     * Template methods
-     **************************************************************************/
+        return $this->renderView();
+    }
 
 	/**
 	 * Pre Submit functionality
@@ -270,12 +223,6 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
 		return $data;
 	}
 
-
-
-	/***************************************************************************
-     * Helper methods
-     **************************************************************************/
-
 	/**
 	 * Get database column
 	 *
@@ -290,9 +237,60 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
 		return $table.'.'.$field;
 	}
 
+    /**
+     * require T3 extension
+     * @param   string  $extensionKey  extension key
+     * @return  void
+     * @author  Joachim Mathes <mathes@punkt.de>
+     * @sincs   2009-11-13
+     */
+    protected function requireT3Extension($extensionKey) {
+        if (!t3lib_extMgm::isLoaded('pt_jqueryui')) {
+			throw new tx_pttools_exception('You need to install and load pt_jqueryui to run datepicker filter!');
+		}
+    }
 
+    /**
+     * Render view
+     *
+	 * @param   void
+	 * @return  unknown
+     * @author  Joachim Mathes <mathes@punkt.de>
+	 * @since   2009-09-24
+	 */
+    protected function renderView () {
+        $this->defineSmartyTemplateVariables();
+        $view->addItem($this->submitLabel, 'submitLabel');
+		$view->addItem($datesJSON, 'datesJSON', false);
+		$view->addItem($datePickerMode, 'datePickerMode');
+		$view->addItem($changeMonth, 'changeMonth');
+		$view->addItem($changeYear, 'changeYear');
+		$view->addItem($buttonImage, 'buttonImage');
+		$view->addItem($defaultDate, 'defaultDate');
+        return $view->render();
+    }
 
-	/**
+    /**
+	 * Define Smarty template variables
+	 *
+	 * @param   void
+	 * @return  void
+	 * @author  Joachim Mathes <mathes@punkt.de>
+	 * @since   2009-11-13
+	 */
+    protected function defineSmartyTemplateVariables() {
+        $this->smartyTemplateVariables['$view'] = $this->getView('filter_datePicker_userInterface');
+        $this->smartyTemplateVariables['$datesJSON'] = $this->getJsonEvents();
+        $this->smartyTemplateVariables['$datePickerMode'] = $this->conf['datePickerMode'] == '' ? 'inline' : $this->conf['datePickerMode'];
+        $this->smartyTemplateVariables['$changeMonth'] = $this->conf['changeMonth'] == '' ? 'true' : $this->conf['changeMonth'];
+        $this->smartyTemplateVariables['$changeYear'] = $this->conf['changeYear'] == '' ? 'true' : $this->conf['changeYear'];
+        $this->smartyTemplateVariables['$buttonImage'] = $this->conf['buttonImage'] == '' ? t3lib_extMgm::extRelPath('pt_list').'res/javascript/jqueryui/development-bundle/demos/datepicker/images/calendar.gif' : $this->conf['buttonImage'];
+        $this->smartyTemplateVariables['$defaultDate'] = $this->value['date'] == '' ? date('Y-m-d') : $this->value['date'];
+        $this->smartyTemplateVariables['$defaultDate'] = explode('-', $this->smartyTemplateVariables['$defaultDate']);
+        $this->smartyTemplateVariables['$defaultDate'][1]--; // peculiar JavaScript date feature
+    }
+
+    /**
 	 * Returns an JSON style formatted string of events
 	 *
 	 * @param      void
@@ -312,19 +310,6 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
         $datesJSON = "{'dates':[".implode(',', $datesArray)."]}";
         return $datesJSON;
 	}
-
-    /**
-     * require T3 extension
-     * @param   string  $extensionKey  extension key
-     * @return  void
-     * @author  Joachim Mathes <mathes@punkt.de>
-     * @sincs   2009-11-13
-     */
-    protected function requireT3Extension($extensionKey) {
-        if (!t3lib_extMgm::isLoaded('pt_jqueryui')) {
-			throw new tx_pttools_exception('You need to install and load pt_jqueryui to run datepicker filter!');
-		}
-    }
 
 }
 ?>
