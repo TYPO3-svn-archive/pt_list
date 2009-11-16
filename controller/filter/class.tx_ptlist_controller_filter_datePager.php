@@ -179,7 +179,7 @@ class tx_ptlist_controller_filter_datePager extends tx_ptlist_filter {
 	 * Get period of time SQL where clause snippet
 	 *
 	 * @param   void
-	 * @return  string   point of time SQL
+	 * @return  string   period of time SQL
 	 * @author  Joachim Mathes <mathes@punkt.de>
 	 * @since   2009-11-09
 	 */
