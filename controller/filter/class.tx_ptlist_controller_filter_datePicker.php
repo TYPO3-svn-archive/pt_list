@@ -65,32 +65,18 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
                                      array('message' => sprintf('This filter can only be used with 1 or 2 dataDescriptions (dataDescriptions found: "%s"',
                                                                 count($this->dataDescriptions))));
 	}
-	
-	
-	
-	/***************************************************************************
-     * Action Methods
-     **************************************************************************/
 
 	/**
-	 * Displays the user interface in active state
+	 * 'Is active'-action
 	 *
-	 * This function is called by defaultAction() from parent class tx_ptlist_filter.
-	 * As a pt_mvc derived controller tx_ptlist_filter calls defaultAction(), if no action parameter is specified.
-	 *
-	 * Calls isNotActiveAction().
-	 *
-	 * @param		void
-	 * @return		string HTML output
-	 * @author		Fabrizio Branca <mail@fabrizio-branca.de>
-	 * @since		2009-01-19
+	 * @param   void
+	 * @return  string HTML output
+	 * @author  Joachim Mathes <mathes@punkt.de>
+	 * @since   2009-11-13
 	 */
 	public function isActiveAction() {
-		// In this case we redirect to the "isActive" action as we do not want a different interface when the filter is active
 		return $this->doAction('isNotActive');
 	}
-
-
 
 	/**
 	 * Is not active action
@@ -127,7 +113,7 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
 		$defaultDate = $this->value['date'] == '' ? date('Y-m-d') : $this->value['date'];
 		$defaultDate = explode('-', $defaultDate);
 		$defaultDate[1]--; // peculiar JavaScript date feature
-        
+
 		// Set View items for Smarty template
 		$view->addItem($this->submitLabel, 'submitLabel');
 		$view->addItem($datesJSON, 'datesJSON', false);
