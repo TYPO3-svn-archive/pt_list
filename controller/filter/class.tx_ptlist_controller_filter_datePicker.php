@@ -22,24 +22,13 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+require_once t3lib_extMgm::extPath('pt_tools').'res/objects/class.tx_pttools_exception.php';
+require_once t3lib_extMgm::extPath('pt_tools').'res/staticlib/class.tx_pttools_assert.php';
+require_once t3lib_extMgm::extPath('pt_tools').'res/staticlib/class.tx_pttools_debug.php';
+require_once t3lib_extMgm::extPath('pt_tools').'res/staticlib/class.tx_pttools_div.php';
 
-
-/**
- * Class definition file for "date picker" filter
- * 
- * @author      Joachim Mathes
- * @version     $ID$
- */
-
-
-
-/**
- * Inclusion of external ressources
- */
 require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_filter.php';
 require_once t3lib_extMgm::extPath('pt_list').'view/filter/datePicker/class.tx_ptlist_view_filter_datePicker_userInterface.php';
-require_once t3lib_extMgm::extPath('pt_tools').'res/objects/class.tx_pttools_exception.php';
-
 
 /**
  * Class implementing a Datepicker filter
@@ -48,6 +37,7 @@ require_once t3lib_extMgm::extPath('pt_tools').'res/objects/class.tx_pttools_exc
  * @since		2009-07-14
  * @package     Typo3
  * @subpackage  pt_list
+ * @version     $Id$
  */
 class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
 
