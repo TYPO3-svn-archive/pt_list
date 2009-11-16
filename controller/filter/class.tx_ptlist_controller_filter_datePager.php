@@ -58,7 +58,7 @@ class tx_ptlist_controller_filter_datePager extends tx_ptlist_filter {
         tx_pttools_assert::isInRange(count($this->dataDescriptions),
                                      1,
                                      2,
-                                     array('message' => sprintf('This filter can only be used with 1 or 2 dataDescriptions (dataDescriptions found: "%s"',
+                                     array('message' => sprintf('This filter can only be used with 1 or 2 dataDescriptions (dataDescriptions found: "%s")',
                                                                 count($this->dataDescriptions))));
 	}
 
