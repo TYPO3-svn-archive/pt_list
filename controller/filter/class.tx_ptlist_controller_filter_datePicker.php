@@ -41,36 +41,29 @@ require_once t3lib_extMgm::extPath('pt_list').'view/filter/datePicker/class.tx_p
  */
 class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
 
-	
-	
+
+
 	/***************************************************************************
      * Modifying standard pt_mvc functionality
      **************************************************************************/
-	
+
 	/**
 	 * MVC init method
-	 * 
-	 * Checks if the column collection contains exactly one column as this filter
-	 * can be used only with one column at the same time.
 	 *
-	 * @param		void
-	 * @return		void
-	 * @throws		tx_pttools_exceptionAssertion	if more than one column is attached to the filters columnCollection
-	 * @author		Fabrizio Branca <mail@fabrizio-branca.de>
-	 * @since		2009-01-23
+	 * @param   void
+	 * @return  void
+	 * @throws  tx_pttools_exceptionAssertion  if more than one column is attached to the filters columnCollection
+	 * @author  Joachim Mathes <mathes@punkt.de>
+	 * @since   2009-01-23
 	 */
 	public function init() {
-		
-		// Make sure, pt_jqueryui extension is installed
-		if (!t3lib_extMgm::isLoaded('pt_jqueryui')) {
-			throw new tx_pttools_exception('You need to install and load pt_jqueryui to run datepicker filter!');
-		}
-		
+        $this->requireT3Extension('pt_jqueryui');
 		parent::init();
-		tx_pttools_assert::isEqual(count($this->dataDescriptions),
-				   1,
-				   array('message' => sprintf('This filter can only be used with 1 dataDescription (dataDescription found: "%s"',
-								  count($this->dataDescriptions))));
+        tx_pttools_assert::isInRange(count($this->dataDescriptions),
+                                     1,
+                                     2,
+                                     array('message' => sprintf('This filter can only be used with 1 or 2 dataDescriptions (dataDescriptions found: "%s"',
+                                                                count($this->dataDescriptions))));
 	}
 	
 	
@@ -147,8 +140,8 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
 		return $view->render();
 	}
 
-	
-	
+
+
     /***************************************************************************
      * Template methods
      **************************************************************************/
@@ -165,9 +158,9 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
 		// Save the incoming parameters to derived value property here.
 		$this->value = array('date' => $this->params['date']);
 	}
-	
-	
-	
+
+
+
     /***************************************************************************
      * Domain logic
      **************************************************************************/
@@ -193,7 +186,7 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
         // Determine field type of date field (timestamp or date format; default: timestamp).
         // This information has to be given in the TypoScript config property `dateFieldType'.
         $dateFieldType = $this->conf['dateFieldType'] == '' ? 'timestamp' : $this->conf['dateFieldType'];
- 
+
         $table = $this->dataDescriptions->getItemByIndex(0)->get_table();
 
         switch ($dateFieldType) {
@@ -206,8 +199,8 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
         default:
             throw new tx_pttools_exceptionConfiguration("No valid date field type set.",
                                                         "No valid date field type set for datePicker filter. Type was " . $dateFieldType . " but can only be 'date' or 'timestamp'!");
-        }       
-        
+        }
+
         // HOOK: allow multiple hooks to append individual additional where clause conditions (added by rk 19.08.09)
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['filter_datePicker']['getSqlWhereClauseSnippetHook'])) {
             foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['filter_datePicker']['getSqlWhereClauseSnippetHook'] as $funcName) {
@@ -217,14 +210,14 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
                 $sqlWhereClauseSnippet .= t3lib_div::callUserFunction($funcName, $params, $this, '');
                 if (TYPO3_DLOG) t3lib_div::devLog(sprintf('Processing hook "%s" for "getSqlWhereClauseSnippetHook" of filter_datePicker', $funcName), $this->extKey, 1, array('params' => $params));
             }
-        }   
-        
+        }
+
         return $sqlWhereClauseSnippet;
-        
+
     }
-	
-    
-	
+
+
+
 	/**
 	 * Returns array of event dates
 	 *
@@ -247,13 +240,13 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
 
 		switch ($dateFieldType) {
 		case 'date':
-			$select = 'DISTINCT DATE_FORMAT(' . $table . '.' . $field . ", '%e') AS day, 
-			                    DATE_FORMAT(" . $table . '.' . $field . ", '%c') AS month, 
+			$select = 'DISTINCT DATE_FORMAT(' . $table . '.' . $field . ", '%e') AS day,
+			                    DATE_FORMAT(" . $table . '.' . $field . ", '%c') AS month,
 			                    DATE_FORMAT(" . $table . '.' . $field . ", '%Y') AS year";
 			break;
 		case 'timestamp':
-			$select = "DISTINCT FROM_UNIXTIME(" . $table . '.' . $field . ", '%e') AS day, 
-			                    FROM_UNIXTIME(" . $table . '.' . $field . ", '%c') AS month, 
+			$select = "DISTINCT FROM_UNIXTIME(" . $table . '.' . $field . ", '%e') AS day,
+			                    FROM_UNIXTIME(" . $table . '.' . $field . ", '%c') AS month,
 			                    FROM_UNIXTIME(" . $table . '.' . $field . ", '%Y') AS year";
 			break;
 		default:
@@ -271,8 +264,8 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
 		$limit = '';
 		// Ignore all filters
 		$ignoredFiltersForWhereClause = '__ALL__';
-		
-        
+
+
         // HOOK: allow multiple hooks to append individual additional where clause conditions (added by rk 19.08.09)
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['filter_datePicker']['getEventDates_whereClauseHook'])) {
             foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['filter_datePicker']['getEventDates_whereClauseHook'] as $funcName) {
@@ -284,14 +277,14 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
                 $where .= t3lib_div::callUserFunction($funcName, $params, $this, '');
                 if (TYPO3_DLOG) t3lib_div::devLog(sprintf('Processing hook "%s" for "getEventDates_whereClauseHook" of filter_datePicker', $funcName), $this->extKey, 1, array('params' => $params));
             }
-        }   
-        
+        }
+
 		$data = $listObject->getGroupData($select, $where, $groupBy, $orderBy, $limit, $ignoredFiltersForWhereClause);
-		
+
 		return $data;
 	}
-	
-	
+
+
 
 	/***************************************************************************
      * Helper methods
@@ -310,12 +303,12 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
 
 		return $table.'.'.$field;
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Returns an JSON style formatted string of events
-	 * 
+	 *
 	 * @param      void
 	 * @return     unknown
 	 * @author     Michael Knoll <knoll@punkt.de>, Joachim Mathes <mathes@punkt.de>
@@ -333,6 +326,19 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
         $datesJSON = "{'dates':[".implode(',', $datesArray)."]}";
         return $datesJSON;
 	}
-	
+
+    /**
+     * require T3 extension
+     * @param   string  $extensionKey  extension key
+     * @return  void
+     * @author  Joachim Mathes <mathes@punkt.de>
+     * @sincs   2009-11-13
+     */
+    protected function requireT3Extension($extensionKey) {
+        if (!t3lib_extMgm::isLoaded('pt_jqueryui')) {
+			throw new tx_pttools_exception('You need to install and load pt_jqueryui to run datepicker filter!');
+		}
+    }
+
 }
 ?>
