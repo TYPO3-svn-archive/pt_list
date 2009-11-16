@@ -57,7 +57,7 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
         tx_pttools_assert::isInRange(count($this->dataDescriptions),
                                      1,
                                      2,
-                                     array('message' => sprintf('This filter can only be used with 1 or 2 dataDescriptions (dataDescriptions found: "%s"',
+                                     array('message' => sprintf('This filter can only be used with 1 or 2 dataDescriptions (dataDescriptions found: "%s")',
                                                                 count($this->dataDescriptions))));
 	}
 
@@ -86,16 +86,16 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
     }
 
 	/**
-	 * Pre Submit functionality
+	 * Submit action
 	 *
-	 * @param		void
-	 * @return		string	HTML output
-	 * @author		Joachim Mathes <mathes@punkt.de>
-	 * @since		2009-07-20
+	 * @param   void
+	 * @return  string	HTML output
+	 * @author  Joachim Mathes <mathes@punkt.de>
+	 * @since   2009-07-20
 	 */
-	public function preSubmit() {
-		// Save the incoming parameters to derived value property here.
+	public function submitAction() {
 		$this->value = array('date' => $this->params['date']);
+        return parent::submitAction();
 	}
 
 
@@ -107,17 +107,14 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
     /**
      * Get SQL where clause snippet
      *
-     * This is an inherited abstract function from parent class tx_ptlist_filter.
-     * Thus it has to be implemented in this class.
-     *
-     * @return      string  sql where clause snippet
-     * @author      Joachim Mathes <mathes@punkt.de>
-     * @since       2009-07-17
+     * @param   void
+     * @return  string  sql where clause snippet
+     * @author  Joachim Mathes <mathes@punkt.de>
+     * @since   2009-07-17
      */
     public function getSqlWhereClauseSnippet() {
 
         $date = $this->value['date'];
-        $dbColumn = $this->getDbColumn();
 
         // Check for correctness of date parameter.
         tx_pttools_assert::isNotEmpty($date, array('message' => 'Value "date" must not be empty but was empty.'));
@@ -152,90 +149,48 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
         }
 
         return $sqlWhereClauseSnippet;
-
     }
 
-
-
-	/**
-	 * Returns array of event dates
+    /**
+	 * Get point of time event dates
 	 *
-	 * @return	  array			 event dates
-	 * @author	  Joachim Mathes <mathes@punkt.de>
-	 * @since	  2009-07-20
+     * @param   void
+	 * @return  array  event dates
+	 * @author  Joachim Mathes <mathes@punkt.de>
+	 * @since   2009-07-20
 	 */
-	protected function getEventDates() {
-		// Retrieve list object from registry
-		$listObject = tx_pttools_registry::getInstance()->get($this->listIdentifier.'_listObject'); /* @var $listObject tx_ptlist_list */
-
-		// Prepare parameters for the getGroupData() call
-
-		// SELECT
-		// Determine field type of date field (timestamp or date format; default: timestamp).
-		// This information has to be given in the TypoScript config property `dateFieldType'.
-		$dateFieldType = $this->conf['dateFieldType'] == '' ? 'timestamp' : $this->conf['dateFieldType'];
-		$field = $this->dataDescriptions->getItemByIndex(0)->get_field();
-		$table = $this->dataDescriptions->getItemByIndex(0)->get_table();
-
-		switch ($dateFieldType) {
-		case 'date':
-			$select = 'DISTINCT DATE_FORMAT(' . $table . '.' . $field . ", '%e') AS day,
-			                    DATE_FORMAT(" . $table . '.' . $field . ", '%c') AS month,
-			                    DATE_FORMAT(" . $table . '.' . $field . ", '%Y') AS year";
-			break;
-		case 'timestamp':
-			$select = "DISTINCT FROM_UNIXTIME(" . $table . '.' . $field . ", '%e') AS day,
-			                    FROM_UNIXTIME(" . $table . '.' . $field . ", '%c') AS month,
-			                    FROM_UNIXTIME(" . $table . '.' . $field . ", '%Y') AS year";
-			break;
-		default:
-			throw new tx_pttools_exceptionConfiguration("No valid date field type set.",
-														"No valid date field type set for eventCalender filter. Type was $dateFieldType but can only be 'date' or 'timestamp'!");
-		}
-
-		// WHERE
+	protected function getPointOfTimeEventDates() {
+		$listObject = tx_pttools_registry::getInstance()->get($this->listIdentifier.'_listObject');
+        $startDateColumn = $this->getDatecolumnByIndexNumber(0);
+		$sqlDateFunction = $this->determineSqlDateFunction();
+        $select = "DISTINCT" . $sqlDateFunction . "('" . $startDateColumn . ", '%e') AS day, "
+                             . $sqlDateFunction . "('" . $startDateColumn . ", '%c') AS month, "
+                             . $sqlDateFunction . "('" . $startDateColumn . ", '%Y') AS year";
 		$where = '';
-		// GROUP BY
 		$groupBy = '';
-		// ORDER BY
 		$orderBy = '';
-		// LIMIT
 		$limit = '';
-		// Ignore all filters
 		$ignoredFiltersForWhereClause = '__ALL__';
 
-
-        // HOOK: allow multiple hooks to append individual additional where clause conditions (added by rk 19.08.09)
-        if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['filter_datePicker']['getEventDates_whereClauseHook'])) {
-            foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['filter_datePicker']['getEventDates_whereClauseHook'] as $funcName) {
-                $params = array(
-                    'where' => $where,
-                    'listObj' => $listObject,
-                    'filterIdentifier' => $this->get_filterIdentifier()
-                );
-                $where .= t3lib_div::callUserFunction($funcName, $params, $this, '');
-                if (TYPO3_DLOG) t3lib_div::devLog(sprintf('Processing hook "%s" for "getEventDates_whereClauseHook" of filter_datePicker', $funcName), $this->extKey, 1, array('params' => $params));
-            }
-        }
+        $this->getEventDatesWhereClauseHook($where, $listObject)
 
 		$data = $listObject->getGroupData($select, $where, $groupBy, $orderBy, $limit, $ignoredFiltersForWhereClause);
 
 		return $data;
 	}
 
-	/**
-	 * Get database column
+    /**
+	 * Get period of time SQL where clause snippet
 	 *
-	 * @return		string	sql database field
-	 * @author		Joachim Mathes <mathes@punkt.de>
-	 * @since		2009-07-17
+     * @param   void
+	 * @return  array  event dates
+	 * @author  Joachim Mathes <mathes@punkt.de>
+	 * @since   2009-07-20
 	 */
-	protected function getDbColumn() {
-		$table = $this->dataDescriptions->getItemByIndex(0)->get_table();
-		$field = $this->dataDescriptions->getItemByIndex(0)->get_field();
+	protected function getPeriodOfTimeEventDates() {
 
-		return $table.'.'.$field;
-	}
+
+    }
 
     /**
      * require T3 extension
@@ -291,6 +246,42 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
     }
 
     /**
+	 * Determine SQL date function
+	 *
+	 * @param   void
+	 * @return  string  SQL date function
+	 * @author  Joachim Mathes <mathes@punkt.de>
+	 * @since   2009-11-09
+	 */
+    protected function determineSqlDateFunction() {
+        switch ($this->conf['dateFieldType']) {
+        case 'date':
+            $sqlDateFunction = 'DATE_FORMAT';
+            break;
+        case 'timestamp':
+            $sqlDateFunction = 'FROM_UNIXTIME';
+            break;
+		default:
+			throw new tx_pttools_exceptionConfiguration("No valid 'dateFieldType' set in Typoscript configuration.");
+        }
+        return $sqlDateFunction;
+    }
+
+    /**
+	 * Get date column by index number
+	 *
+	 * @param   int     $indexNumber  index number
+	 * @return  string  concatenated table and column name
+	 * @author  Joachim Mathes <mathes@punkt.de>
+	 * @since   2009-11-13
+	 */
+    protected function getDateColumnByIndexNumber($indexNumber) {
+        return $this->dataDescriptions->getItemByIndex($indexNumber)->get_table()
+               . '.'
+               . $this->dataDescriptions->getItemByIndex($indexNumber)->get_field();
+    }
+
+    /**
 	 * Returns an JSON style formatted string of events
 	 *
 	 * @param      void
@@ -310,6 +301,30 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
         $datesJSON = "{'dates':[".implode(',', $datesArray)."]}";
         return $datesJSON;
 	}
+
+    /**
+     * Hook: getEventDatesWhereClause
+     *
+     * @param   string  $where       where clause
+     * @param   object  $listObject  list object
+	 * @return  void
+	 * @author  Joachim Mathes <mathes@punkt.de>
+	 * @since   2009-11-13
+     */
+    protected function getEventDatesWhereClauseHook($where, $listObject) {
+        // HOOK: allow multiple hooks to append individual additional where clause conditions (added by rk 19.08.09)
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['filter_datePicker']['getEventDates_whereClauseHook'])) {
+            foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['filter_datePicker']['getEventDates_whereClauseHook'] as $funcName) {
+                $params = array(
+                    'where' => $where,
+                    'listObj' => $listObject,
+                    'filterIdentifier' => $this->get_filterIdentifier()
+                );
+                $where .= t3lib_div::callUserFunction($funcName, $params, $this, '');
+                if (TYPO3_DLOG) t3lib_div::devLog(sprintf('Processing hook "%s" for "getEventDates_whereClauseHook" of filter_datePicker', $funcName), $this->extKey, 1, array('params' => $params));
+            }
+        }
+    }
 
 }
 ?>
