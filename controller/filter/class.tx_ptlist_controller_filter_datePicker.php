@@ -108,37 +108,63 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
      * Get SQL where clause snippet
      *
      * @param   void
-     * @return  string  sql where clause snippet
+     * @return  string  SQL where clause snippet
      * @author  Joachim Mathes <mathes@punkt.de>
      * @since   2009-07-17
      */
     public function getSqlWhereClauseSnippet() {
+        switch(count($this->dataDescriptions)) {
+            case 1:
+                $sqlWhereClauseSnippet = $this->getPointOfTimeSqlWhereClauseSnippet();
+                break;
+            case 2:
+                $sqlWhereClauseSnippet = $this->getPeriodOfTimeSqlWhereClauseSnippet();
+                break;
+            default:
+                throw new tx_pttools_exceptionConfiguration("No valid number of data descriptions.");
+        }
+        $this->getSqlWhereClauseSnippetHook($sqlWhereClauseSnippet);
+        return $sqlWhereClauseSnippet;
+    }
 
-        $date = $this->value['date'];
-
-        // Check for correctness of date parameter.
+    /**
+	 * Get point of time SQL where clause snippet
+	 *
+	 * @param   void
+	 * @return  string   point of time SQL where clause snippet
+	 * @author  Joachim Mathes <mathes@punkt.de>
+	 * @since   2009-11-13
+	 */
+    protected function getPointOfTimeSqlWhereClauseSnippet() {
+        $cachedDate = $this->value['date'];
         tx_pttools_assert::isNotEmpty($date, array('message' => 'Value "date" must not be empty but was empty.'));
 
-        // Determine field type of date field (timestamp or date format; default: timestamp).
-        // This information has to be given in the TypoScript config property `dateFieldType'.
-        $dateFieldType = $this->conf['dateFieldType'] == '' ? 'timestamp' : $this->conf['dateFieldType'];
+        $tableName = $this->getTableName();
+        $startDateColumn = $this->getDateColumnByIndexNumber(0);
+        $endDateColumn = $this->getDateColumnByIndexNumber(1);
+        $sqlDateFunction = $this->determineSqlDateFunction();
+        $sqlWhereClauseSnippet = $sqlDateFunction . "(" . $startDateColumn . ", '%Y-%m-%d') = " . $GLOBALS['TYPO3_DB']->fullQuoteStr($cachedDate, $tableName);
+        return $sqlWhereClauseSnippet;
+    }
 
-        $table = $this->dataDescriptions->getItemByIndex(0)->get_table();
+    /**
+	 * Get period of time SQL where clause snippet
+	 *
+	 * @param   void
+	 * @return  string   period of time SQL where clause snippet
+	 * @author  Joachim Mathes <mathes@punkt.de>
+	 * @since   2009-11-13
+	 */
+    protected function getPeriodOfTimeSqlWhereClauseSnippet() {
+        $cachedDate = $this->value['date'];
+        tx_pttools_assert::isNotEmpty($date, array('message' => 'Value "date" must not be empty but was empty.'));
 
-        switch ($dateFieldType) {
-        case 'date':
-            $sqlWhereClauseSnippet = "DATE_FORMAT(" . $dbColumn . ", '%Y-%m-%d') = " . $GLOBALS['TYPO3_DB']->fullQuoteStr($date, $table); // prevents SQL injection!
-            break;
-        case 'timestamp':
-            $sqlWhereClauseSnippet = "FROM_UNIXTIME(" . $dbColumn . ", '%Y-%m-%d') = " . $GLOBALS['TYPO3_DB']->fullQuoteStr($date, $table); // prevents SQL injection!
-            break;
-        default:
-            throw new tx_pttools_exceptionConfiguration("No valid date field type set.",
-                                                        "No valid date field type set for datePicker filter. Type was " . $dateFieldType . " but can only be 'date' or 'timestamp'!");
-        }
-
-        $this->getSqlWhereClauseSnippetHook($sqlWhereClauseSnippet);
-
+        $tableName = $this->getTableName();
+        $startDateColumn = $this->getDateColumnByIndexNumber(0);
+        $sqlDateFunction = $this->determineSqlDateFunction();
+        $sqlWhereClauseSnippet = $sqlDateFunction . "(" . $startDateColumn . ", '%Y-%m-%d') <= " . $GLOBALS['TYPO3_DB']->fullQuoteStr($cachedDate, $tableName)
+                                 . " AND "
+                                 . $sqlDateFunction . "(" . $endDateColumn . ", '%Y-%m-%d') >= " . $GLOBALS['TYPO3_DB']->fullQuoteStr($cachedDate, $tableName);
         return $sqlWhereClauseSnippet;
     }
 
@@ -362,6 +388,18 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
         return $this->dataDescriptions->getItemByIndex($indexNumber)->get_table()
                . '.'
                . $this->dataDescriptions->getItemByIndex($indexNumber)->get_field();
+    }
+
+    /**
+	 * Get table name
+	 *
+	 * @param   void
+	 * @return  string  table name
+	 * @author  Joachim Mathes <mathes@punkt.de>
+	 * @since   2009-11-13
+	 */
+    protected function getTableName() {
+        return $this->dataDescriptions->getItemByIndex($indexNumber)->get_table();
     }
 
     /**
