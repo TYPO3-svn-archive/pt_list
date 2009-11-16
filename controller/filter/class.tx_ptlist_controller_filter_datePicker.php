@@ -137,11 +137,10 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
 	 */
     protected function getPointOfTimeSqlWhereClauseSnippet() {
         $cachedDate = $this->value['date'];
-        tx_pttools_assert::isNotEmpty($date, array('message' => 'Value "date" must not be empty but was empty.'));
+        tx_pttools_assert::isNotEmpty($cachedDate, array('message' => 'Value "date" must not be empty but was empty.'));
 
         $tableName = $this->getTableName();
         $startDateColumn = $this->getDateColumnByIndexNumber(0);
-        $endDateColumn = $this->getDateColumnByIndexNumber(1);
         $sqlDateFunction = $this->determineSqlDateFunction();
         $sqlWhereClauseSnippet = $sqlDateFunction . "(" . $startDateColumn . ", '%Y-%m-%d') = " . $GLOBALS['TYPO3_DB']->fullQuoteStr($cachedDate, $tableName);
         return $sqlWhereClauseSnippet;
@@ -157,10 +156,11 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
 	 */
     protected function getPeriodOfTimeSqlWhereClauseSnippet() {
         $cachedDate = $this->value['date'];
-        tx_pttools_assert::isNotEmpty($date, array('message' => 'Value "date" must not be empty but was empty.'));
+        tx_pttools_assert::isNotEmpty($cachedDate, array('message' => 'Value "date" must not be empty but was empty.'));
 
         $tableName = $this->getTableName();
         $startDateColumn = $this->getDateColumnByIndexNumber(0);
+        $endDateColumn = $this->getDateColumnByIndexNumber(1);
         $sqlDateFunction = $this->determineSqlDateFunction();
         $sqlWhereClauseSnippet = $sqlDateFunction . "(" . $startDateColumn . ", '%Y-%m-%d') <= " . $GLOBALS['TYPO3_DB']->fullQuoteStr($cachedDate, $tableName)
                                  . " AND "
@@ -275,6 +275,7 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
 	 * @since   2009-11-13
 	 */
     protected function evaluateDatePeriod($date) {
+        $this->validateDatePeriod($date['period']);
         for ($i = 0; $i <= $date['period']; $i++) {
             $datesInJsonFormat[$i] = sprintf("{'year':%s, 'month':%s, 'day':%s}",
                 date('Y', mktime(0, 0, 0, $date['month'], $date['day'] + $i, $date['year'])),
@@ -282,6 +283,20 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
                 date('j', mktime(0, 0, 0, $date['month'], $date['day'] + $i, $date['year'])));
         }
         return implode(',', $datesInJsonFormat);
+    }
+
+    /**
+	 * Validate date period
+	 *
+	 * @param   int    date period
+	 * @return  void
+	 * @author  Joachim Mathes <mathes@punkt.de>
+	 * @since   2009-11-13
+	 */
+    protected function validateDatePeriod($datePeriod) {
+        if ($datePeriod < 0) {
+            throw new tx_pttools_exceptionConfiguration("No valid date period. Enddate is greater than startdate.");
+        }
     }
 
     /**
