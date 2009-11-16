@@ -33,6 +33,12 @@ require_once t3lib_extMgm::extPath('pt_list').'view/filter/datePicker/class.tx_p
 /**
  * Class implementing a Datepicker filter
  *
+ * TODO: The date logic might better be encapsulated into seperate classes.
+ *       Therefore filter design has to be discussed with respect to spreading
+ *       filter code over several classes.
+ * TODO: Implement Ajax functionality, since the given approach will not scale
+ *       for a huge amount of event dates.
+ *
  * @author		Joachim Mathes
  * @since		2009-07-14
  * @package     Typo3
@@ -98,12 +104,6 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
         return parent::submitAction();
 	}
 
-
-
-    /***************************************************************************
-     * Domain logic
-     **************************************************************************/
-
     /**
      * Get SQL where clause snippet
      *
@@ -137,72 +137,9 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
                                                         "No valid date field type set for datePicker filter. Type was " . $dateFieldType . " but can only be 'date' or 'timestamp'!");
         }
 
-        // HOOK: allow multiple hooks to append individual additional where clause conditions (added by rk 19.08.09)
-        if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['filter_datePicker']['getSqlWhereClauseSnippetHook'])) {
-            foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['filter_datePicker']['getSqlWhereClauseSnippetHook'] as $funcName) {
-                $params = array(
-                    'sqlWhereClauseSnippet' => $sqlWhereClauseSnippet,
-                );
-                $sqlWhereClauseSnippet .= t3lib_div::callUserFunction($funcName, $params, $this, '');
-                if (TYPO3_DLOG) t3lib_div::devLog(sprintf('Processing hook "%s" for "getSqlWhereClauseSnippetHook" of filter_datePicker', $funcName), $this->extKey, 1, array('params' => $params));
-            }
-        }
+        $this->getSqlWhereClauseSnippetHook($sqlWhereClauseSnippet);
 
         return $sqlWhereClauseSnippet;
-    }
-
-    /**
-	 * Get point of time event dates
-	 *
-     * @param   void
-	 * @return  array  event dates
-	 * @author  Joachim Mathes <mathes@punkt.de>
-	 * @since   2009-07-20
-	 */
-	protected function getPointOfTimeEventDates() {
-		$listObject = tx_pttools_registry::getInstance()->get($this->listIdentifier.'_listObject');
-        $startDateColumn = $this->getDatecolumnByIndexNumber(0);
-		$sqlDateFunction = $this->determineSqlDateFunction();
-        $select = "DISTINCT" . $sqlDateFunction . "('" . $startDateColumn . ", '%e') AS day, "
-                             . $sqlDateFunction . "('" . $startDateColumn . ", '%c') AS month, "
-                             . $sqlDateFunction . "('" . $startDateColumn . ", '%Y') AS year";
-		$where = '';
-		$groupBy = '';
-		$orderBy = '';
-		$limit = '';
-		$ignoredFiltersForWhereClause = '__ALL__';
-
-        $this->getEventDatesWhereClauseHook($where, $listObject)
-
-		$data = $listObject->getGroupData($select, $where, $groupBy, $orderBy, $limit, $ignoredFiltersForWhereClause);
-
-		return $data;
-	}
-
-    /**
-	 * Get period of time SQL where clause snippet
-	 *
-     * @param   void
-	 * @return  array  event dates
-	 * @author  Joachim Mathes <mathes@punkt.de>
-	 * @since   2009-07-20
-	 */
-	protected function getPeriodOfTimeEventDates() {
-
-
-    }
-
-    /**
-     * require T3 extension
-     * @param   string  $extensionKey  extension key
-     * @return  void
-     * @author  Joachim Mathes <mathes@punkt.de>
-     * @sincs   2009-11-13
-     */
-    protected function requireT3Extension($extensionKey) {
-        if (!t3lib_extMgm::isLoaded('pt_jqueryui')) {
-			throw new tx_pttools_exception('You need to install and load pt_jqueryui to run datepicker filter!');
-		}
     }
 
     /**
@@ -215,13 +152,14 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
 	 */
     protected function renderView () {
         $this->defineSmartyTemplateVariables();
+        $view = $this->getView('filter_datePicker_userInterface');
         $view->addItem($this->submitLabel, 'submitLabel');
-		$view->addItem($datesJSON, 'datesJSON', false);
-		$view->addItem($datePickerMode, 'datePickerMode');
-		$view->addItem($changeMonth, 'changeMonth');
-		$view->addItem($changeYear, 'changeYear');
-		$view->addItem($buttonImage, 'buttonImage');
-		$view->addItem($defaultDate, 'defaultDate');
+		$view->addItem($this->smartyTemplateVariables['datesJSON'], 'datesJSON', false);
+		$view->addItem($this->smartyTemplateVariables['datePickerMode'], 'datePickerMode');
+		$view->addItem($this->smartyTemplateVariables['changeMonth'], 'changeMonth');
+		$view->addItem($this->smartyTemplateVariables['changeYear'], 'changeYear');
+		$view->addItem($this->smartyTemplateVariables['buttonImage'], 'buttonImage');
+		$view->addItem($this->smartyTemplateVariables['defaultDate'], 'defaultDate');
         return $view->render();
     }
 
@@ -234,15 +172,147 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
 	 * @since   2009-11-13
 	 */
     protected function defineSmartyTemplateVariables() {
-        $this->smartyTemplateVariables['$view'] = $this->getView('filter_datePicker_userInterface');
-        $this->smartyTemplateVariables['$datesJSON'] = $this->getJsonEvents();
-        $this->smartyTemplateVariables['$datePickerMode'] = $this->conf['datePickerMode'] == '' ? 'inline' : $this->conf['datePickerMode'];
-        $this->smartyTemplateVariables['$changeMonth'] = $this->conf['changeMonth'] == '' ? 'true' : $this->conf['changeMonth'];
-        $this->smartyTemplateVariables['$changeYear'] = $this->conf['changeYear'] == '' ? 'true' : $this->conf['changeYear'];
-        $this->smartyTemplateVariables['$buttonImage'] = $this->conf['buttonImage'] == '' ? t3lib_extMgm::extRelPath('pt_list').'res/javascript/jqueryui/development-bundle/demos/datepicker/images/calendar.gif' : $this->conf['buttonImage'];
-        $this->smartyTemplateVariables['$defaultDate'] = $this->value['date'] == '' ? date('Y-m-d') : $this->value['date'];
-        $this->smartyTemplateVariables['$defaultDate'] = explode('-', $this->smartyTemplateVariables['$defaultDate']);
-        $this->smartyTemplateVariables['$defaultDate'][1]--; // peculiar JavaScript date feature
+        $this->smartyTemplateVariables['datesJSON'] = $this->getEventDates();
+        $this->smartyTemplateVariables['datePickerMode'] = $this->conf['datePickerMode'] == '' ? 'inline' : $this->conf['datePickerMode'];
+        $this->smartyTemplateVariables['changeMonth'] = $this->conf['changeMonth'] == '' ? 'true' : $this->conf['changeMonth'];
+        $this->smartyTemplateVariables['changeYear'] = $this->conf['changeYear'] == '' ? 'true' : $this->conf['changeYear'];
+        $this->smartyTemplateVariables['buttonImage'] = $this->conf['buttonImage'] == '' ? t3lib_extMgm::extRelPath('pt_list').'res/javascript/jqueryui/development-bundle/demos/datepicker/images/calendar.gif' : $this->conf['buttonImage'];
+        $this->smartyTemplateVariables['defaultDate'] = $this->value['date'] == '' ? date('Y-m-d') : $this->value['date'];
+        $this->smartyTemplateVariables['defaultDate'] = explode('-', $this->smartyTemplateVariables['defaultDate']);
+        $this->smartyTemplateVariables['defaultDate'][1]--; // peculiar JavaScript date feature
+    }
+
+    /**
+	 * Returns an JSON style formatted string of events
+	 *
+	 * @param   void
+	 * @return  unknown
+	 * @author  Michael Knoll <knoll@punkt.de>
+     * @author  Joachim Mathes <mathes@punkt.de>
+	 * @since   2009-09-24
+	 */
+	protected function getEventDates() {
+        switch(count($this->dataDescriptions)) {
+            case 1:
+                $dates = $this->getPointOfTimeEventDates();
+                break;
+            case 2:
+                $dates = $this->getPeriodOfTimeEventDates();
+                break;
+            default:
+                throw new tx_pttools_exceptionConfiguration("No valid number of data descriptions.");
+        }
+        return $dates;
+	}
+
+    /**
+	 * Get point of time event dates
+	 *
+	 * @param   void
+	 * @return  string  JSON formatted string
+	 * @author  Joachim Mathes <mathes@punkt.de>
+	 * @since   2009-11-09
+	 */
+    protected function getPointOfTimeEventDates() {
+        $dates = $this->execPointOfTimeEventDatesSql();
+        foreach ($dates as $key => $value) {
+            $datesArray[$key] = sprintf("{'year':%s, 'month':%s, 'day':%s}",
+                                        $value['year'], $value['month'], $value['day']);
+        }
+        $datesInJsonFormat = "{'dates':[".implode(',', $datesArray)."]}";
+        return $datesInJsonFormat;
+    }
+
+    /**
+	 * Get period of time event dates
+	 *
+	 * @param   void
+	 * @return  string  JSON formatted string
+	 * @author  Joachim Mathes <mathes@punkt.de>
+	 * @since   2009-11-09
+	 */
+    protected function getPeriodOfTimeEventDates() {
+        $dates = $this->execPeriodOfTimeEventDatesSql();
+        foreach ($dates as $key => $date) {
+            $datesArray[$key] = $this->evaluateDatePeriod($date);
+        }
+        $datesInJsonFormat = "{'dates':[" . implode(',', $datesArray) . " ]}";
+        return $datesInJsonFormat;
+    }
+
+    /**
+	 * Evaluate date period
+	 *
+	 * @param   array  date array
+	 * @return  array  array of JSON formatted strings
+	 * @author  Joachim Mathes <mathes@punkt.de>
+	 * @since   2009-11-13
+	 */
+    protected function evaluateDatePeriod($date) {
+        for ($i = 0; $i <= $date['period']; $i++) {
+            $datesInJsonFormat[$i] = sprintf("{'year':%s, 'month':%s, 'day':%s}",
+                date('Y', mktime(0, 0, 0, $date['month'], $date['day'] + $i, $date['year'])),
+                date('n', mktime(0, 0, 0, $date['month'], $date['day'] + $i, $date['year'])),
+                date('j', mktime(0, 0, 0, $date['month'], $date['day'] + $i, $date['year'])));
+        }
+        return implode(',', $datesInJsonFormat);
+    }
+
+    /**
+	 * Exec point of time event dates SQL
+	 *
+     * @param   void
+	 * @return  array  event dates
+	 * @author  Joachim Mathes <mathes@punkt.de>
+	 * @since   2009-07-20
+	 */
+	protected function execPointOfTimeEventDatesSql() {
+		$listObject = tx_pttools_registry::getInstance()->get($this->listIdentifier.'_listObject');
+        $startDateColumn = $this->getDateColumnByIndexNumber(0);
+		$sqlDateFunction = $this->determineSqlDateFunction();
+        $select = "DISTINCT " . $sqlDateFunction . "(" . $startDateColumn . ", '%e') AS day, "
+                              . $sqlDateFunction . "(" . $startDateColumn . ", '%c') AS month, "
+                              . $sqlDateFunction . "(" . $startDateColumn . ", '%Y') AS year";
+		$where = '';
+		$groupBy = '';
+		$orderBy = '';
+		$limit = '';
+		$ignoredFiltersForWhereClause = '__ALL__';
+
+        $this->getEventDatesWhereClauseHook($where, $listObject);
+
+		$dates = $listObject->getGroupData($select, $where, $groupBy, $orderBy, $limit, $ignoredFiltersForWhereClause);
+
+		return $dates;
+	}
+
+    /**
+	 * Exec period of time event dates SQL
+	 *
+     * @param   void
+	 * @return  array  event dates
+	 * @author  Joachim Mathes <mathes@punkt.de>
+	 * @since   2009-07-20
+	 */
+	protected function execPeriodOfTimeEventDatesSql() {
+		$listObject = tx_pttools_registry::getInstance()->get($this->listIdentifier . '_listObject');
+        $startDateColumn = $this->getDateColumnByIndexNumber(0);
+        $endDateColumn = $this->getDateColumnByIndexNumber(1);
+        $sqlDateFunction = $this->determineSqlDateFunction();
+        $select = "DISTINCT " . $sqlDateFunction . "(" . $startDateColumn . ", '%e') AS day, "
+                              . $sqlDateFunction . "(" . $startDateColumn . ", '%c') AS month, "
+                              . $sqlDateFunction . "(" . $startDateColumn . ", '%Y') AS year, DATEDIFF(" . $sqlDateFunction . "(" . $endDateColumn . "), " . $sqlDateFunction . "(" . $startDateColumn . ")) AS period";
+		$where = '';
+		$groupBy = '';
+		$orderBy = '';
+		$limit = '';
+		$ignoredFiltersForWhereClause = '__ALL__';
+
+        $this->getEventDatesWhereClauseHook($where, $listObject);
+
+		$dates = $listObject->getGroupData($select, $where, $groupBy, $orderBy, $limit, $ignoredFiltersForWhereClause);
+
+		return $dates;
     }
 
     /**
@@ -268,6 +338,19 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
     }
 
     /**
+     * require T3 extension
+     * @param   string  $extensionKey  extension key
+     * @return  void
+     * @author  Joachim Mathes <mathes@punkt.de>
+     * @sincs   2009-11-13
+     */
+    protected function requireT3Extension($extensionKey) {
+        if (!t3lib_extMgm::isLoaded('pt_jqueryui')) {
+			throw new tx_pttools_exception('You need to install and load pt_jqueryui to run datepicker filter!');
+		}
+    }
+
+    /**
 	 * Get date column by index number
 	 *
 	 * @param   int     $indexNumber  index number
@@ -280,27 +363,6 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
                . '.'
                . $this->dataDescriptions->getItemByIndex($indexNumber)->get_field();
     }
-
-    /**
-	 * Returns an JSON style formatted string of events
-	 *
-	 * @param      void
-	 * @return     unknown
-	 * @author     Michael Knoll <knoll@punkt.de>, Joachim Mathes <mathes@punkt.de>
-	 * @since      2009-09-24
-	 */
-	protected function getJsonEvents() {
-		// Get event dates
-        $dates = $this->getEventDates();
-        // Create JSON object as plain string
-        $datesArray = array();
-        foreach ($dates as $key => $value) {
-            $datesArray[$key] = sprintf("{'year':%s, 'month':%s, 'day':%s}",
-                                       $value['year'], $value['month'], $value['day']);
-        }
-        $datesJSON = "{'dates':[".implode(',', $datesArray)."]}";
-        return $datesJSON;
-	}
 
     /**
      * Hook: getEventDatesWhereClause
@@ -322,6 +384,27 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
                 );
                 $where .= t3lib_div::callUserFunction($funcName, $params, $this, '');
                 if (TYPO3_DLOG) t3lib_div::devLog(sprintf('Processing hook "%s" for "getEventDates_whereClauseHook" of filter_datePicker', $funcName), $this->extKey, 1, array('params' => $params));
+            }
+        }
+    }
+
+    /**
+     * Hook: getSqlWhereClauseSnippetHook
+     *
+     * @param   string  $sqlWhereClauseSnippet  SQL where clause snippet
+	 * @return  void
+	 * @author  Joachim Mathes <mathes@punkt.de>
+	 * @since   2009-11-13
+     */
+    protected function getSqlWhereClauseSnippetHook($sqlWhereClauseSnippet) {
+        // HOOK: allow multiple hooks to append individual additional where clause conditions (added by rk 19.08.09)
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['filter_datePicker']['getSqlWhereClauseSnippetHook'])) {
+            foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['filter_datePicker']['getSqlWhereClauseSnippetHook'] as $funcName) {
+                $params = array(
+                    'sqlWhereClauseSnippet' => $sqlWhereClauseSnippet,
+                );
+                $sqlWhereClauseSnippet .= t3lib_div::callUserFunction($funcName, $params, $this, '');
+                if (TYPO3_DLOG) t3lib_div::devLog(sprintf('Processing hook "%s" for "getSqlWhereClauseSnippetHook" of filter_datePicker', $funcName), $this->extKey, 1, array('params' => $params));
             }
         }
     }
