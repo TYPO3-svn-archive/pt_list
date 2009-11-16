@@ -63,7 +63,7 @@ class tx_ptlist_controller_filter_datePager extends tx_ptlist_filter {
 	}
 
 	/**
-	 * Is active action
+	 * 'Is active'-action
 	 *
 	 * @param   void
 	 * @return  string HTML output
