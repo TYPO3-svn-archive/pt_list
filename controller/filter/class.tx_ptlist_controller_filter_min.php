@@ -37,6 +37,7 @@
  */
 require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_filter.php';
 require_once t3lib_extMgm::extPath('pt_list').'view/filter/min/class.tx_ptlist_view_filter_min_userInterface.php';
+require_once t3lib_extMgm::extPath('pt_list').'model/filter/filterValue/class.tx_ptlist_filterValueNumeric.php';
 
 
 
@@ -51,8 +52,43 @@ require_once t3lib_extMgm::extPath('pt_list').'view/filter/min/class.tx_ptlist_v
  */
 class tx_ptlist_controller_filter_min extends tx_ptlist_filter {
 	
-	
-	
+	/**
+     * Holds a reference to a numeric filter value object
+     *
+     * @var tx_ptlist_filterValueNumeric
+     */
+    protected $minFilterValue;
+    
+    
+    
+    /**
+     * Set to true by default, if set to false, filter will not validate
+     *
+     * @var boolean
+     */
+    protected $validate = true;
+    
+    
+    
+    /***************************************************************************
+     * Construction
+     **************************************************************************/
+    
+    /**
+     * Constructor
+     *
+     * @param  string $listIdentifier    Identifier of list
+     * @param  string $filterIdentifier  Identifier of filter
+     * @author Michael Knoll <knoll@punkt.de>
+     * @since  2009-11-17
+     */
+    public function __construct($listIdentifier = '', $filterIdentifier = '') {
+        parent::__construct($listIdentifier, $filterIdentifier);
+        $this->minFilterValue = new tx_ptlist_filterValueNumeric();
+    }
+    
+    
+    
 	/***************************************************************************
      * Overwriting pt_mvc default behaviour
      **************************************************************************/
@@ -104,7 +140,7 @@ class tx_ptlist_controller_filter_min extends tx_ptlist_filter {
 	 */
 	public function isNotActiveAction() {
 		$view = $this->getView($this->getFilterViewName());
-		$view->addItem($this->value, 'value');
+		$view->addItem($this->minFilterValue->getHtmlEncodedValue(), 'value');
 		return $view->render();
 	}
 	
@@ -123,10 +159,17 @@ class tx_ptlist_controller_filter_min extends tx_ptlist_filter {
 	 * @since	2009-09-23
 	 */
 	public function preSubmit() {
-		$this->isActive = true;
-		$this->value = $this->params['value'];
+		if (!empty($this->params['value'])) {
+			if (is_numeric($this->params['value'])) {
+				$this->isActive = true;
+				$this->validate = true;
+				$this->minFilterValue->setValue($this->params['value']);
+			} else {
+				$this->validate = false;
+			}
+		}
 	}
-
+	
 	
 	/***************************************************************************
      * Domain-Logic
@@ -146,9 +189,24 @@ class tx_ptlist_controller_filter_min extends tx_ptlist_filter {
 		    '%s.%s >= %s', 
 		    $this->dataDescriptions->getItemByIndex(0)->get_table(), 
 		    $this->dataDescriptions->getItemByIndex(0)->get_field(), 
-		    intval($this->value)
+		    $this->minFilterValue->getSqlEncodedValue()
 	    );
 		return $sqlWhereClauseSnippet;
+	}
+	
+	
+	
+	/**
+	 * Validates filter values before generating 
+	 * 
+	 * @param  void
+	 * @return bool    True, if filter value validates (non-empty && numeric || empty)
+	 * @author Michael Knoll <knoll@punkt.de>
+	 * @since  2009-11-17
+	 *
+	 */
+	public function validate() {
+		return $this->validate;
 	}
     
     

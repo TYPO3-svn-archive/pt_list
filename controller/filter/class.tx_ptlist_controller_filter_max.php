@@ -37,6 +37,7 @@
  */
 require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_filter.php';
 require_once t3lib_extMgm::extPath('pt_list').'view/filter/max/class.tx_ptlist_view_filter_max_userInterface.php';
+require_once t3lib_extMgm::extPath('pt_list').'model/filter/filterValue/class.tx_ptlist_filterValueNumeric.php';
 
 
 
@@ -50,6 +51,41 @@ require_once t3lib_extMgm::extPath('pt_list').'view/filter/max/class.tx_ptlist_v
  * @since       2009-01-26
  */
 class tx_ptlist_controller_filter_max extends tx_ptlist_filter {
+    
+	/**
+	 * Holds a reference to a numeric filter value object
+	 *
+	 * @var tx_ptlist_filterValueNumeric
+	 */
+    protected $maxFilterValue;
+    
+    
+    
+    /**
+     * Set to true by default, if set to false, filter will not validate
+     *
+     * @var boolean
+     */
+    protected $validate = true;
+	
+    
+    
+	/***************************************************************************
+     * Construction
+     **************************************************************************/
+    
+    /**
+     * Constructor
+     *
+     * @param  string $listIdentifier    Identifier of list
+     * @param  string $filterIdentifier  Identifier of filter
+     * @author Michael Knoll <knoll@punkt.de>
+     * @since  2009-11-17
+     */
+    public function __construct($listIdentifier = '', $filterIdentifier = '') {
+    	parent::__construct($listIdentifier, $filterIdentifier);
+    	$this->maxFilterValue = new tx_ptlist_filterValueNumeric();
+    }
     
     
     
@@ -97,13 +133,13 @@ class tx_ptlist_controller_filter_max extends tx_ptlist_filter {
      * Display the interface
      *
      * @param   void
-     * @return  unknown
+     * @return  string  HTML code for rendered filter
      * @author  Fabrizio Branca <mail@fabrizio-branca.de>
      * @since   2009-01-19
      */
     public function isNotActiveAction() {
         $view = $this->getView($this->getFilterViewName());
-        $view->addItem($this->value, 'value');
+        $view->addItem($this->maxFilterValue->getHtmlEncodedValue(), 'value');
         return $view->render();
     }
 
@@ -123,8 +159,32 @@ class tx_ptlist_controller_filter_max extends tx_ptlist_filter {
      */
 	public function preSubmit() {
 		$this->isActive = true;
-		$this->value = $this->params['value'];
+		if ($this->params['value'] != '') {
+		
+            if (is_numeric($this->params['value'])) {
+                $this->isActive = true;
+                $this->validate = true;
+                $this->maxFilterValue->setValue($this->params['value']);
+            } else {
+                $this->validate = false;
+            }
+		}
 	}
+    
+    
+    
+    /**
+     * Validates filter values before generating 
+     * 
+     * @param  void
+     * @return bool    True, if filter value validates (non-empty && numeric || empty)
+     * @author Michael Knoll <knoll@punkt.de>
+     * @since  2009-11-17
+     *
+     */
+    public function validate() {
+        return $this->validate;
+    }
 	
 	
 	
@@ -142,13 +202,18 @@ class tx_ptlist_controller_filter_max extends tx_ptlist_filter {
      * @since   2009-01-19
      */
 	public function getSqlWhereClauseSnippet() {
-        $sqlWhereClauseSnippet = sprintf(
-            '%s.%s <= %s', 
-            $this->dataDescriptions->getItemByIndex(0)->get_table(), 
-            $this->dataDescriptions->getItemByIndex(0)->get_field(), 
-            intval($this->value)
-        );
-        return $sqlWhereClauseSnippet;
+		$minRawValue = $this->maxFilterValue->getRawValue();
+		if (!empty($minRawValue)) {
+	        $sqlWhereClauseSnippet = sprintf(
+	            '%s.%s <= %s', 
+	            $this->dataDescriptions->getItemByIndex(0)->get_table(), 
+	            $this->dataDescriptions->getItemByIndex(0)->get_field(), 
+	            $this->maxFilterValue->getSqlEncodedValue()
+	        );
+	        return $sqlWhereClauseSnippet;
+		} else {
+			return 1;
+		}
 	}
 
 	

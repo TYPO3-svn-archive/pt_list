@@ -32,8 +32,8 @@ ToDo: As of 06.10.2009
        - tx_ptlist_controller_filter_datePager
        - tx_ptlist_controller_filter_datePicker
        - tx_ptlist_controller_filter_firstLetter
-       - tx_ptlist_controller_filter_max
-       - tx_ptlist_controller_filter_min
+       + tx_ptlist_controller_filter_max
+       + tx_ptlist_controller_filter_min
        + tx_ptlist_controller_filter_range
        + tx_ptlist_controller_filter_string
        - tx_ptlist_controller_filter_timeSpan
@@ -64,17 +64,19 @@ ToDo: As of 06.10.2009
 XSS-Prevention actions taken so far:
 ==============================
 
++ (mk) CHG: Min Max filter now ueses filterValueNumeric object to process filter values
++ (mk) CHG: Range filter now uses filterValueNumeric object to process filter values
 + (mk) CHG: String filter now uses filterValueString object to process filter values.
 + (mk) CHG: tx_ptlist_filter::getView() adds TS configuration as 'filterconf'. As this values come from TS, no encoding is desired. Set to 'false' 
 
 
 
-TODO for version 0.0.3-dev
-==========================
+TODOs for version 0.0.3-dev
+===========================
 
 - (mk) Introduce autoload-mechanism
   - perhaps this is no longer necessary in EXTBase so could be done later
-- (mk) Introduce filterValue objects to encapsulate all filter value operations
+o (mk) Introduce filterValue objects to encapsulate all filter value operations
 - (mk) Refactor filter classes to use filter model object instead of "monster" controller
 - (mk) Introduce query builder to abstract generation of SQL Clauses
 - (mk) Refactor tx_ptlist_controller_list::init()
@@ -84,6 +86,7 @@ TODO for version 0.0.3-dev
 Version 0.0.3-dev
 =================
 
++ (mk) CHG: Min Max filter now ueses filterValueNumeric object to process filter values
 + (mk) CHG: Range filter now uses filterValueNumeric object to process filter values
 + (mk) CHG: String filter now uses filterValueString object to process filter values
 + (mk) SVN: Merged all changes in trunk up to revision 25620

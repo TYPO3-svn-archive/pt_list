@@ -30,6 +30,7 @@
  * $Id$
  *
  * @author  Rainer Kuhn <kuhn@punkt.de>
+ * @author  Michael Knoll <knoll@punkt.de>
  * @since   2009-01-23
  */ 
 
