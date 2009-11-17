@@ -40,6 +40,7 @@
  */
 require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_filter.php';
 require_once t3lib_extMgm::extPath('pt_list').'view/filter/range/class.tx_ptlist_view_filter_range_userInterface.php';
+require_once t3lib_extMgm::extPath('pt_list').'model/filter/filterValue/class.tx_ptlist_filterValueNumeric.php';
 
 
 
@@ -54,6 +55,50 @@ require_once t3lib_extMgm::extPath('pt_list').'view/filter/range/class.tx_ptlist
 class tx_ptlist_controller_filter_range extends tx_ptlist_filter {
     
 	
+	protected $table;
+	
+	
+	protected $field;
+	
+	
+	
+	/**
+	 * Holds a reference to a filter value object
+	 *
+	 * @var tx_ptlist_filterValueNumeric
+	 */
+	protected $minFilterValue;
+	
+	
+	
+	/**
+	 * Holds a referenct to a filter value object
+	 *
+	 * @var tx_ptlist_filterValueNumeric
+	 */
+	protected $maxFilterValue;
+	
+	
+	
+	/***************************************************************************
+     * Construction
+     **************************************************************************/
+	
+	/**
+	 * Constructor setting up required objects
+	 *
+	 * @param string $listIdentifier       Identifier of list
+	 * @param string $filterIdentifier     Identifier of filter
+     * @author Michael Knoll <knoll@punkt.de>
+     * @since  2009-11-17
+	 */
+	public function __construct($listIdentifier='', $filterIdentifier='') {
+		parent::__construct($listIdentifier, $filterIdentifier);
+		
+		$this->minFilterValue = new tx_ptlist_filterValueNumeric();
+        $this->maxFilterValue = new tx_ptlist_filterValueNumeric();
+	}
+	
 	
     /***************************************************************************
      * Domain - Logic
@@ -62,7 +107,6 @@ class tx_ptlist_controller_filter_range extends tx_ptlist_filter {
     
     /**
      * Returns the SQL WHERE clause snippet for this filter
-     * +++++ IMPORTANT: avoid SQL injections in your implementation!!! +++++
      *
      * @param   void
      * @return  string SQL-WHERE clause
@@ -73,20 +117,69 @@ class tx_ptlist_controller_filter_range extends tx_ptlist_filter {
         
         tx_pttools_assert::isEqual(count($this->dataDescriptions), 1, array('message' => 'This filter can only be used with 1 column'));
         
-        $table = $this->dataDescriptions->getItemByIndex(0)->get_table();
-        $field = $this->dataDescriptions->getItemByIndex(0)->get_field();
+        $minRawValue = $this->minFilterValue->getRawValue();
+        $maxRawValue = $this->maxFilterValue->getRawValue();
         
-        $dbColumn = $table.'.'.$field;
+        $sqlSnippet = '';
         
-        $sqlWhereClauseSnippet = array();
-        if (!empty($this->value['minval'])) {
-        	$sqlWhereClauseSnippet[] = $dbColumn.' >= '.intval($this->value['minval']);
+        if (!empty($minRawValue) || !empty($maxRawValue)) {
+        
+	        $dbColumn = $this->table.'.'.$this->field;
+	        
+	        $sqlWhereClauseSnippet = array();
+	        
+	        if (!empty($minRawValue)) {
+	        	$sqlWhereClauseSnippet[] = $dbColumn.' >= '. $this->minFilterValue->getSqlEncodedValue();
+	        }
+	        if (!empty($maxRawValue)) {
+	        	$sqlWhereClauseSnippet[] = $dbColumn.' <= '. $this->maxFilterValue->getSqlEncodedValue();
+	        }
+	        $sqlSnippet = implode(' AND ', $sqlWhereClauseSnippet);
+	        
+        } else {
+        	$sqlSnippet = 1;
         }
-        if (!empty($this->value['maxval'])) {
-        	$sqlWhereClauseSnippet[] = $dbColumn.' <= '.intval($this->value['maxval']);
-        }
-        return implode(' AND ', $sqlWhereClauseSnippet);
         
+        return $sqlSnippet;
+        
+    }
+    
+    
+    
+    /***************************************************************************
+     * Template Methods
+     **************************************************************************/
+    
+    /**
+     * Initialize the filter
+     * 
+     * @author  Rainer Kuhn <kuhn@punkt.de>
+     * @since   2009-01-23
+     */
+    public function init() {
+    	parent::init();
+    	
+    	$this->table = $this->dataDescriptions->getItemByIndex(0)->get_table();
+    	$this->field = $this->dataDescriptions->getItemByIndex(0)->get_field();
+    }
+    
+    
+    
+    /**
+     * Processes the filter form submission
+     *
+     * @param   void
+     * @return  void
+     * @author  Rainer Kuhn <kuhn@punkt.de>
+     * @since   2009-01-23
+     */
+    public function preSubmit() {
+    	if ($this->params['minval'] != '') {
+            $this->minFilterValue->setValue($this->params['minval']);
+    	}
+    	if ($this->params['maxval'] != '') {
+            $this->maxFilterValue->setValue($this->params['maxval']);
+    	}
     }
     
     
@@ -123,8 +216,8 @@ class tx_ptlist_controller_filter_range extends tx_ptlist_filter {
     public function isNotActiveAction() {
         
         $view = $this->getView('filter_range_userInterface');
-        $view->addItem($this->value['minval'], 'minval');
-        $view->addItem($this->value['maxval'], 'maxval');
+        $view->addItem($this->minFilterValue->getHtmlEncodedValue(), 'minval');
+        $view->addItem($this->maxFilterValue->getHtmlEncodedValue(), 'maxval');
         return $view->render();
         
     }
@@ -139,18 +232,19 @@ class tx_ptlist_controller_filter_range extends tx_ptlist_filter {
      * @since   2009-01-20
      */
     public function validate() {
-    	if (TYPO3_DLOG) t3lib_div::devLog('Range validation', 'pt_list', 1, $this->value);
+    	if (TYPO3_DLOG) t3lib_div::devLog('Range validation', 'pt_list', 1, $this->minFilterValue->getRawValue() . ' ' . $this->maxFilterValue->getRawValue());
     	
-    	// at least one of the values has to be set
-    	if (empty($this->value['minval']) && empty($this->value['maxval'])) return false;
-    	
+    	// empty() does not work with return-values, so store them to vars here
+    	$minRawValue = $this->minFilterValue->getRawValue();
+    	$maxRawValue = $this->maxFilterValue->getRawValue();
+   	
     	// both values have to be numeric if they are not empty
-    	if (!empty($this->value['minval']) && !is_numeric($this->value['minval'])) return false;
-    	if (!empty($this->value['maxval']) && !is_numeric($this->value['maxval'])) return false;
+    	if (!empty($minRawValue) && !is_numeric($minRawValue)) return false;
+    	if (!empty($maxRawValue) && !is_numeric($maxRawValue)) return false;
     	
     	// if both are set, the max value has to be higher than the min value
-    	if (!empty($this->value['minval']) && !empty($this->value['maxval'])) {
-    		if ($this->value['maxval'] < $this->value['minval']) return false;
+    	if (!empty($minRawValue) && !empty($maxRawValue)) {
+    		if ($maxRawValue < $minRawValue) return false;
     	}
     	
     	return true;
@@ -168,10 +262,15 @@ class tx_ptlist_controller_filter_range extends tx_ptlist_filter {
 	 */
 	public function breadcrumbAction() {
 
-		if (empty($this->value)) {
+		// at least one of the values has to be set
+        $minRawValue = $this->minFilterValue->getRawValue();
+        $maxRawValue = $this->maxFilterValue->getRawValue();
+		
+		if (empty($minRawValue) && empty($maxRawValue)) {
+			// TODO ry21 make this translateable!
 			$value = 'Not set';
 		} else {
-			$value = sprintf('%s-%s', $this->value['minval'], $this->value['maxval']);
+			$value = $this->minFilterValue->getHtmlEncodedValue() . '-' . $this->maxFilterValue->getHtmlEncodedValue();
 		}
 
 		$view = $this->getView('filter_breadcrumb');
@@ -179,27 +278,6 @@ class tx_ptlist_controller_filter_range extends tx_ptlist_filter {
 		$view->addItem($value, 'value');
 		return $view->render();
 	}
-	
-	
-	
-	/***************************************************************************
-     * Template Methods
-     **************************************************************************/
-	
-    /**
-     * Processes the filter form submission
-     *
-     * @param   void
-     * @return  void
-     * @author  Rainer Kuhn <kuhn@punkt.de>
-     * @since   2009-01-23
-     */
-    public function preSubmit() {
-        $this->value = array(
-            'minval' => $this->params['minval'],
-            'maxval' => $this->params['maxval']
-        );
-    }
 	
 	
 }

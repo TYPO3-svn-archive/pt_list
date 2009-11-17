@@ -34,8 +34,8 @@ ToDo: As of 06.10.2009
        - tx_ptlist_controller_filter_firstLetter
        - tx_ptlist_controller_filter_max
        - tx_ptlist_controller_filter_min
-       - tx_ptlist_controller_filter_range
-       - tx_ptlist_controller_filter_string
+       + tx_ptlist_controller_filter_range
+       + tx_ptlist_controller_filter_string
        - tx_ptlist_controller_filter_timeSpan
        - tx_ptlist_controller_filter_timeSpan2
     - Possibly dangerous parts concerning XSS-prevention:
@@ -64,6 +64,7 @@ ToDo: As of 06.10.2009
 XSS-Prevention actions taken so far:
 ==============================
 
++ (mk) CHG: String filter now uses filterValueString object to process filter values.
 + (mk) CHG: tx_ptlist_filter::getView() adds TS configuration as 'filterconf'. As this values come from TS, no encoding is desired. Set to 'false' 
 
 
@@ -83,6 +84,8 @@ TODO for version 0.0.3-dev
 Version 0.0.3-dev
 =================
 
++ (mk) CHG: Range filter now uses filterValueNumeric object to process filter values
++ (mk) CHG: String filter now uses filterValueString object to process filter values
 + (mk) SVN: Merged all changes in trunk up to revision 25620
 + (mk) CHG: Increased version to 0.0.3-dev             =====
 + (mk) ADD: Added abstract class for filter value

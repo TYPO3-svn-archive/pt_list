@@ -73,11 +73,11 @@ class tx_ptlist_controller_filter_string extends tx_ptlist_filter {
     
     /**
      * Returns the SQL WHERE clause snippet for this filter
-     * +++++ IMPORTANT: avoid SQL injections in your implementation!!! +++++
      *
      * @param   void
      * @return  string HTML output
      * @author  Rainer Kuhn <kuhn@punkt.de>
+     * @author  Michael Knoll <knoll@punkt.de>
      * @since   2009-01-20
      */
     public function getSqlWhereClauseSnippet() {
