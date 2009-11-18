@@ -70,6 +70,7 @@ XSS-Prevention Actions so far:
 
 Version 0.0.3-dev
 =================
++ (jm) FIX: Fixed hooks in DatePicker filter
 + (jm) CHG: Set default dateFieldType to timestamp in DatePicker filter 
 + (jm) ADD: DatePicker filter now can refer to two date columns and therefor is able to filter periods of time.
 + (jm) ADD: DatePager filter now can refer to two date columns and therefor is able to filter periods of time.
