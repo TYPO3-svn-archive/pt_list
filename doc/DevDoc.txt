@@ -12,7 +12,7 @@ RFT: refactoring / code cleanup
 ********************************************************************************
 
 
-ToDo: As of 10.11.2009
+ToDo: As of 18.11.2009
 ======================
 
 - [TODO] check and extend changes for default XSS prevention
@@ -61,15 +61,22 @@ ToDo: As of 10.11.2009
 
 
 XSS-Prevention Actions so far:
-==============================
+-----------------------------
 + (mk) CHG: tx_ptlist_filter::getView() adds TS configuration as 'filterconf'. As this values come from TS, no encoding is desired. Set to 'false' 
 
 
 
 
 
-Version 0.0.3-dev
-=================
+================================================================================
+CHANGELOG
+================================================================================
+
+
+
+
+Version 0.0.3:   [used for online project 18.11.09]
+-------------
 + (jm) FIX: Fixed hooks in DatePicker filter
 + (jm) CHG: Set default dateFieldType to timestamp in DatePicker filter 
 + (jm) ADD: DatePicker filter now can refer to two date columns and therefor is able to filter periods of time.
@@ -79,8 +86,8 @@ Version 0.0.3-dev
 
 
 
-Version 0.0.2   [used for online project 26.10.09]
-=============
+Version 0.0.2:   [used for online project 26.10.09]
+-------------
 + (mk) CHG: Made adding of filterconf from TS non-html-encoded (XSS-prevention)
 + (mk) ADD: Added parameter for date picker getEventDates() hook
 + (mk) FIX: Fixed javascript Bug in datepicker filter
@@ -119,9 +126,8 @@ Version 0.0.2   [used for online project 26.10.09]
 
 
 
-Version 0.0.1
-=============
-
+Version 0.0.1:
+-------------
 + (fb) FIX: ADD: preset array values for filters support stdWrap now (sorry for forgetting to commit tx_pttools_div::stdWrapArray :)
        + added documentation to the manual
 + (rk) FIX: commented non-compatible tx_pttools_div::stdWrapArray line (currently not available in SVN)
@@ -247,7 +253,13 @@ Version 0.0.1
 + (fb) CHG: tx_ptlist_renderer::cObj() renamed to tx_ptlist_renderer::cObject()
   + (fb) CHG: parameter for tx_ptlist_renderer::cObject() renamed from "cObj(.)" to "renderObj(.)"   
 
-  
+
+
+
+================================================================================
+NOTES
+================================================================================
+
 Configuration
 
 == Extension configuration ==
