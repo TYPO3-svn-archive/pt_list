@@ -70,6 +70,7 @@ XSS-Prevention Actions so far:
 
 Version 0.0.3-dev
 =================
++ (jm) CHG: Set default dateFieldType to timestamp in DatePicker filter 
 + (jm) ADD: DatePicker filter now can refer to two date columns and therefor is able to filter periods of time.
 + (jm) ADD: DatePager filter now can refer to two date columns and therefor is able to filter periods of time.
 + (jm) CHG: transferred controller action hint (submit) in DatePicker filter template from form tag to hidden tag

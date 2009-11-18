@@ -373,7 +373,8 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
             $sqlDateFunction = 'FROM_UNIXTIME';
             break;
 		default:
-			throw new tx_pttools_exceptionConfiguration("No valid 'dateFieldType' set in Typoscript configuration.");
+            $sqlDateFunction = 'FROM_UNIXTIME';
+            break;
         }
         return $sqlDateFunction;
     }
