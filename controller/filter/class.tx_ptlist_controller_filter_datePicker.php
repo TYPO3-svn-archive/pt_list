@@ -427,7 +427,7 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
 	 * @author  Joachim Mathes <mathes@punkt.de>
 	 * @since   2009-11-13
      */
-    protected function getEventDatesWhereClauseHook($where, $listObject) {
+    protected function getEventDatesWhereClauseHook(&$where, $listObject) {
         // HOOK: allow multiple hooks to append individual additional where clause conditions (added by rk 19.08.09)
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['filter_datePicker']['getEventDates_whereClauseHook'])) {
             foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['filter_datePicker']['getEventDates_whereClauseHook'] as $funcName) {
@@ -450,7 +450,7 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
 	 * @author  Joachim Mathes <mathes@punkt.de>
 	 * @since   2009-11-13
      */
-    protected function getSqlWhereClauseSnippetHook($sqlWhereClauseSnippet) {
+    protected function getSqlWhereClauseSnippetHook(&$sqlWhereClauseSnippet) {
         // HOOK: allow multiple hooks to append individual additional where clause conditions (added by rk 19.08.09)
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['filter_datePicker']['getSqlWhereClauseSnippetHook'])) {
             foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['filter_datePicker']['getSqlWhereClauseSnippetHook'] as $funcName) {
