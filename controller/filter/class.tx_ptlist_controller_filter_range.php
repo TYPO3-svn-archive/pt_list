@@ -55,10 +55,20 @@ require_once t3lib_extMgm::extPath('pt_list').'model/filter/filterValue/class.tx
  */
 class tx_ptlist_controller_filter_range extends tx_ptlist_filter {
     
-	
+	/**
+	 * Holds name of table, the filter belongs to
+	 *
+	 * @var string
+	 */
 	protected $table;
 	
 	
+	
+	/**
+	 * Holds name of field, the filter belongs to
+	 *
+	 * @var string
+	 */
 	protected $field;
 	
 	
@@ -219,6 +229,7 @@ class tx_ptlist_controller_filter_range extends tx_ptlist_filter {
         $view = $this->getView('filter_range_userInterface');
         $view->addItem($this->minFilterValue->getHtmlEncodedValue(), 'minval');
         $view->addItem($this->maxFilterValue->getHtmlEncodedValue(), 'maxval');
+        $view->addItem($this->conf, 'filterconf');
         return $view->render();
         
     }

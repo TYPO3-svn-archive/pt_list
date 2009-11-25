@@ -37,7 +37,7 @@ ToDo: As of 06.10.2009
        + tx_ptlist_controller_filter_range
        + tx_ptlist_controller_filter_string
        - tx_ptlist_controller_filter_timeSpan
-       - tx_ptlist_controller_filter_timeSpan2
+       + tx_ptlist_controller_filter_timeSpan2
     - Possibly dangerous parts concerning XSS-prevention:
        - tx_ptlist_filter::getFilterValueAsGetParameterString() generates getParameterStrings which are used as links in HTML-Source in other places without url-encoding
        - tx_ptlist_filter::breadcrumbAction() returns HTML-encoded value, so no rendering will be left :-)
@@ -86,18 +86,27 @@ o (mk) Introduce filterValue objects to encapsulate all filter value operations
 Version 0.0.3-dev
 =================
 
++ (mk) CHG: Timespan2 filter uses filterValueDate now
++ (mk) ADD: Added filterValueDate class
++ (mk) ADD: Added tests for filterValueDate class
++ (mk) FIX: Added filterconfig to view for timespan2 filter
++ (mk) FIX: Fixed demolist TS for range filter (submitValue was not set)
 + (mk) CHG: Min Max filter now ueses filterValueNumeric object to process filter values
 + (mk) CHG: Range filter now uses filterValueNumeric object to process filter values
++ (mk) ADD: Added filterValueNumeric class
++ (mk) ADD: Added tests for filterValueNumeric object
 + (mk) CHG: String filter now uses filterValueString object to process filter values
++ (mk) ADD: Added filterValueString class
++ (mk) ADD: Added tests for filterValueString object
 + (mk) SVN: Merged all changes in trunk up to revision 25620
 + (mk) CHG: Increased version to 0.0.3-dev             =====
 + (mk) ADD: Added abstract class for filter value
-+ (mk) ADD: Added tests for filterValue object
++ (mk) ADD: Added tests for abstract filterValue object
 
 
 
-Version 0.0.2-dev
-=================
+Version 0.0.2
+=============
 
 + (mk) ADD: Added parameter for date picker getEventDates() hook
 + (mk) FIX: Fixed javascript Bug in datepicker filter

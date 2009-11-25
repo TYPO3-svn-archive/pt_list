@@ -278,6 +278,7 @@ plugin.tx_ptlist.listConfig.myDemoList {
 			filterIdentifier = rangePhoneNumber
 			label = Range Phone Number
 			dataDescriptionIdentifier = phone
+			submitValue = Search
 		}
 	}
 	

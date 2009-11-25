@@ -39,6 +39,7 @@
  */
 require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_filter.php';
 require_once t3lib_extMgm::extPath('pt_list').'view/filter/timeSpan2/class.tx_ptlist_view_filter_timeSpan2_userInterface.php';
+require_once t3lib_extMgm::extPath('pt_list').'model/filter/filterValue/class.tx_ptlist_filterValueDate.php';
 require_once t3lib_extMgm::extPath('pt_tools').'res/objects/class.tx_pttools_exception.php';
 
 
@@ -53,16 +54,48 @@ require_once t3lib_extMgm::extPath('pt_tools').'res/objects/class.tx_pttools_exc
  */
 class tx_ptlist_controller_filter_timeSpan2 extends tx_ptlist_filter {
 
+    /**
+     * Holds a reference to a filter-value date object for from date
+     *
+     * @var tx_ptlist_filterValueDate
+     */	
+	protected $fromDate;
+	
 	
 	
 	/**
-	 * Current state
-	 * 'from' => [<empty, if mode is "preset>|<timestamp>]
-	 * 'to' => [<empty, if mode is "preset>|<timestamp>]
+	 * Holds a reference to a filter-value date object for to date
 	 *
-	 * @var array	current filter value
+	 * @var tx_ptlist_filterValueDate
 	 */
-	protected $value = array();
+	protected $toDate;
+	
+	
+	
+	/**
+	 * input format of date value
+	 *
+	 * @var string
+	 */
+	protected $inputFormat = tx_ptlist_filterValueDate::DD_DOT_MM_DOT_YYYY_INPUT_FORMAT;
+	
+	
+	
+	/**
+	 * output format of date value
+	 *
+	 * @var string
+	 */
+	protected $outputFormat = tx_ptlist_filterValueDate::DD_DOT_MM_DOT_YYYY_OUTPUT_FORMAT;
+	
+	
+	
+	/**
+	 * output format for sql output
+	 *
+	 * @var string
+	 */
+	protected $dateFieldType = 'timestamp';
 
 	
 	
@@ -88,7 +121,16 @@ class tx_ptlist_controller_filter_timeSpan2 extends tx_ptlist_filter {
         }
     	
         parent::init();
+        
+        // Ensure filter is only configured for 1 data description
         tx_pttools_assert::isEqual(count($this->dataDescriptions), 1, array('message' => sprintf('This filter can only be used with 1 dataDescription (dataDescription found: "%s"', count($this->dataDescriptions))));
+        
+        // Load some configuration from TS
+        // TODO write some documentation here!
+        $this->inputFormat   = $this->conf['inputFormat']   == '' ? $this->inputFormat   : $this->conf['inputFormat'];
+        $this->outputFormat  = $this->conf['outputFormat']  == '' ? $this->outputFormat  : $this->conf['outputFormat'];
+        $this->dateFieldType = $this->conf['dateFieldType'] == '' ? $this->dateFieldType : $this->conf['dateFieldType'];
+        
     }
     
 	
@@ -123,7 +165,8 @@ class tx_ptlist_controller_filter_timeSpan2 extends tx_ptlist_filter {
 	 */
 	public function isNotActiveAction() {
 		$view = $this->getView('filter_timeSpan2_userInterface');
-		$view->addItem($this->value, 'value');
+		$value = array('from' => $this->fromDate->getHtmlEncodedValue($this->outputFormat), 'to' => $this->toDate->getHtmlEncodedValue($this->outputFormat));
+		$view->addItem($value, 'value');
 		$view->addItem($this->conf, 'filterconf');
 		return $view->render();
 
@@ -141,10 +184,9 @@ class tx_ptlist_controller_filter_timeSpan2 extends tx_ptlist_filter {
 	 * @since	2009-02-06
 	 */
 	public function breadcrumbAction() {
-		
 		if (!empty($this->value)) {
 			// todo ry21 add some localization here!
-			$value = 'Zeitspanne: ' . $this->formatTimeSpan($this->value['from'], $this->value['to']);
+			$value = 'Zeitspanne: ' . $this->formatTimeSpan();
 		} else {
 			$value = 'Not set';
 		}
@@ -170,13 +212,27 @@ class tx_ptlist_controller_filter_timeSpan2 extends tx_ptlist_filter {
      * @since   2009-02-27
      */
     public function preSubmit() {
-
-        // save the incoming parameters to your value property here
-        $this->value = array(
-            'from' => $this->params['from'],
-            'to' => $this->params['to'],
-        );
-
+        // save the incoming parameters as filter-value objects to your value property here
+        // validation should be done before, otherwise, this could result in an exception!
+        $this->fromDate = tx_ptlist_filterValueDate::getInstanceByDateAndFormat($this->params['from'], $this->inputFormat);
+        $this->toDate   = tx_ptlist_filterValueDate::getInstanceByDateAndFormat($this->params['to'], $this->inputFormat);
+    }
+    
+    
+    
+    /**
+     * Validation of submitted values. Checks, whether "from" and "to" values are both set
+     *
+     * @return bool
+     * @author Michael Knoll <knoll@punkt.de>
+     * @since  2009-11-24
+     * 
+     */
+    public function validate() {
+    	if ($this->params['from'] != '' && $this->params['to'] != '') {
+    		return true;
+    	}
+    	return false;
     }
 	
 
@@ -195,15 +251,11 @@ class tx_ptlist_controller_filter_timeSpan2 extends tx_ptlist_filter {
      * @since   2009-07-17
      */
     public function getSqlWhereClauseSnippet() {
-
-        $span = $this->valueToTimeSpan($this->value);
-
-        if (empty($span['from']) && empty($span['to'])) {
-            throw new tx_pttools_exception('"From" and "to" cannot be both empty!');
-        }
-
-        $rangeSnippet = $this->getRangeSnippet($span['from'], $span['to'], $this->getDbColumn());
-        
+    	if ($this->params['from'] != '' && $this->params['to'] != '') {
+            $rangeSnippet = $this->getRangeSnippet();
+    	} else {
+    		$rangeSnippet = ' 1 ';
+    	}
         return $rangeSnippet;
     }
 
@@ -216,36 +268,27 @@ class tx_ptlist_controller_filter_timeSpan2 extends tx_ptlist_filter {
 	/**
 	 * Format timespan
 	 *
-	 * @param 	int		'from' timestamp
-	 * @param 	int		'to' timestamp
 	 * @return 	string	formatted timespan string
 	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-02-09
 	 */
-	protected function formatTimeSpan($from, $to) {
-		
-		// Convert to Unix timestamp
-		$fromDateTime = date_create($from);
-        $from = date_format($fromDateTime, 'U');
-        $toDateTime = date_create($to);
-        $to = date_format($toDateTime, 'U');
-		
-		if (date('Y', $from) == date('Y', $to)) {
-			if (date('m', $from) == date('m', $to)) {
-				if (date('d', $from) == date('d', $to)) {
+	protected function formatTimeSpan() {
+		if ($this->fromDate->getValueByFormat('Y') == $this->toDate->getValueByFormat('Y')) {
+			if ($this->fromDate->getValueByFormat('m') == $this->toDate->getValueByFormat('m')) {
+				if ($this->fromDate->getValueByFormat('d') == $this->toDate->getValueByFormat('d')) {
 					// same (single) day
-					$value = date('d.m.y', $from);
+					$value = $this->fromDate->getValueByFormat($this->outputFormat);
 				} else {
 					// different day, but same month
-					$value = date('d.', $from) . '-' . date('d.m.y', $to);
+					$value = $this->fromDate->getValueByFormat('d') . '-' . $this->toDate->getValueByFormat($this->outputFormat);
 				}
 			} else {
 				// different day and different month, but same year
-				$value = date('d.m.', $from) . '-' . date('d.m.y', $to);
+				$value = $this->fromDate->getValueByFormat('d.m.') . '-' . $this->toDate->getValueByFormat($this->outputFormat);
 			}
 		} else {
 			// completely different
-			$value = date('d.m.y', $from) . '-' . date('d.m.y', $to);
+			$value = $this->fromDate->getValueByFormat('d.m.y') . '-' . $this->ToDate->getValueByFormat('d.m.y');
 		}
 		return $value;
 	}
@@ -255,38 +298,29 @@ class tx_ptlist_controller_filter_timeSpan2 extends tx_ptlist_filter {
 	/**
 	 * Get sql where clause snippet
 	 *
-	 * @param 	array 	(optional) if empty the function takes $this->value as  $value
 	 * @return 	string 	sql where clause snippet
 	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>, Michael Knoll <knoll@punkt.de>
 	 * @since	2009-07-17
 	 */
-	protected function getRangeSnippet($from, $to, $dbColumn) {
-
-		// Check for corectness of parameters
-        if (empty($from) && empty($to)) {
-            throw new tx_pttools_exception('"From" and "to" cannot be both empty!');
-        }
-        
-        // Determine field type of date field
-		$dateFieldType = $this->conf['dateFieldType'] == '' ? 'timestamp' : $this->conf['dateFieldType'];
+	protected function getRangeSnippet() {
         $sqlWhereClauseSnippet = array();
         $snippet = '';
         
-		if ($dateFieldType == 'date') {
-	        // Generate where clause for date fields
-	        $dateFrom = date('Y-m-d', $from);
-	        $dateTo   = date('Y-m-d', $to);
-	        $snippet  = $dbColumn . ' BETWEEN \'' . $dateFrom . '\' AND \'' . $dateTo .'\''; 
-		} elseif($dateFieldType == 'timestamp') {
+		if ($this->dateFieldType == 'date') {
+			// Generate where clause for date fields
+            $snippet  = $this->getDbColumn() . 
+                        ' BETWEEN \'' . 
+                        $this->fromDate->getSqlEncodedValue(tx_ptlist_filterValueDate::YYYY_DASH_MM_DASH_DD_OUTPUT_FORMAT) . 
+                        '\' AND \'' . 
+                        $this->toDate->getSqlEncodedValue(tx_ptlist_filterValueDate::YYYY_DASH_MM_DASH_DD_OUTPUT_FORMAT) .
+                        '\''; 
+		} elseif($this->dateFieldType == 'timestamp') {
             // Generate where clause for timestamp fields
-	        if (!empty($from)) {
-	            $sqlWhereClauseSnippet[] = $dbColumn.' >= '.intval($from);
-	        }
-	        if (!empty($to)) {
-	            $sqlWhereClauseSnippet[] = $dbColumn.' <= '.intval($to);
-	        }
+	        $sqlWhereClauseSnippet[] = $this->getDbColumn() . ' >= ' . $this->fromDate->getValueByFormat('U');
+	        $sqlWhereClauseSnippet[] = $this->getDbColumn() . ' <= ' . $this->toDate->getValueByFormat('U');
 	        $snippet = implode(' AND ', $sqlWhereClauseSnippet);
 		} else {
+			// Non-valid datefield type set!
 			throw new tx_pttools_exceptionConfiguration("No valid date field type set.", "No valid date field type set for timespan filter. Type was $dateFieldType but can only be 'date' or 'timestamp'!");
 		}
         
@@ -308,31 +342,6 @@ class tx_ptlist_controller_filter_timeSpan2 extends tx_ptlist_filter {
 
         return $table.'.'.$field;
     }
-
-    
-    
-    /**
-     * Converts filter values to an array of unix timestamps
-     * 
-     * @param   array   $value  Array with dates array( 'from' => date, 'to' => date )
-     * @return  array           Array with timestamps array( 'from' => timestamp, 'to' => timestamp )
-     * @author  Michael Knoll <knoll@punkt.de>
-     * @since   2009-07-17
-     */
-    protected function valueToTimeSpan($value) {
-    	
-    	tx_pttools_assert::isNotEmpty($value['from'], array('message' => 'Value "From" must not be empty but was empty.'));
-    	tx_pttools_assert::isNotEmpty($value['to'], array('message' => 'Value "To" must not be empty but was empty.'));
-    	
-    	$fromDateTime = date_create($value['from']);
-    	$fromTimestamp = date_format($fromDateTime, 'U');
-    	
-    	$toDateTime = date_create($value['to']);
-    	$toTimestamp = date_format($toDateTime, 'U');
-    	
-    	return array('from' => $fromTimestamp, 'to' => $toTimestamp); 
-    }
-	
 
 }
 

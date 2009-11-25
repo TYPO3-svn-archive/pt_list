@@ -211,7 +211,7 @@ class tx_ptlist_controller_filter_timeSpan extends tx_ptlist_filter {
 			throw new tx_pttools_exception('"From" and "to" cannot be both empty!');
 		}
 
-        return $this->getRangeSnippet($span['from'], $span['to'], $this->getDbColumn());
+        return $this->getRangeSnippet($span['from'], $span['to']);
     }
     
 
@@ -224,8 +224,10 @@ class tx_ptlist_controller_filter_timeSpan extends tx_ptlist_filter {
      * @author  Fabrizio Branca <mail@fabrizio-branca.de>
      * @since   2009-02-09
      */
-    protected function getRangeSnippet($from, $to, $dbColumn) {
+    protected function getRangeSnippet($from, $to) {
 
+    	$dbColumn = $this->getDbColumn();
+    	
         if (empty($from) && empty($to)) {
             throw new tx_pttools_exception('"From" and "to" cannot be both empty!');
         }
