@@ -474,6 +474,9 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 
 		$view->addItem($this->currentListObject->getAllFilters(true, $this->filterboxId, true)->getMarkerArray(), 'filterbox', false);  // do not filter HTML here since the complete filterbox is already rendered as HTML
 		$view->addItem($this->filterboxId, 'filterboxId');
+	
+		$resetLinkPid = !empty($this->conf['resetLinkPid']) ? $this->conf['resetLinkPid'] : $GLOBALS["TSFE"]->id;
+		$view->addItem($resetLinkPid, 'resetLinkPid');
 
 		return $view->render();
 	}
