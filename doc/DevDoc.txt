@@ -75,6 +75,7 @@ CHANGELOG
 
 Version 0.0.4dev:
 ----------------
++ (fb) ADD: using t3lib_div::_GPmerged instead of t3lib_div::GParrayMerged() (deprecated) if TYPO3 >= 4.3 
 + (fb) ADD: Configuration option "resetLinkPid" to set an alternative target for the filterboxes reset links. If not set the links point to the current page.
             e.g. plugin.tx_ptlist.controller.list.resetLinkPid = 42
 

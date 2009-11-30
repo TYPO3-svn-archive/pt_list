@@ -117,6 +117,11 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 	 * @var array	local configuration (set in the constructor)
 	 */
 	protected $localConfiguration = array();
+	
+	/**
+	 * @var array	list prefix specific paramters (will be merged to params)
+	 */
+	protected $listPrefixParams = array();
 
 
 
@@ -260,7 +265,13 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 		tx_pttools_assert::isNotEmptyString($this->listPrefix, array('message' => 'No "listPrefix" found.'));
 
 		// merge parameters
-		$this->params = t3lib_div::array_merge_recursive_overrule(t3lib_div::GParrayMerged($this->listPrefix), $this->params);
+		if (t3lib_div::compat_version('4.3')) {
+			$this->listPrefixParams = t3lib_div::_GPmerged($this->listPrefix);	
+		} else {
+			$this->listPrefixParams = t3lib_div::GParrayMerged($this->listPrefix);	
+		}
+		
+		$this->params = t3lib_div::array_merge_recursive_overrule($this->listPrefixParams, $this->params);
 	}
 
 
