@@ -57,7 +57,14 @@ foreach ($GLOBALS[$_EXTKEY.'_controllerArray'] as $prefix => $configuration) {
 	$TCA['tt_content']['types']['list']['subtypes_excludelist'][$_EXTKEY.$prefix] = 'layout,select_key,pages,recursive';
 	
 	// Adds an entry to the list of plugins in content elements of type "Insert plugin"
-	t3lib_extMgm::addPlugin(array('LLL:EXT:'.$_EXTKEY.'/locallang_db.xml:tt_content.list_type'.$prefix, $_EXTKEY.$prefix),'list_type');
+	t3lib_extMgm::addPlugin(
+		array(
+			'LLL:EXT:'.$_EXTKEY.'/locallang_db.xml:tt_content.list_type'.$prefix, 
+			$_EXTKEY.$prefix,
+			$configuration['pluginIcon']
+		),
+		'list_type'
+	);
 	
 	// Include flexform
 	if ($configuration['includeFlexform']) {

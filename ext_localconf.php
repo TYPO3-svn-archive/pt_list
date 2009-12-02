@@ -2,7 +2,10 @@
 if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
 
 $GLOBALS[$_EXTKEY.'_controllerArray'] = array(
-	'_controller_list' => array('includeFlexform' => true), 
+	'_controller_list' => array(
+		'includeFlexform' => true,
+		'pluginIcon' => 'EXT:pt_list/res/list.png'
+	), 
 );
 
 $cN = t3lib_extMgm::getCN($_EXTKEY);
