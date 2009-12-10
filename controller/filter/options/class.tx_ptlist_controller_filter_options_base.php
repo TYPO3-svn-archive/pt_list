@@ -158,16 +158,6 @@ abstract class tx_ptlist_controller_filter_options_base extends tx_ptlist_filter
 		$view->addItem((bool)$this->conf['submitOnChange'], 'submitOnChange');
 		$view->addItem($this->determineSelectBoxSize(), 'selectBoxSize');
 		
-		// append filter state values to all urls
-		$appendFilterValuesToUrls = tx_pttools_div::getTS('plugin.tx_ptlist.controller.list.appendFilterValuesToUrls');
-		$appendToUrl = '';
-		if ($appendFilterValuesToUrls) {
-			$listObject = tx_pttools_registry::getInstance()->get($this->listIdentifier.'_listObject'); /* @var $listObject tx_ptlist_list */
-			// TODO XSS-prevention: The result of this method is not URL-Encoded!
-			$appendToUrl = $listObject->getAllFilters()->getAllFilterValueAsGetParameterString($this->filterIdentifier);
-		}
-		$view->addItem($appendToUrl, 'appendToUrl', false);
-
 		$view->addItem($selectBoxSize, $this->determineSelectBoxSize());
 
 		// render!

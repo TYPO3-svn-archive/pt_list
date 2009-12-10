@@ -141,6 +141,7 @@ class tx_ptlist_controller_filter_string extends tx_ptlist_filter {
         
         $view = $this->getView('filter_string_userInterface');
         $view->addItem($this->value, 'value');
+        
         return $view->render();
         
     }

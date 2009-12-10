@@ -80,7 +80,7 @@ require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_filter.php'
  * @package     TYPO3
  * @subpackage  tx_ptlist
  */
-class tx_ptlist_controller_filter_<yourFilterName> extends tx_ptlist_filter {
+class tx_ptlist_controller_filter_yourFilterName extends tx_ptlist_filter {
 	
     /***************************************************************************
      * Methods defined in parent abstract class "tx_ptlist_filter" 

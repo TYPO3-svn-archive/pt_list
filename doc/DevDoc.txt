@@ -75,6 +75,11 @@ CHANGELOG
 
 Version 0.0.4dev:
 ----------------
++ (fb) CHG: Converting line endings to unix line endings
+       CHG: added svn property for line endings
+       CHG: added svn keyword id
++ (fb) CHG: Dropped action "changeSortingOrder". Sorting will now be set be the presence of the parameters sorting_column and sorting_direction
+       CHG: renamed sorting parameters from column and direction into sorting_column and sorting_direction
 + (fb) ADD: added the possibility to add icons for frontend controllers that are used as plugins
        + ADD: changed the icon for the list controller to a list icon
 + (fb) ADD: using t3lib_div::_GPmerged instead of t3lib_div::GParrayMerged() (deprecated) if TYPO3 >= 4.3 

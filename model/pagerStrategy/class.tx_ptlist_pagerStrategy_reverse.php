@@ -26,7 +26,7 @@
 /**
  * Class definition file for a default pager strategy implementation
  * 
- * $Id: class.tx_ptlist_pagerStrategy_default.php 20242 2009-05-12 22:21:13Z fabriziobranca $
+ * $Id$
  * 
  * @author Fabrizio Branca <mail@fabrizio-branca.de>
  * @since 2009-01-27
@@ -45,7 +45,7 @@ require_once t3lib_extMgm::extPath('pt_list').'model/interfaces/class.tx_ptlist_
  * Class implementing a pager strategy that shows prev, next, last etc. in reverse order
  * TODO if labels of pager buttons would be configurable via TS, this class would be obsolete!
  * 
- * @version		$Id: class.tx_ptlist_pagerStrategy_default.php 20242 2009-05-12 22:21:13Z fabriziobranca $
+ * @version		$Id$
  * @author		Fabrizio Branca <mail@fabrizio-branca.de>
  * @since		2009-01-27
  */

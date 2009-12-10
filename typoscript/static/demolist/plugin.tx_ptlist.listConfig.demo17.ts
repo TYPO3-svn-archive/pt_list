@@ -3,7 +3,7 @@
 #
 # Mondial database example
 #
-# @version	$Id: setup.txt,v 1.16 2009/03/18 14:42:54 ry44 Exp $
+# @version	$Id$
 # @author	Fabrizio Branca <mail@fabrizio-branca.de>
 # @since	2009-04-15
 ################################################################################

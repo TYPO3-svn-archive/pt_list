@@ -4,7 +4,7 @@
 # Very simple list with data from the "static_countries" table joined with the
 # "static_territories" table. Displayed columns directly correspond to data columns. 
 #
-# @version	$Id: setup.txt,v 1.16 2009/03/18 14:42:54 ry44 Exp $
+# @version	$Id$
 # @author	Fabrizio Branca <mail@fabrizio-branca.de>
 # @since	2009-04-15
 ################################################################################

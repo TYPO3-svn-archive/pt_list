@@ -3,7 +3,7 @@
   * 
   * Hint: Delimiters (to avoid conflicts with javscript syntax) are "{{" and "}}"
   * 
-  * @version 	$Id: list_extjsList_headerdata.tpl,v 1.3 2009/03/03 09:45:21 ry44 Exp $
+  * @version 	$Id$
   * @author		Fabrizio Branca <mail@fabrizio-branca.de>
   * @since 		2009-01-28
   *}}

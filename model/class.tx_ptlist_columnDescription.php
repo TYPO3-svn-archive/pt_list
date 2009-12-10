@@ -408,14 +408,32 @@ class tx_ptlist_columnDescription implements tx_pttools_iTemplateable, tx_pttool
         $this->isSortable = $isSortable;
     }
 
+    
+    
+    /**
+     * Get the hidden flag
+     * 
+     * @oaram void
+     * @return bool
+     */
     public function get_hidden() {
     	return $this->hidden;
     }
+    
+    
 
+    /**
+     * Set the hidden flag
+     * 
+     * @param $hidden
+     * @return void
+     */
     public function set_hidden($hidden) {
     	$this->hidden = (bool)$hidden;
     }
 
+    
+    
     /**
      * Sets the label property
      *
@@ -428,6 +446,14 @@ class tx_ptlist_columnDescription implements tx_pttools_iTemplateable, tx_pttool
         $this->label = $label;
     }
 
+    
+    
+    /**
+     * Get the sorting state
+     * 
+     * @param void
+     * @return string sorting state, see class constants for available values
+     */
     public function get_sortingState() {
         tx_pttools_assert::isTrue($this->isSortable(), array('message' => 'Sorting is not supported for this column!'));
         return $this->sortingState;

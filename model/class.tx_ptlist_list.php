@@ -150,16 +150,20 @@ abstract class tx_ptlist_list implements tx_ptlist_iListable, tx_ptlist_iFiltera
 	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-19
 	 */
-	public function setSortingParameters($sortingField, $sortingDirection) {
-		tx_pttools_assert::isNotEmptyString($sortingField, array('message' => 'Invalid sortingField parameter'));
+	public function setSortingParameters($sortingColumn, $sortingDirection) {
+		tx_pttools_assert::isNotEmptyString($sortingColumn, array('message' => 'Invalid sortingField parameter'));
 		tx_pttools_assert::isInArray(
 			$sortingDirection,
-			array(tx_ptlist_columnDescription::SORTINGSTATE_ASC, tx_ptlist_columnDescription::SORTINGSTATE_DESC, tx_ptlist_columnDescription::SORTINGSTATE_NONE),
+			array(
+				tx_ptlist_columnDescription::SORTINGSTATE_ASC, 
+				tx_ptlist_columnDescription::SORTINGSTATE_DESC, 
+				tx_ptlist_columnDescription::SORTINGSTATE_NONE
+			),
 			array('message' => 'Invalid sortingDirection parameter')
 		);
 
 		foreach ($this->getAllColumnDescriptions() as $column) { /* @var $column tx_ptlist_columnDescription */
-			if ($column->get_columnIdentifier() == $sortingField) {
+			if ($column->get_columnIdentifier() == $sortingColumn) {
 				$column->set_sortingState($sortingDirection);
 			} else {
 				if ($column->isSortable()) {
@@ -167,6 +171,59 @@ abstract class tx_ptlist_list implements tx_ptlist_iListable, tx_ptlist_iFiltera
 				}
 			}
 		}
+	}
+	
+	
+	
+	/**
+	 * Returns the column that is currently deciding the sort order
+	 * 
+	 * @param void
+	 * @return tx_ptlist_columnDescription|null column 
+	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
+	 * @since 2009-12-09
+	 */
+	public function getSortingColumn() {
+		$sortingColumn = null;
+		foreach ($this->getAllColumnDescriptions() as $column) { /* @var $column tx_ptlist_columnDescription */
+			if ($column->isSortable() && ($column->get_sortingState() != tx_ptlist_columnDescription::SORTINGSTATE_NONE)) {
+				if (is_null($sortingColumn)) {
+					$sortingColumn = $column;
+				} else {
+					throw new tx_pttools_exception('Found more than one sorting column.');
+				}
+			}
+		}
+		return $sortingColumn;
+	}
+	
+	
+	/**
+	 * Get complete list state as url parameter
+	 * 
+	 * @param bool $excludeSortingParameters
+	 * @param string csl of filter identifiers to ignore
+	 * @return string list state
+	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
+	 * @since 2009-12-09
+	 */
+	public function getCompleteListStateAsUrlParameters($excludeSortingParameters = false, $ignoredFilters='') {
+		
+		$parameterString = '';
+		
+		// filter states
+		$parameterString .= $this->getAllFilters()->getAllFilterValueAsGetParameterString($ignoredFilters);
+		
+		// sorting states
+		if (!$excludeSortingParameters && ($sortingColumn = $this->getSortingColumn()) != null) {
+			$controller_listPrefix = tx_pttools_registry::getInstance()->get($this->listId.'_listControllerObject')->get_listPrefix();
+			$parameterString .= '&'.$controller_listPrefix.'[sorting_column]='.$sortingColumn->get_columnIdentifier();
+			$parameterString .= '&'.$controller_listPrefix.'[sorting_direction]='.$sortingColumn->get_sortingState();
+		}
+		
+		// paging states (not needed)
+		
+		return $parameterString;
 	}
 	
 	

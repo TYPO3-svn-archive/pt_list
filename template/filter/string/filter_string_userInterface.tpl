@@ -1,4 +1,9 @@
-<form method="post" action="{url parameter=$currentPage additionalParams='&%s[action]=submit'|vsprintf:$prefixId setup='lib.tx_ptlist.typolinks.string'}">
+
+{if $filterconf.dropActionParameter}
+	<form method="post" action="{url parameter=$currentPage additionalParams='%2$s'|vsprintf:$prefixId:$appendToUrl setup='lib.tx_ptlist.typolinks.string'}">
+{else}
+	<form method="post" action="{url parameter=$currentPage additionalParams='%2$s&%1$s[action]=submit'|vsprintf:$prefixId:$appendToUrl setup='lib.tx_ptlist.typolinks.string'}">
+{/if}
 	<input type="text" name="{$prefixId}[value]" value="{$value}" />
 	<br />
 	<br />

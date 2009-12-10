@@ -317,7 +317,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 				$this->currentListObject = t3lib_div::getUserObj($this->conf['listClass']);
 			}
 			tx_pttools_assert::isInstanceOf($this->currentListObject, 'tx_ptlist_list');
-
+			
 			// store reference to listObject into the registry
 			$registry[$this->currentlistId.'_listObject'] = $this->currentListObject;
 
@@ -325,82 +325,20 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 			$this->currentListObject->set_listId($this->currentlistId);
 			$this->currentListObject->setup();
 
-
-			/**
-			 * Restore filter states (from configuration, parameter or session)
-			 */
-			if (!empty($this->conf['bookmark_uid'])) {
-
-				// load filter states from bookmark
-				tx_pttools_assert::isValidUid($this->conf['bookmark_uid'], false, array('message' => 'No valid "bookmark_uid" found!'));
-				$bookmark = new tx_ptlist_bookmark($this->conf['bookmark_uid']);
-				$serializedFilterCollection = $bookmark->get_filterstate();
-				if (TYPO3_DLOG) t3lib_div::devLog('Loaded serialized filterstate from bookmark (by configuration)', 'pt_list', 1, $serializedFilterCollection);
-
-			} elseif (!empty($this->params['bookmark_uid'])) {
-
-				// load filter states from bookmark
-				tx_pttools_assert::isValidUid($this->params['bookmark_uid'], false, array('message' => 'No valid "bookmark_uid" found!'));
-				$bookmark = new tx_ptlist_bookmark($this->params['bookmark_uid']);
-				$serializedFilterCollection = $bookmark->get_filterstate();
-				if (TYPO3_DLOG) t3lib_div::devLog('Loaded serialized filterstate from bookmark (by parameter)', 'pt_list', 1, $serializedFilterCollection);
-
-			} else {
-
-				// read serialized filters from session
-				if (!$this->conf['doNotUseSession']) {
-					// restore filter collection from session
-					$serializedFilterCollection = tx_pttools_sessionStorageAdapter::getInstance()->read($GLOBALS['TSFE']->fe_user->user['uid'] . '_' . $this->currentlistId . '_filter', false);
-					if (TYPO3_DLOG) t3lib_div::devLog('Serialized filterCollection from session', 'pt_list', 0, $serializedFilterCollection);
-				}
-
-			}
+			$serializedFilterCollection = $this->restoreFilterCollection();
 
 			if (!empty($serializedFilterCollection)) {
 				$filterCollection = unserialize($serializedFilterCollection);
 				tx_pttools_assert::isInstanceOf($filterCollection, 'tx_ptlist_filterCollection', array('message' => sprintf('Class "%s" does not match "tx_ptlist_filterCollection"', get_class($filterCollection))));
 				$this->currentListObject->invokeFilterCollection($filterCollection);
 			}
-
-
-
+			
+			$this->processSorting();
 
 			// process filter sub controllers (processes all subcontrollers and retrieves the where clause from them)
 			$this->currentListObject->update();
 
-			// process sorting parameters
-			if ($this->params['action'] == 'changeSortingOrder') {
-			    // if sorting action submitted: set submitted sorting parameters in current list and store them into session
-				$this->currentListObject->setSortingParameters($this->params['column'], $this->params['direction']);
-
-				// store sorting info into session
-				if (!$this->conf['doNotUseSession']) {
-					tx_pttools_sessionStorageAdapter::getInstance()->store($GLOBALS['TSFE']->fe_user->user['uid'] . '_' . $this->currentlistId . '_sortingColumn', $this->params['column']);
-					tx_pttools_sessionStorageAdapter::getInstance()->store($GLOBALS['TSFE']->fe_user->user['uid'] . '_' . $this->currentlistId . '_sortingDirection', $this->params['direction']);
-				}
-
-			} else {
-				// read sorting parameters from session
-				if (!$this->conf['doNotUseSession']) {
-					$sortingColumn = tx_pttools_sessionStorageAdapter::getInstance()->read($GLOBALS['TSFE']->fe_user->user['uid'] . '_' . $this->currentlistId . '_sortingColumn');
-					$sortingDirection = tx_pttools_sessionStorageAdapter::getInstance()->read($GLOBALS['TSFE']->fe_user->user['uid'] . '_' . $this->currentlistId . '_sortingDirection');
-					if (!empty($sortingColumn) && !empty($sortingDirection)) {
-						$this->currentListObject->setSortingParameters($sortingColumn, $sortingDirection);
-					}
-				}
-			}
-
-			// create and configure pager object and store reference to it into the registry
-			$this->pager = new tx_ptlist_pager();
-			if (!empty($this->conf['itemsPerPage'])) {
-				$this->pager->set_itemsPerPage($this->conf['itemsPerPage']);
-			}
-			if (!empty($this->conf['maxRows'])) {
-				$this->pager->set_maxRows($this->conf['maxRows']);
-			}
-			$this->pager->set_itemCollection($this->currentListObject);
-			$this->pager->set_currentPageNumber(!empty($this->params['page']) ? $this->params['page'] : 1);
-			$registry[$this->currentlistId.'_pager'] = $this->pager;
+			$this->initPager();
 
 			$serializedFilterCollection = serialize($this->currentListObject->getAllFilters());
 
@@ -410,17 +348,10 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 				tx_pttools_sessionStorageAdapter::getInstance()->store($GLOBALS['TSFE']->fe_user->user['uid'] . '_' . $this->currentlistId . '_filter', $serializedFilterCollection, false);
 			}
 
-			// process bookmarks (= store filter states to database)
 			if ($this->params['action'] == 'addBookmark') {
-				tx_pttools_assert::isNotEmptyString($this->params['bookmark_name'], array('message' => 'Empty bookmark name!'));
-				$bookmark = new tx_ptlist_bookmark();
-				$bookmark->set_name($this->params['bookmark_name']);
-				$bookmark->set_feuser($GLOBALS['TSFE']->fe_user->user['uid']);
-				$bookmark->set_list($this->currentlistId);
-				$bookmark->set_filterstates($serializedFilterCollection);
-				$bookmark->storeSelf();
+				$this->createBookmark($this->params['bookmark_name'], $serializedFilterCollection);
 			}
-
+			
 			// store processed state flag for list into the registry
 			$registry[$this->currentlistId.'_isProcessed'] = true;
 		}
@@ -428,6 +359,121 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 		// set current listObject and pager from appropriate references stored in registry
 		$this->currentListObject = $registry[$this->currentlistId.'_listObject'];
 		$this->pager = $registry[$this->currentlistId.'_pager'];
+	}
+
+	
+	
+	/**
+	 * Sets the sorting of the list by reading parameters or restoring the state from the session
+	 * (Refactoring "extractMethod" from originally init() method)
+	 * 
+	 * @param void
+	 * @return void
+	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
+	 * @since 2009-12-09
+	 */
+	protected function processSorting() {
+		if (isset($this->params['sorting_column']) && isset($this->params['sorting_direction'])) {
+		    // if sorting action submitted: set submitted sorting parameters in current list and store them into session
+			$this->currentListObject->setSortingParameters($this->params['sorting_column'], $this->params['sorting_direction']);
+
+			// store sorting info into session
+			if (!$this->conf['doNotUseSession']) {
+				tx_pttools_sessionStorageAdapter::getInstance()->store($GLOBALS['TSFE']->fe_user->user['uid'] . '_' . $this->currentlistId . '_sortingColumn', $this->params['column']);
+				tx_pttools_sessionStorageAdapter::getInstance()->store($GLOBALS['TSFE']->fe_user->user['uid'] . '_' . $this->currentlistId . '_sortingDirection', $this->params['direction']);
+			}
+
+		} elseif (!$this->conf['doNotUseSession']) {
+			// read sorting parameters from session
+			$sortingColumn = tx_pttools_sessionStorageAdapter::getInstance()->read($GLOBALS['TSFE']->fe_user->user['uid'] . '_' . $this->currentlistId . '_sortingColumn');
+			$sortingDirection = tx_pttools_sessionStorageAdapter::getInstance()->read($GLOBALS['TSFE']->fe_user->user['uid'] . '_' . $this->currentlistId . '_sortingDirection');
+			if (!empty($sortingColumn) && !empty($sortingDirection)) {
+				$this->currentListObject->setSortingParameters($sortingColumn, $sortingDirection);
+			}
+		}
+	}
+	
+	
+	
+	/**
+	 * Init pager
+	 * (Refactoring "extractMethod" from originally init() method)
+	 * 
+	 * @param void
+	 * @return void
+	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
+	 * @since 2009-12-09
+	 */
+	protected function initPager() {
+		// create and configure pager object and store reference to it into the registry
+		$this->pager = new tx_ptlist_pager();
+		if (!empty($this->conf['itemsPerPage'])) {
+			$this->pager->set_itemsPerPage($this->conf['itemsPerPage']);
+		}
+		if (!empty($this->conf['maxRows'])) {
+			$this->pager->set_maxRows($this->conf['maxRows']);
+		}
+		$this->pager->set_itemCollection($this->currentListObject);
+		$this->pager->set_currentPageNumber(!empty($this->params['page']) ? $this->params['page'] : 1);
+		tx_pttools_registry::getInstance()->register($this->currentlistId.'_pager', $this->pager);
+	}
+	
+	
+	/**
+	 * Stores the current state as bookmark
+	 * 
+	 * @param string $bookmarkName
+	 * @param string $serializedFilterCollection
+	 * @return void
+	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
+	 * @since 2009-12-09
+	 */
+	protected function createBookmark($bookmarkName, $serializedFilterCollection) {
+		tx_pttools_assert::isNotEmptyString($bookmarkName, array('message' => 'Empty bookmark name!'));
+		$bookmark = new tx_ptlist_bookmark($bookmarkName);
+		$bookmark->set_name();
+		$bookmark->set_feuser($GLOBALS['TSFE']->fe_user->user['uid']);
+		$bookmark->set_list($this->currentlistId);
+		$bookmark->set_filterstates($serializedFilterCollection);
+		$bookmark->storeSelf();
+	}
+	
+	
+	/**
+	 * Restores the filter collection
+	 * - using a bookmark from configuration OR
+	 * - using a bookmark from parameter OR
+	 * - using the session
+	 * 
+	 * @param void
+	 * @return string serialized filter collection
+	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
+	 * @since 2009-12-09
+	 */
+	protected function restoreFilterCollection() {
+		if (!empty($this->conf['bookmark_uid'])) {
+
+			// load filter states from bookmark
+			tx_pttools_assert::isValidUid($this->conf['bookmark_uid'], false, array('message' => 'No valid "bookmark_uid" found!'));
+			$bookmark = new tx_ptlist_bookmark($this->conf['bookmark_uid']);
+			$serializedFilterCollection = $bookmark->get_filterstate();
+			if (TYPO3_DLOG) t3lib_div::devLog('Loaded serialized filterstate from bookmark (by configuration)', 'pt_list', 1, $serializedFilterCollection);
+
+		} elseif (!empty($this->params['bookmark_uid'])) {
+
+			// load filter states from bookmark
+			tx_pttools_assert::isValidUid($this->params['bookmark_uid'], false, array('message' => 'No valid "bookmark_uid" found!'));
+			$bookmark = new tx_ptlist_bookmark($this->params['bookmark_uid']);
+			$serializedFilterCollection = $bookmark->get_filterstate();
+			if (TYPO3_DLOG) t3lib_div::devLog('Loaded serialized filterstate from bookmark (by parameter)', 'pt_list', 1, $serializedFilterCollection);
+
+		} elseif (!$this->conf['doNotUseSession']) {
+			// restore filter collection from session
+			$serializedFilterCollection = tx_pttools_sessionStorageAdapter::getInstance()->read($GLOBALS['TSFE']->fe_user->user['uid'] . '_' . $this->currentlistId . '_filter', false);
+			if (TYPO3_DLOG) t3lib_div::devLog('Serialized filterCollection from session', 'pt_list', 0, $serializedFilterCollection);
+		}
+		
+		return $serializedFilterCollection; 
 	}
 
 
@@ -445,21 +491,20 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 	public function doAction($action = '', array $parameter = array()) {
 
 		if (isset($this->forcedNextAction['actionName'])) {
+			
+			$originalAction = $action;
 
 			// copy actionName and parameters to local variables
-			$actionName = $this->forcedNextAction['actionName'];
-			$params = $this->forcedNextAction['params'];
-
-			if (TYPO3_DLOG) t3lib_div::devLog(sprintf('Executing "%s" instead of "%s"', $actionName, $action), 'pt_list');
+			$action = $this->forcedNextAction['actionName'];
+			$parameter = $this->forcedNextAction['params'];
 
 			// reset class variable
 			$this->forcedNextAction = array();
-
-			// execute forced action
-			return parent::doAction($actionName, $params);
-		} else {
-			return parent::doAction($action, $parameter);
-		}
+			
+			if (TYPO3_DLOG) t3lib_div::devLog(sprintf('Executing "%s" instead of "%s"', $action, $originalAction), 'pt_list');
+		} 
+		
+		return parent::doAction($action, $parameter);
 
 	}
 
@@ -523,7 +568,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 
 		$appendToUrl = '';
 		if ($this->conf['appendFilterValuesToUrls']) {
-			$appendToUrl = $this->currentListObject->getAllFilters()->getAllFilterValueAsGetParameterString();
+			$appendToUrl = $this->currentListObject->getCompleteListStateAsUrlParameters();
 		}
 		$view->addItem($appendToUrl, 'appendToUrl', false);
 
@@ -568,6 +613,12 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 
         // (added by rk 28.08.09) # TODO: Replace this by a translation mechanism
         $view->addItem($this->currentListObject->get_noElementsFoundText(), 'noElementsFoundText', false); // do not filter HTML here since the display text may already be formatted as HTML (e.g. from Typoscript configuration)
+        
+		$appendToSortingUrl = '';
+		if ($this->conf['appendFilterValuesToUrls']) {
+			$appendToSortingUrl = $this->currentListObject->getCompleteListStateAsUrlParameters(true);
+		}
+		$view->addItem($appendToSortingUrl, 'appendToSortingUrl', false);
 
 
 		// render

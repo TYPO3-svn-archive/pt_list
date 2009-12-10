@@ -184,20 +184,21 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
                 $this->resetToTsPresetStateAction();
             }
         }
+        
     	
         $action = parent::getAction();
-        if (empty($action)) {
-            if ($this->conf['dropActionParameter'] == 1) {
-                if (!empty($this->params['value'])) {
-                    $action = 'submit';
-                }
-            }
+        
+        if (empty($action) && $this->conf['dropActionParameter']) {
+			if (!empty($this->params['value'])) {
+				$action = 'submit';
+			}
         }
+        
         return $action;
     }
     
     
-    
+
     /**
      * Overwriting the getPrefixId() method to generate a custom prefixId depending on the list identifier and the filter identifier
      * 
@@ -260,17 +261,23 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
     /**
      * Configuration of filter will be passed to template as 'filter'
      * 
-     * TODO change this. Passed configuration should be accessible as "conf" or "config" in template class
-     * 
      * @param  string          $viewName   Name of view
      * @return tx_ptmvc_view               View for filter user interface
-     * @author Michael Knoll <knoll@punkt.de>
+     * @author Michael Knoll <knoll@punkt.de>, Fabrizio Branca <mail@fabrizio-branca.de>
      * @since  2009-07-17
      */
     public function getView($viewName='') {
         
         $view = parent::getView($viewName);
+        // TODO change this. Passed configuration should be accessible as "conf" or "config" in template class
         $view->addItem($this->conf, 'filterconf', false);
+        
+        // add appendToUrl variable to view if configured
+		if (tx_pttools_div::getTS('plugin.tx_ptlist.controller.list.appendFilterValuesToUrls')) {
+			$listObject = tx_pttools_registry::getInstance()->get($this->listIdentifier.'_listObject'); /* @var $listObject tx_ptlist_list */
+			$view->addItem($listObject->getCompleteListStateAsUrlParameters(false, $this->filterIdentifier), 'appendToUrl', false);
+		}
+		
         return $view;
         
     }
