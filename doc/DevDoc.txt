@@ -75,6 +75,9 @@ CHANGELOG
 
 Version 0.0.4dev:
 ----------------
++ (fb) FIX: sorting configuration is now possible in lower case, too
+       ADD: columnDescription->getSpeakingSortingState()
+       ADD: list->getCompleteListStateAsUrlParameters() won't add sorting parameters if the correspond to the configured defaults
 + (fb) CHG: Converting line endings to unix line endings
        CHG: added svn property for line endings
        CHG: added svn keyword id

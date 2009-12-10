@@ -458,6 +458,35 @@ class tx_ptlist_columnDescription implements tx_pttools_iTemplateable, tx_pttool
         tx_pttools_assert::isTrue($this->isSortable(), array('message' => 'Sorting is not supported for this column!'));
         return $this->sortingState;
     }
+    
+    
+    
+    /**
+     * Returns "asc", "desc" or "none" as sorting state (lowercase)
+     * 
+     * @param void
+     * @return string "asc", "desc" or "none"
+     * @author Fabrizio Branca <mail@fabrizio-branca.de>
+     * @since 2009-12-10
+     */
+    public function getSpeakingSortingState() {
+    	$speakingSortingState = '';
+    	switch ($this->get_sortingState()) {
+    		case self::SORTINGSTATE_ASC: {
+    			$speakingSortingState = 'asc';
+    		} break;
+    		case self::SORTINGSTATE_DESC: {
+    			$speakingSortingState = 'desc';
+    		} break;
+    		case self::SORTINGSTATE_NONE: {
+    			$speakingSortingState = 'none';
+    		} break;
+    		default:  {
+    			throw new tx_pttools_exception('Unkown sorting state');
+    		}
+    	}
+    	return $speakingSortingState;
+    }
 
 
 

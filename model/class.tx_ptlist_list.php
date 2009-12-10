@@ -216,9 +216,12 @@ abstract class tx_ptlist_list implements tx_ptlist_iListable, tx_ptlist_iFiltera
 		
 		// sorting states
 		if (!$excludeSortingParameters && ($sortingColumn = $this->getSortingColumn()) != null) {
-			$controller_listPrefix = tx_pttools_registry::getInstance()->get($this->listId.'_listControllerObject')->get_listPrefix();
-			$parameterString .= '&'.$controller_listPrefix.'[sorting_column]='.$sortingColumn->get_columnIdentifier();
-			$parameterString .= '&'.$controller_listPrefix.'[sorting_direction]='.$sortingColumn->get_sortingState();
+			if (!($sortingColumn->get_columnIdentifier() == $this->conf['defaults.']['sortingColumn'] 
+				&& $sortingColumn->getSpeakingSortingState() == strtolower($this->conf['defaults.']['sortingDirection']))) {
+					$controller_listPrefix = tx_pttools_registry::getInstance()->get($this->listId.'_listControllerObject')->get_listPrefix();
+					$parameterString .= '&'.$controller_listPrefix.'[sorting_column]='.$sortingColumn->get_columnIdentifier();
+					$parameterString .= '&'.$controller_listPrefix.'[sorting_direction]='.$sortingColumn->get_sortingState();
+			}
 		}
 		
 		// paging states (not needed)
@@ -243,9 +246,9 @@ abstract class tx_ptlist_list implements tx_ptlist_iListable, tx_ptlist_iFiltera
 				
 				// Reset sorting state from column, if there is a default sorting state, reset default state
 				if (isset($this->conf['defaults.']['sortingColumn']) && $column->get_columnIdentifier() == $this->conf['defaults.']['sortingColumn']) {
-					if ($this->conf['defaults.']['sortingDirection'] == 'ASC') {
+					if (strtolower($this->conf['defaults.']['sortingDirection']) == 'asc') {
 				        $column->set_sortingState(tx_ptlist_columnDescription::SORTINGSTATE_ASC);
-					} elseif ($this->conf['defaults.']['sortingDirection'] == 'DESC') {
+					} elseif (strtolower($this->conf['defaults.']['sortingDirection']) == 'desc') {
 						$column->set_sortingState(tx_ptlist_columnDescription::SORTINGSTATE_DESC);
 					} else {
 						$column->set_sortingState(tx_ptlist_columnDescription::SORTINGSTATE_NONE);
