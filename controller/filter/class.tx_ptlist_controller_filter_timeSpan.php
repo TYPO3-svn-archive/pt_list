@@ -46,8 +46,8 @@ require_once t3lib_extMgm::extPath('pt_list').'view/filter/timeSpan/class.tx_ptl
  *
  * @author		Fabrizio Branca <mail@fabrizio-branca.de>
  * @since		2009-01-26
- * @package     typo3
- * @subpackage  pt_list
+ * @package     TYPO3
+ * @subpackage  pt_list\controller\filter
  */
 class tx_ptlist_controller_filter_timeSpan extends tx_ptlist_filter {
 

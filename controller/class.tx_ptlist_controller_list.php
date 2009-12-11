@@ -73,7 +73,7 @@ require_once t3lib_extMgm::extPath('pt_mvc').'classes/class.tx_ptmvc_controllerF
  *
  * @author		Fabrizio Branca <mail@fabrizio-branca.de>
  * @since		2009-01-21
- * @package     Typo3
+ * @package     TYPO3
  * @subpackage  pt_list
  */
 class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {

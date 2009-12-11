@@ -20,6 +20,8 @@ require_once t3lib_extMgm::extPath('pt_tools') . 'res/abstract/class.tx_pttools_
  * @version 	$Id$
  * @author		Fabrizio Branca <mail@fabrizio-branca.de>
  * @since		2009-01-21
+ * @package     TYPO3
+ * @subpackage  pt_list\model\typo3Tables
  */
 class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iSettableByArray {
 

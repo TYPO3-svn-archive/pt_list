@@ -47,8 +47,8 @@ require_once t3lib_extMgm::extPath('pt_list').'view/filter/firstLetter/class.tx_
  * 
  * @author		Fabrizio Branca <mail@fabrizio-branca.de>, Ursula Klinger <klinger@punkt.de>
  * @since		2009-01-23
- * @package     Typo3
- * @subpackage  pt_list
+ * @package     TYPO3
+ * @subpackage  pt_list\controller\filter
  */
 class tx_ptlist_controller_filter_firstLetter extends tx_ptlist_filter {
 

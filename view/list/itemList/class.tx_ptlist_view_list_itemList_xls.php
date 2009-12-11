@@ -25,7 +25,7 @@
 /**
  * Class definition file for XLS Export from pt_list
  *
- * @version $Id:$
+ * @version $Id$
  * @author  Michael Knoll <knoll@punkt.de>
  */
 
@@ -46,7 +46,7 @@ require_once t3lib_extMgm::extPath('pt_list').'view/class.tx_ptlist_view.php';
 /**
  * Pt list view for exporting list contents to XLS format
  *
- * @package TYPO3
+ * @package     TYPO3
  * @subpackage pt_list
  * @author  Michael Knoll
  * @since 2009-06-16

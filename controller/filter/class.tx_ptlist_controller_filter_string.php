@@ -49,7 +49,7 @@ require_once t3lib_extMgm::extPath('pt_list').'view/filter/string/class.tx_ptlis
  * @author      Rainer Kuhn <kuhn@punkt.de>
  * @since       2009-01-20
  * @package     TYPO3
- * @subpackage  tx_ptlist
+ * @subpackage  pt_list\controller\filter
  */
 class tx_ptlist_controller_filter_string extends tx_ptlist_filter {
 	

@@ -51,7 +51,7 @@ require_once t3lib_extMgm::extPath('pt_tools') . 'res/staticlib/class.tx_pttools
  * 
  * @author Fabrizio Branca, Michael Knoll <knoll@punkt.de>
  * @since  2009-04-20
- * @package TYPO3
+ * @package     TYPO3
  * @subpackage pt_list
  */
 class tx_ptlist_view_list_itemList_pdf extends tx_ptlist_view {

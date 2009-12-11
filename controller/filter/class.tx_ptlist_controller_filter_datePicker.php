@@ -41,8 +41,8 @@ require_once t3lib_extMgm::extPath('pt_list').'view/filter/datePicker/class.tx_p
  *
  * @author		Joachim Mathes
  * @since		2009-07-14
- * @package     Typo3
- * @subpackage  pt_list
+ * @package     TYPO3
+ * @subpackage  pt_list\controller\filter
  * @version     $Id$
  */
 class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {

@@ -36,7 +36,7 @@ require_once t3lib_extMgm::extPath('pt_tools').'res/objects/class.tx_pttools_reg
  * @author		Fabrizio Branca <mail@fabrizio-branca.de>
  * @since		2009-02-23
  * @package     TYPO3
- * @subpackage  tx_ptlist
+ * @subpackage  pt_list\model
  */
 class tx_ptlist_div {
 

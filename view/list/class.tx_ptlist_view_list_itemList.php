@@ -47,7 +47,7 @@ require_once t3lib_extMgm::extPath('pt_list').'view/class.tx_ptlist_view.php';
 /**
  * Class implementing standard view for item list
  * 
- * @package Typo3
+ * @package     TYPO3
  * @subpackage pt_list
  * @author Fabrizio Branca <mail@fabrizio-branca.de>
  * @since 2009-02-19

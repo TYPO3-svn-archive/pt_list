@@ -32,6 +32,8 @@ require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_externalDat
  * @version 	$Id$
  * @author		Fabrizio Branca <mail@fabrizio-branca.de>
  * @since		2009-01-22
+ * @package     TYPO3
+ * @subpackage  pt_list\model\typo3Tables
  */
 class tx_ptlist_typo3Tables_dataObjectAccessor implements tx_pttools_iSingletonCollection {
 

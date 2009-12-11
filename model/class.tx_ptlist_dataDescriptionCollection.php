@@ -45,7 +45,7 @@ require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_dataDescrip
  * @author      Fabrizio Branca <mail@fabrizio-branca.de>, Rainer Kuhn <kuhn@punkt.de>
  * @since       2009-01-15
  * @package     TYPO3
- * @subpackage  tx_ptlist
+ * @subpackage  pt_list\model
  */
 class tx_ptlist_dataDescriptionCollection extends tx_pttools_objectCollection implements tx_pttools_iSettableByArray {
 

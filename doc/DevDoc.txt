@@ -75,6 +75,11 @@ CHANGELOG
 
 Version 0.0.4dev:
 ----------------
++ (fb) FIX: Corrected and added some phpdoc @package and @subpackage annotations
+       ==== HINT: =====
+       + Please annotate _all_ classes!
+       + Use @package TYPO3 (all capital letters)
+       + and @subpackage pt_list[\<subsubpackage>[\<subsubsubpackage>]...]
 + (fb) FIX: fixed bug with storing sorting state in the session
 + (fb) FIX: sorting configuration is now possible in lower case, too
        ADD: columnDescription->getSpeakingSortingState()

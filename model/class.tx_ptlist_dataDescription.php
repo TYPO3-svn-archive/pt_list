@@ -32,7 +32,7 @@ require_once t3lib_extMgm::extPath('pt_tools').'res/staticlib/class.tx_pttools_d
  * @author      Fabrizio Branca <mail@fabrizio-branca.de>, Dorit Rottner <rottner@punkt.de>
  * @since       2009-01-30
  * @package     TYPO3
- * @subpackage  tx_ptlist
+ * @subpackage  pt_list\model
  */
 class tx_ptlist_dataDescription implements tx_pttools_iSettableByArray {
 

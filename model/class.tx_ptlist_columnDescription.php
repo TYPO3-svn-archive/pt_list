@@ -51,7 +51,7 @@ require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_div.php';
  * @author      Fabrizio Branca <mail@fabrizio-branca.de>, Rainer Kuhn <kuhn@punkt.de>
  * @since       2009-01-15
  * @package     TYPO3
- * @subpackage  tx_ptlist
+ * @subpackage  pt_list\model
  */
 class tx_ptlist_columnDescription implements tx_pttools_iTemplateable, tx_pttools_iSettableByArray {
 

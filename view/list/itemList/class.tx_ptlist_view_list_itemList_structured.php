@@ -45,7 +45,7 @@ require_once t3lib_extMgm::extPath('pt_tools').'res/staticlib/class.tx_pttools_a
 /**
  * Class definition for structured list view.
  * 
- * @package Typo3
+ * @package     TYPO3
  * @subpackage pt_list
  * @author Michael Knoll <knoll@punkt.de>
  * @since 2009-06-30

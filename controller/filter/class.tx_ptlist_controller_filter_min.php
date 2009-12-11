@@ -45,8 +45,8 @@ require_once t3lib_extMgm::extPath('pt_list').'view/filter/min/class.tx_ptlist_v
  * 
  * @version  	$Id$
  * @author		Fabrizio Branca <mail@fabrizio-branca.de>
- * @package     Typo3
- * @subpackage  pt_list
+ * @package     TYPO3
+ * @subpackage  pt_list\controller\filter
  * @since		2009-01-26
  */
 class tx_ptlist_controller_filter_min extends tx_ptlist_filter {

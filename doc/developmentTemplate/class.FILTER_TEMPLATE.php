@@ -54,7 +54,7 @@
 /** 
  * ####Feel free to add some comments on this file####
  *
- * $Id:$
+ * $Id$
  *
  * @author  ###Here goes your name + email####
  * @since   ###Since when did you work on this file####
@@ -78,7 +78,7 @@ require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_filter.php'
  * @author      ###Here goes your name + email####
  * @since       ###Since when did you work on this file####
  * @package     TYPO3
- * @subpackage  tx_ptlist
+ * @subpackage  pt_list
  */
 class tx_ptlist_controller_filter_yourFilterName extends tx_ptlist_filter {
 	

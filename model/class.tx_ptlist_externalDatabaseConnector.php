@@ -40,7 +40,7 @@ require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_div.php';
  * @author		Fabrizio Branca <mail@fabrizio-branca.de>
  * @since		2009-02-25
  * @package     TYPO3
- * @subpackage  tx_ptlist
+ * @subpackage  pt_list\model
  * @version 	$Id$
  */
 class tx_ptlist_externalDatabaseConnector extends t3lib_db {

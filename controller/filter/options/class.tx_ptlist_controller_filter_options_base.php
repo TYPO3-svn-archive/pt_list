@@ -53,8 +53,8 @@ require_once $pt_list_path.'view/filter/options/class.tx_ptlist_view_filter_opti
  * @version 	$Id$
  * @author		Fabrizio Branca <mail@fabrizio-branca.de>
  * @since		2009-01-23
- * @package     Typo3
- * @subpackage  pt_list
+ * @package     TYPO3
+ * @subpackage  pt_list\controller\filter
  */
 abstract class tx_ptlist_controller_filter_options_base extends tx_ptlist_filter {
 

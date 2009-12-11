@@ -45,7 +45,7 @@ require_once t3lib_extMgm::extPath('pt_tools').'res/abstract/class.tx_pttools_iT
  * Pager class for pt_list
  * 
  * @package     TYPO3
- * @subpackage  pt_list
+ * @subpackage  pt_list\model
  * @author      Fabrizio Branca <mail@fabrizio-branca.de>
  * @since       2009-01-27
  */

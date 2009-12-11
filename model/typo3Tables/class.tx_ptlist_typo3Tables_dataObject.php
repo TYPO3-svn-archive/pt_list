@@ -31,6 +31,8 @@ require_once t3lib_extMgm::extPath('pt_tools') . 'res/abstract/class.tx_pttools_
  * @version 	$Id$
  * @author		Fabrizio Branca <mail@fabrizio-branca.de>
  * @since		2009-01-20
+ * @package     TYPO3
+ * @subpackage  pt_list\model\typo3Tables
  */
 class tx_ptlist_typo3Tables_dataObject implements ArrayAccess, tx_pttools_iSettableByArray {
 

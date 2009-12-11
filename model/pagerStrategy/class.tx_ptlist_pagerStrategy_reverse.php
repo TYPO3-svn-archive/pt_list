@@ -48,6 +48,8 @@ require_once t3lib_extMgm::extPath('pt_list').'model/interfaces/class.tx_ptlist_
  * @version		$Id$
  * @author		Fabrizio Branca <mail@fabrizio-branca.de>
  * @since		2009-01-27
+ * @package     TYPO3
+ * @subpackage  pt_list\model\pagerStrategy
  */
 class tx_ptlist_pagerStrategy_reverse implements tx_ptlist_iPagerStrategy {
 

@@ -46,8 +46,8 @@ require_once t3lib_extMgm::extPath('pt_list').'controller/filter/options/class.t
  * 
  * @author		Fabrizio Branca <mail@fabrizio-branca.de>
  * @since		2009-01-23
- * @package     Typo3
- * @subpackage  pt_list
+ * @package     TYPO3
+ * @subpackage  pt_list\controller\filter
  */
 class tx_ptlist_controller_filter_options_group extends tx_ptlist_controller_filter_options_base {
 

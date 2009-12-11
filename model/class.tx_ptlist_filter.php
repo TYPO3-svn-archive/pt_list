@@ -65,8 +65,8 @@ require_once t3lib_extMgm::extPath('pt_list').'view/filter/class.tx_ptlist_view_
  * 
  * @author  Fabrizio Branca <mail@fabrizio-branca.de>
  * @since   2009-01-20
- * @package TYPO3
- * @subpackage pt_list
+ * @package     TYPO3
+ * @subpackage  pt_list\model
  */
 abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements tx_pttools_iTemplateable, Serializable, tx_pttools_iSettableByArray {
     

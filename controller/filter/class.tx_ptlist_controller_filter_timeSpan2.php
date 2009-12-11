@@ -46,8 +46,8 @@ require_once t3lib_extMgm::extPath('pt_tools').'res/objects/class.tx_pttools_exc
 /**
  * Class implementing a "timespan" filter
  *
- * @package     Typo3
- * @subpackage  pt_list
+ * @package     TYPO3
+ * @subpackage  pt_list\controller\filter
  * @author		Michael Knoll <knoll@punkt.de>
  * @since		2009-07-17
  */
