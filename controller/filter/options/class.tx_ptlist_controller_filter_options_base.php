@@ -119,7 +119,7 @@ abstract class tx_ptlist_controller_filter_options_base extends tx_ptlist_filter
 
 		// get array of possible values to be displayed for selection
 		$this->possibleValues = $this->getOptions(); /* @var $possibleValues array of array('item' => <value>, 'label' => <label>, 'quantity' => <quantity>) */
-
+		
 		// render values
 		$this->renderPossibleValues();
 
@@ -258,7 +258,8 @@ abstract class tx_ptlist_controller_filter_options_base extends tx_ptlist_filter
 	 */
 	public function getSqlWhereClauseSnippet() {
 
-		$field = $this->dataDescriptions->getItemByIndex(0)->getSelectClause(false);
+		$dataDescription = $this->dataDescriptions->getItemByIndex(0);
+		$field = $dataDescription->getSelectClause(false);
 		tx_pttools_assert::isNotEmptyString($field, array('message' => '"getSelectClause" returned invalid string!'));
 		
 		tx_pttools_assert::isNotEmptyArray($this->value, array('message' => 'Value array is empty!'));
@@ -267,20 +268,25 @@ abstract class tx_ptlist_controller_filter_options_base extends tx_ptlist_filter
 			if ($this->conf['findInSet'] == true) {
 				$orSnippets = array();
 				foreach ($this->value as $value) {
+					$value = $GLOBALS['TYPO3_DB']->quoteStr($value, $dataDescription->get_table());
 					$orSnippets[] = '('.sprintf('FIND_IN_SET("%2$s", %1$s)', $field, $value).')';
 				}
 				$sqlWhereClauseSnippet = '('.implode(' OR ', $orSnippets) .')';
 			} else {
-				$sqlWhereClauseSnippet = sprintf('%1$s IN ("%2$s")', $field, implode('", "', $this->value));
+				$set = array();
+				foreach ($this->value as $value) {
+					$set[] = $GLOBALS['TYPO3_DB']->quoteStr($value, $dataDescription->get_table());
+				}
+				$sqlWhereClauseSnippet = sprintf('%1$s IN ("%2$s")', $field, implode('", "', $set));
 			}
 		} else {
+			$value = $GLOBALS['TYPO3_DB']->quoteStr($this->value[0], $dataDescription->get_table());
 			if ($this->conf['findInSet'] == true) {
-				$sqlWhereClauseSnippet = sprintf('FIND_IN_SET("%2$s", %1$s)', $field, $this->value[0]);
+				$sqlWhereClauseSnippet = sprintf('FIND_IN_SET("%2$s", %1$s)', $field, $value);
 			} else {
-				$sqlWhereClauseSnippet = sprintf('%1$s = "%2$s"', $field, $this->value[0]);
+				$sqlWhereClauseSnippet = sprintf('%1$s = "%2$s"', $field, $value);
 			}
 		}
-
 		return $sqlWhereClauseSnippet;
 	}
 
@@ -418,7 +424,7 @@ abstract class tx_ptlist_controller_filter_options_base extends tx_ptlist_filter
 	protected function setFilterValueFromSubmittedForm() {
 	    // Determine, wheter a) multiple, b) single or c) no values are given from filter form
         if (is_array($this->params['value'])) {
-        
+        	
             // a) multiple selection mode
             $this->readMultipleValuesFromParam();
             

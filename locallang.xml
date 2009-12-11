@@ -8,6 +8,7 @@
 		<languageKey index="default" type="array">
             <label index="noItemsFound">No items found</label>
 			<label index="reset">Reset</label>
+			<label index="set_filter">Set filter</label>
             <label index="filterRangeMin">min.</label>
             <label index="filterRangeMax">max.</label>
             <label index="filter_group_all">[All]</label>
@@ -24,6 +25,7 @@
 		<languageKey index="de" type="array">
             <label index="noItemsFound">Keine Elemente gefunden</label>
 			<label index="reset">Zurücksetzen</label>
+			<label index="set_filter">Filter aktivieren</label>
             <label index="filter_group_all">[Alle]</label>
             <label index="displayTopics">Ergebnisse {0} - {1} von {2}</label>
 			<label index="displayRows">Ergebnisse %s - %s von %s</label><!-- Variables: offSetStart, offSetEnd, totalItemCount-->

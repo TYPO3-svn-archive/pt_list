@@ -76,12 +76,16 @@ class tx_ptlist_controller_filter_string extends tx_ptlist_filter {
         foreach ($this->dataDescriptions as $dataDescription) {  /* @var $dataDescription tx_ptlist_dataDescription */
             $sqlWhereClauseSnippetsAndParts = array();
             foreach (t3lib_div::trimExplode(' ', $this->value, true) as $part) {
-                $sqlWhereClauseSnippetsAndParts[] = sprintf('%s LIKE "%%%s%%"', $dataDescription->getSelectClause(false), $GLOBALS['TYPO3_DB']->quoteStr($part, $dataDescription->get_table()));
+            	
+            	// "like" must be escaped twice (see http://bugs.mysql.com/bug.php?id=37270#c199611)
+            	$part = $GLOBALS['TYPO3_DB']->quoteStr($part, $dataDescription->get_table());
+            	$part = $GLOBALS['TYPO3_DB']->quoteStr($part, $dataDescription->get_table()); 
+            	
+                $sqlWhereClauseSnippetsAndParts[] = sprintf('%s LIKE "%%%s%%"', $dataDescription->getSelectClause(false), $part);
             }
             $sqlWhereClauseSnippets[] = ' ( ' . implode(' AND ', $sqlWhereClauseSnippetsAndParts) . ' ) ';
         }
         $sqlWhereClauseSnippet = implode(' OR ', $sqlWhereClauseSnippets);
-        
         return $sqlWhereClauseSnippet;
         
     }

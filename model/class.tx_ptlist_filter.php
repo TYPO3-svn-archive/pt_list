@@ -732,6 +732,9 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
         // set configuration from outside instead of getting it the usual way via getConfiguration()
         $this->conf = $dataArray;
         
+        if (!isset($this->conf['submitValue'])) {
+        	$this->conf['submitValue'] = 'set_filter'; // see ext:pt_list/locallang.xml
+        }
         if (isset($dataArray['listIdentifier'])) {
             $this->listIdentifier = $dataArray['listIdentifier'];
         }
