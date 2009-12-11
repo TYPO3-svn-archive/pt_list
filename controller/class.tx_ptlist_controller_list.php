@@ -341,7 +341,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 			$this->initPager();
 
 			$serializedFilterCollection = serialize($this->currentListObject->getAllFilters());
-
+			
 			// store serialized filters into session
 			if (!$this->conf['doNotUseSession']) {
 				if (TYPO3_DLOG) t3lib_div::devLog('Storing serialized filterCollection to session', 'pt_list', 0, $serializedFilterCollection);
@@ -379,8 +379,12 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 
 			// store sorting info into session
 			if (!$this->conf['doNotUseSession']) {
-				tx_pttools_sessionStorageAdapter::getInstance()->store($GLOBALS['TSFE']->fe_user->user['uid'] . '_' . $this->currentlistId . '_sortingColumn', $this->params['column']);
-				tx_pttools_sessionStorageAdapter::getInstance()->store($GLOBALS['TSFE']->fe_user->user['uid'] . '_' . $this->currentlistId . '_sortingDirection', $this->params['direction']);
+				
+				$sessionKeyPrefix = $GLOBALS['TSFE']->fe_user->user['uid'] . '_' . $this->currentlistId;
+				
+				tx_pttools_sessionStorageAdapter::getInstance()->store($sessionKeyPrefix . '_sortingColumn', $this->params['sorting_column']);
+				tx_pttools_sessionStorageAdapter::getInstance()->store($sessionKeyPrefix . '_sortingDirection', $this->params['sorting_direction']);
+				
 			}
 
 		} elseif (!$this->conf['doNotUseSession']) {

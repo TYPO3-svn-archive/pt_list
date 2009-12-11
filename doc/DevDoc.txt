@@ -75,6 +75,7 @@ CHANGELOG
 
 Version 0.0.4dev:
 ----------------
++ (fb) FIX: fixed bug with storing sorting state in the session
 + (fb) FIX: sorting configuration is now possible in lower case, too
        ADD: columnDescription->getSpeakingSortingState()
        ADD: list->getCompleteListStateAsUrlParameters() won't add sorting parameters if the correspond to the configured defaults
