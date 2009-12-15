@@ -75,6 +75,7 @@ CHANGELOG
 
 Version 0.0.4dev:
 ----------------
++ (wz) FIX: Evaluate stdWrap for database and tables config
 + (fb) FIX: Corrected and added some phpdoc @package and @subpackage annotations
        ==== HINT: =====
        + Please annotate _all_ classes!

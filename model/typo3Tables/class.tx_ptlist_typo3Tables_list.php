@@ -92,12 +92,14 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 		tx_ptlist_typo3Tables_dataObjectAccessor::getInstanceById($this->listId);
 
 		// switch to another database if configured
-		if (!empty($dataArray['database'])) {
-			tx_ptlist_typo3Tables_dataObjectAccessor::getInstanceById($this->listId)->setDatabase($dataArray['database']);
+		$myDatabase = $GLOBALS['TSFE']->cObj->stdWrap($dataArray['database'], $dataArray['database.']);
+		if (!empty($myDatabase)) {
+			tx_ptlist_typo3Tables_dataObjectAccessor::getInstanceById($this->listId)->setDatabase($myDatabase);
 		}
 
 		// tables
-		$this->tables = t3lib_div::trimExplode(',', $dataArray['tables']);
+		$myTables = $GLOBALS['TSFE']->cObj->stdWrap($dataArray['tables'], $dataArray['tables.']);
+		$this->tables = t3lib_div::trimExplode(',', $myTables);
 		tx_pttools_assert::isNotEmptyArray($this->tables, array('message' => 'No tables found in configuration!'));
 
 		// SQL base where clause
