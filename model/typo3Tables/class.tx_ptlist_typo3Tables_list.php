@@ -45,7 +45,6 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 	 */
 	protected $tables = array();
 	
-	
 
 	/***************************************************************************
 	 * Implementing abstract methods from the "tx_ptlist_list" class
@@ -332,18 +331,48 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 	 * Getter / Setter methods
 	 **************************************************************************/
 
+	/**
+	 * Get tables
+	 * 
+	 * @return string
+	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
+	 */
 	public function get_tables() {
 		return $this->tables;
 	}
 
+	
+
+	/**
+	 * Get base where clause
+	 * 
+	 * @return string
+	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
+	 */
 	public function get_baseWhereClause() {
 		return $this->baseWhereClause;
 	}
 
+	
+
+	/**
+	 * Get base group by clause
+	 * 
+	 * @return string
+	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
+	 */
 	public function get_baseGroupByClause() {
 		return $this->baseGroupByClause;
 	}
 
+	
+
+	/**
+	 * Get base from clause
+	 * 
+	 * @return string
+	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
+	 */
 	public function get_baseFromClause() {
 		return $this->baseFromClause;
 	}
