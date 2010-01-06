@@ -75,6 +75,8 @@ CHANGELOG
 
 Version 0.0.4dev:
 ----------------
++ (fb) ADD: added documentetion for sortingDataDescription configuration
++ (fb) ADD: added a reference demolist (work in progress)
 + (wz) FIX: Evaluate stdWrap for database and tables config
 + (fb) FIX: Corrected and added some phpdoc @package and @subpackage annotations
        ==== HINT: =====
