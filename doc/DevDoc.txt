@@ -75,6 +75,7 @@ CHANGELOG
 
 Version 0.0.4dev:
 ----------------
++ (fb) FIX: Forcing sort orders did not work
 + (fb) ADD: added documentetion for sortingDataDescription configuration
 + (fb) ADD: added a reference demolist (work in progress)
 + (wz) FIX: Evaluate stdWrap for database and tables config
