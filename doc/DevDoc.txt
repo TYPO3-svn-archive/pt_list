@@ -75,6 +75,8 @@ CHANGELOG
 
 Version 0.0.4dev:
 ----------------
+
++ (mk) FIX: Fixed HTML Filtering and made it default for cell contents (plugin.tx_ptlist.view.filterHtml = 1 per default) 
 + (fb) ADD: added some lines in typoscript example
 + (fb) FIX: Forcing sort orders did not work
 + (fb) ADD: added documentetion for sortingDataDescription configuration
@@ -106,6 +108,7 @@ Version 0.0.4dev:
 
 Version 0.0.3:   [used for online project 18.11.09]
 -------------
+
 + (jm) FIX: Fixed hooks in DatePicker filter
 + (jm) CHG: Set default dateFieldType to timestamp in DatePicker filter 
 + (jm) ADD: DatePicker filter now can refer to two date columns and therefor is able to filter periods of time.
