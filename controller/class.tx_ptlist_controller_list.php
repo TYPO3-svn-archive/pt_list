@@ -913,7 +913,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 					 */
 					$tsHtmlFiltering = tx_pttools_div::getTS('plugin.tx_ptlist.view.filterHtml');
                     $filterHtml = true;     // filter HTML by default
-					if ( $tsHtmlFiltering == 0 ) {
+					if ($tsHtmlFiltering === 0 || $tsHtmlFiltering === '0') {
 			            $filterHtml = false;
 			        }
 
