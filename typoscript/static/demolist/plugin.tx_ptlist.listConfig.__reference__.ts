@@ -11,6 +11,12 @@
 
 
 
+plugin.tx_ptlist.controller.list {
+	itemsPerPage = 0
+	maxRows = 10
+	# bookmark_uid = 14
+	doNotUseSession = 1
+}
 
 plugin.tx_ptlist.listConfig.<listIdentifier> {
 
