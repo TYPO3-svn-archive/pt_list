@@ -305,7 +305,6 @@ abstract class tx_ptlist_controller_filter_options_base extends tx_ptlist_filter
 	 * @since  2009-09-23
 	 */
 	protected function getViewByMode() {
-	   // select view depeding on configured mode
         switch ($this->conf['mode']) {
             case '':
             case 'select': {

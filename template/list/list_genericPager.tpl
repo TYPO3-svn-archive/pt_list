@@ -1,3 +1,8 @@
+{* 
+This seems to be deprecated!? (Fabrizio 2010-01-04)
+Please have a look at list_pager.tpl	
+*}
+
 <div class="tx-ptlist-pagercontainer">
     <ul class="tx-ptlist-pager">
         {foreach from=$pager.pages item=page}
