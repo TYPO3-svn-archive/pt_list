@@ -540,6 +540,30 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 
 		return $view->render();
 	}
+	
+	
+	
+	/**
+	 * Nav links
+	 * 
+	 * @param string (optional) csl of navlink identifiers. If empty those will be fetched from configuration
+	 * @return string HTML output
+	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
+	 * @since 2010-01-19 
+	 */
+	public function navLinkDefaultAction($navLinks=NULL) {
+		if (is_null($navLinks)) {
+			$navLinks = $this->conf['navLinks'];
+		}
+		tx_pttools_assert::isNotEmptyString($navLinks);
+		
+		$output = '';
+		foreach (t3lib_div::trimExplode(',', $navLinks) as $navLink) {
+			$output .= $this->currentListObject->getNavLink($navLink);
+		}
+		
+		return $output;
+	}
 
 
 

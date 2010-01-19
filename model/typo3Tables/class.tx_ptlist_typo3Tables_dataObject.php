@@ -71,7 +71,36 @@ class tx_ptlist_typo3Tables_dataObject implements ArrayAccess, tx_pttools_iSetta
 			$this->_data[$key] = $value;
 		}
 	}
+	
+	
+	
+	/**
+	 * Get raw data
+	 * 
+	 * @return array data
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
+	 * @since	2010-01-19
+	 */
+	public function getData() {
+		return $this->_data;
+	}
 
+	
+	
+	/**
+	 * Check if the objects property match as given properties
+	 * 
+	 * @param array $properties
+	 * @return bool
+	 */
+	public function matchesAll(array $properties) {
+		foreach ($properties as $property => $value) {
+			if ($this[$property] != $value) {
+				return false;
+			}
+		}
+		return true;
+	}
 
 
 	/***************************************************************************

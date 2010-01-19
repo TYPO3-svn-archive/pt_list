@@ -113,6 +113,12 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 		// SQL base from clause
 		$this->baseFromClause = $GLOBALS['TSFE']->cObj->stdWrap($dataArray['baseFromClause'], $dataArray['baseFromClause.']);
 		
+		if (TYPO3_DLOG) t3lib_div::devLog('base clauses', 'pt_list', 0, array(
+			'baseWhereClause' => $this->baseWhereClause,
+			'baseGroupByClause' => $this->baseGroupByClause,
+			'baseFromClause' => $this->baseFromClause
+		));
+		
         // text do display if no elements have been found for a list request (added by rk 2009-08-28)  # TODO: Replace this by a translation mechanism
         $this->noElementsFoundText = $GLOBALS['TSFE']->cObj->stdWrap($dataArray['noElementsFoundText'], $dataArray['noElementsFoundText.']);
 
@@ -325,6 +331,49 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 		} else {
 			return $this->baseFromClause;
 		}
+	}
+	
+	/**
+	 * Get nav link
+	 * TODO: add a method in the abstract list class
+	 * 
+	 * @param string navLink
+	 * @param array $currentItem
+	 * @return 
+	 */
+	public function getNavLink($navLink) {
+		
+		$currentItem = empty($this->conf['currentItemSpecifier.']) ? array() : $this->conf['currentItemSpecifier.']; 
+		$currentItem = tx_pttools_div::stdWrapArray($currentItem);
+		
+		tx_pttools_assert::isNotEmptyArray($currentItem, array('message' => 'No current item configuration found'));
+		
+		$supportedNavLinks = array('next', 'prev');
+		tx_pttools_assert::isInArray($navLink, $supportedNavLinks, array('message' => 'Unsupported nav link'));
+		
+		// get where clause
+		$items = $this->getItems();
+		$id = $items->searchItem($currentItem);
+		if ($id === false) {
+			throw new tx_pttools_exception('Item not found');
+		}
+		
+		$idx = $items->getIndexByItemId($id);
+		
+		$output = '';
+		
+		if ($navLink == 'next') {
+			$item = $items->hasIndex($idx+1) ? $items->getItemByIndex($idx+1) : false;
+			if ($item !== false) {
+				$output .= tx_ptlist_div::renderValues($item->getData(), $this->conf['nextItem.']); 
+			}
+		} elseif ($navLink == 'prev') {
+			$item = $items->hasIndex($idx-1) ? $items->getItemByIndex($idx-1) : false;
+			if ($item !== false) {
+				$output .= tx_ptlist_div::renderValues($item->getData(), $this->conf['prevItem.']); 
+			}
+		}
+		return $output;		
 	}
 
 	/***************************************************************************

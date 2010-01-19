@@ -76,6 +76,7 @@ CHANGELOG
 Version 0.0.4dev:
 ----------------
 
+# (fb) ADD: added support for prev and next links (TODO: update documentation)
 + (fb) RFT: removed some empty lines
        + added comment into list_genereicPager.tpl to mark this as deprecated
 + (mk) FIX: Fixed HTML Filtering and made it default for cell contents (plugin.tx_ptlist.view.filterHtml = 1 per default) 

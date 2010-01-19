@@ -63,10 +63,10 @@ class tx_ptlist_typo3Tables_dataObjectCollection extends tx_pttools_objectCollec
     /**
      * Load items
      *
-     * @param unknown_type $fields
-     * @param unknown_type $where
-     * @param unknown_type $orderBy
-     * @param unknown_type $limit
+     * @param 	string fields
+     * @param 	string (optional) where
+     * @param 	string (optional) orderBy
+     * @param 	string (optional) limit
      * @return 	void
      * @author	Fabrizio Branca <mail@fabrizio-branca.de>
      * @since	2009-01-22
@@ -82,11 +82,13 @@ class tx_ptlist_typo3Tables_dataObjectCollection extends tx_pttools_objectCollec
     	}
     }
 
+    
+    
     /**
      * Get Marker array.
      *
      * @param 	void
-     * @return 	arra	array of marker arrays of all elements in this collection
+     * @return 	array	array of marker arrays of all elements in this collection
      * @author	Fabrizio Branca <mail@fabrizio-branca.de>
      * @since	2009-01-22
      */
@@ -102,6 +104,51 @@ class tx_ptlist_typo3Tables_dataObjectCollection extends tx_pttools_objectCollec
     		}
     	}
     	return $items;
+    }
+    
+    
+    /**
+     * Searches for an item
+     * 
+     * @param array $properties
+     * @return mixed id or false if not found any item
+     */
+    public function searchItem(array $properties) {
+    	foreach ($this->itemsArr as $key => $item) { /* @var $item tx_ptlist_typo3Tables_dataObject */
+    		if ($item->matchesAll($properties)) {
+    			return $key;
+    		}
+    	}
+    	return false;
+    }
+    
+    
+    
+    /**
+     * Returns the index for a given id
+     * 
+     * @param string id
+     * @return int index
+     */
+    public function getIndexByItemId($id) {
+        if (!$this->hasItem($id)) {
+    		throw new tx_pttools_exception(sprintf('Item with id "%s" does not exist.', $id));
+    	}
+    	return array_search($id, array_keys($this->itemsArr));
+    }
+    
+    
+    
+    /**
+     * Check if an item exists at the index 
+     * 
+     * @param int index
+     * @return bool true if item exists
+     * @author Fabrizio Branca <mail@fabrizio-branca.de>
+     * @since 2010-01-05
+     */
+    public function hasIndex($idx) {
+     	return ($idx >= 0) && ($idx < $this->count());
     }
 
 }
