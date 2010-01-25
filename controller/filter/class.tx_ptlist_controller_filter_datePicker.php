@@ -275,7 +275,6 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
 	 * @since   2009-11-13
 	 */
     protected function evaluateDatePeriod($date) {
-        $this->validateDatePeriod($date['period']);
         for ($i = 0; $i <= $date['period']; $i++) {
             $datesInJsonFormat[$i] = sprintf("{'year':%s, 'month':%s, 'day':%s}",
                 date('Y', mktime(0, 0, 0, $date['month'], $date['day'] + $i, $date['year'])),
@@ -283,20 +282,6 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
                 date('j', mktime(0, 0, 0, $date['month'], $date['day'] + $i, $date['year'])));
         }
         return implode(',', $datesInJsonFormat);
-    }
-
-    /**
-	 * Validate date period
-	 *
-	 * @param   int    date period
-	 * @return  void
-	 * @author  Joachim Mathes <mathes@punkt.de>
-	 * @since   2009-11-13
-	 */
-    protected function validateDatePeriod($datePeriod) {
-        if ($datePeriod < 0) {
-            throw new tx_pttools_exceptionConfiguration("No valid date period. Enddate is greater than startdate.");
-        }
     }
 
     /**
@@ -343,7 +328,7 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
         $select = "DISTINCT " . $sqlDateFunction . "(" . $startDateColumn . ", '%e') AS day, "
                               . $sqlDateFunction . "(" . $startDateColumn . ", '%c') AS month, "
                               . $sqlDateFunction . "(" . $startDateColumn . ", '%Y') AS year, DATEDIFF(" . $sqlDateFunction . "(" . $endDateColumn . "), " . $sqlDateFunction . "(" . $startDateColumn . ")) AS period";
-		$where = '';
+		$where = "DATEDIFF(" . $sqlDateFunction . "(" . $endDateColumn . "), " . $sqlDateFunction . "(" . $startDateColumn . ")) >= 0";
 		$groupBy = '';
 		$orderBy = '';
 		$limit = '';
