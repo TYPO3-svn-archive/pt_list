@@ -425,6 +425,58 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 	public function get_baseFromClause() {
 		return $this->baseFromClause;
 	}
+	
+	
+	
+	/**
+	 * Set tables
+	 * 
+	 * @param string
+	 * @return string
+	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
+	 */
+	public function set_tables($tables) {
+		$this->tables = $tables;
+	}
+
+	
+
+	/**
+	 * Set base where clause
+	 * 
+	 * @param string
+	 * @return string
+	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
+	 */
+	public function set_baseWhereClause($baseWhereClause) {
+		$this->baseWhereClause = $baseWhereClause;
+	}
+
+	
+
+	/**
+	 * Set base group by clause
+	 * 
+	 * @param string
+	 * @return string
+	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
+	 */
+	public function set_baseGroupByClause($baseGroupByClause) {
+		$this->baseGroupByClause = $baseGroupByClause;
+	}
+
+	
+
+	/**
+	 * Set base from clause
+	 * 
+	 * @param string
+	 * @return string
+	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
+	 */
+	public function set_baseFromClause($baseFromClause) {
+		$this->baseFromClause = $baseFromClause;
+	}
     
 }
 

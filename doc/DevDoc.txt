@@ -76,6 +76,9 @@ CHANGELOG
 Version 0.0.4dev:
 ----------------
 
++ (fb) ADD: added some setters in tx_ptlist_typo3Tables_list (They are needed if pt_list is extendend from other controllers and configuration should
+	        be influenced by within the extending code. With this features you can easily have some "dedicated" controllers for special lists and add
+	        individual configuration in a new flexform.
 # (fb) ADD: added support for prev and next links (TODO: update documentation)
 + (fb) RFT: removed some empty lines
        + added comment into list_genereicPager.tpl to mark this as deprecated
