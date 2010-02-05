@@ -30,7 +30,7 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS'][t3lib_extMgm::extPath('pt_list').'clas
 	'path' => 'EXT:pt_list/model/pagerStrategy/class.tx_ptlist_pagerStrategy_default.php:tx_ptlist_pagerStrategy_default',
 );
 
-$GLOBALS['TYPO3_CONF_VARS']['FE']['debug'] = '0';
+// $GLOBALS['TYPO3_CONF_VARS']['FE']['debug'] = '0';
 
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['hook_eofe'][] = 'EXT:pt_list/model/class.tx_ptlist_div.php:tx_ptlist_div->hookEofe';
 
