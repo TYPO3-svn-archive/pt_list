@@ -500,6 +500,15 @@ class tx_ptlist_columnDescription implements tx_pttools_iTemplateable, tx_pttool
      */
     public function set_sortingState($sortingState) {
         tx_pttools_assert::isTrue($this->isSortable(), array('message' => 'Sorting is not supported for this column!'));
+        tx_pttools_assert::isInArray(
+        	$sortingState, 
+        	array(
+        		self::SORTINGSTATE_ASC, 
+        		self::SORTINGSTATE_DESC, 
+        		self::SORTINGSTATE_NONE
+        	), 
+        	array('message' => 'Invalid sorting state')
+        );
         $this->sortingState = $sortingState;
     }
 

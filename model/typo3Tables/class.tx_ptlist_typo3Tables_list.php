@@ -141,7 +141,7 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 			$this->filters->setPropertiesFromArray($dataArray['filters.']);
 		}
 
-		if(!empty($dataArray['defaults.']['sortingColumn'])) {
+		if(!empty($dataArray['defaults.']['sortingColumn']) || !empty($dataArray['defaults.']['sortingColumn.'])) {
 			$sortingColumn = $GLOBALS['TSFE']->cObj->stdWrap($dataArray['defaults.']['sortingColumn'], $dataArray['defaults.']['sortingColumn.']);
 			$sortingDirection = $GLOBALS['TSFE']->cObj->stdWrap($dataArray['defaults.']['sortingDirection'], $dataArray['defaults.']['sortingDirection.']);
 			$sortingDirection = (strtolower($sortingDirection) == 'desc') ? tx_ptlist_columnDescription::SORTINGSTATE_DESC : tx_ptlist_columnDescription::SORTINGSTATE_ASC;

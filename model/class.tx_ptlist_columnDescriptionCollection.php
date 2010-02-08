@@ -249,7 +249,7 @@ class tx_ptlist_columnDescriptionCollection extends tx_pttools_objectCollection 
 	public function getOrderByClause() {
 		$orderby = array();
 		foreach ($this as $column) { /* @var $column tx_ptlist_columnDescription */
-			if ($column->isSortable() && $column->get_sortingState() != tx_ptlist_columnDescription::SORTINGSTATE_NONE) {
+			if ($column->isSortable() && ($column->get_sortingState() != tx_ptlist_columnDescription::SORTINGSTATE_NONE)) {
 				$orderby[] = $column->getOrderByClause();
 			}
 		}
