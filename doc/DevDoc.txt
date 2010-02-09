@@ -72,10 +72,10 @@ XSS-Prevention Actions so far:
 CHANGELOG
 ================================================================================
 
-
 Version 0.0.4dev:
 ----------------
 
++ (nf) ADD: added a filter_integer
 + (fb) RFT: minor changes
 + (fb) ADD: added some setters in tx_ptlist_typo3Tables_list (They are needed if pt_list is extendend from other controllers and configuration should
 	        be influenced by within the extending code. With this features you can easily have some "dedicated" controllers for special lists and add
