@@ -5,6 +5,7 @@
 plugin.tx_ptlist.alias {
     
     # filter_*: filter classes inheriting from the tx_ptlist_filter class
+	filter_integer = EXT:pt_list/controller/filter/class.tx_ptlist_controller_filter_integer.php:tx_ptlist_controller_filter_integer
 	filter_string = EXT:pt_list/controller/filter/class.tx_ptlist_controller_filter_string.php:tx_ptlist_controller_filter_string
 	filter_min = EXT:pt_list/controller/filter/class.tx_ptlist_controller_filter_min.php:tx_ptlist_controller_filter_min
 	filter_max = EXT:pt_list/controller/filter/class.tx_ptlist_controller_filter_max.php:tx_ptlist_controller_filter_max
