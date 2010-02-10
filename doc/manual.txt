@@ -1,0 +1,1432 @@
+
+EXT: List generator
+Extension Key: pt_list
+Language: en
+Keywords: list, generator, forDevelopers, forAdmins, forIntermediates, forAdvanced
+Copyright 2009, Fabrizio Branca, Rainer Kuhn, Michael Knoll, et. al.
+                       <mail@fabrizio-branca.de, kuhn@punkt.de, knoll@punkt.de> 
+
+Extension development sponsored by punkt.de GmbH (http://punkt.de)
+
+This document is published under the Open Content License
+available from http://www.opencontent.org/opl.shtml
+
+The content of this document is related to TYPO3 
+- a GNU/GPL CMS/Framework available from www.typo3.org
+
+Table of Contents
+EXT: List generator	1
+Introduction	3
+What does it do?	3
+Screenshots	3
+Users manual	5
+Installation	5
+How to set up the demo list	5
+Administration	6
+Setting up a list Step-by-step	6
+List Configuration – Main parts	6
+List Configuration – Details	8
+Plugin Configuration	15
+Using aliases	16
+Developers	18
+How pt_list controllers are processed	18
+How filters are processed	19
+Creating an own filter class	19
+Using the list controller as a subcontroller within your plugins	19
+Using pt_list to generate PDF documents	19
+Known problems	23
+To-Do list	24
+ChangeLog	25
+
+Introduction
+What does it do?
+
+Screenshots
+Frontend
+
+Displaying the main features: Filterbox, Item list and Pager.
+
+Backend
+
+
+Backend view of inserted plugins for the frontend output shown in screenshot before (Filterbox, Item List and Pager).
+
+TODO add screenshot from plugins in back end (after refactoring flexforms)
+Users manual
+Installation
+Download and install the extension from the Extension Repository using the Extension Manager. There is a number of dependent extensions including pt_mvc, pt_tools, smarty. For the demo list, you also need static_info_tables.
+There are no further settings to be made in the Extension manager.
+How to set up the demo list
+The extension contains a demo list that shows pt_list's main features. Follow the instructions below to set up this demo list.
+1.Create a page to insert the plugin and the template for the list.
+2.Create a TS Extension template or use your site's default TS Template and include the following static TS templates:
+[pt_list] List configuration (pt_list)
+[pt_list] Themes / Default (pt_list)
+[pt_list] Demo list (static_info_tables) (pt_list)
+3.Put three instances of the pt_list plugin on the page you just created. 
+4.Set the first plugin's “Plugin Mode” to “Filterbox”, the second plugin's “Plugin Mode” to “List” and the third plugin's “Plugin Mode” to “Pager”.
+Make sure to set the list identifier of all three plugin instances to “myDemoList” to make the example working and the “List Type” to “TYPO3 Tables”. 
+Make sure, the field “Filterbox identifier” says “defaultFilterbox” in the plugin instance where you chose “Filterbox” as “Plugin Mode”.
+Make sure to select “Default Pager” in the selectbox “Pager” on the plugin instance where you chose “Pager” as “Plugin Mode”.
+5.Have a look at the frontend – voilà, there comes your demo list.
+
+Administration
+Erklären, wie die ganze Sache funktioniert
+Definition der zugrundeliegenden Datenstrukturen
+Zuweisung von Listenspalten auf Datenstrukturen
+Datenspalten und Listenspalten haben zunächst nichts miteinander zu tun, überlicherweise ist Listenspalte aber ein Verweis auf Datenspalte, Listenspalten können aber auch 0 oder beliebige Datenspalten sein.
+Beschreibung der Funktionalität am Beispiel der Demoliste
+Evtl. Grafik einfügen: Datenbanksicht (Tabellen) für die Beschreibung der Daten vs. Listenansicht im Frontend mit der Spaltenbeschreibung.
+pt_list ermöglicht Implementierung eigener Listen.
+Mitgeliefert ist eine generische Liste, die sich komplett per TS konfigurieren lässt
+Für die Entwicklung eigener Listentypen dient der Abschnitt “Developers”
+Mitgelieferte Liste ist “Typo3 Tables”
+Setting up a list Step-by-step
+Liste wird in TS definiert
+List Identifier ordnet TS Config den Plugins zu:
+plugin.tx_ptlist.listConfig.<list identifier>
+Referenztabelle für die Beschreibung der einzelnen TypoScript Befehle
+Die Definition einer Liste in TypoScript setzt sich aus der Definition folgender Bestandteile zusammen:
+tables: welche Datenbank-Tabellen werden für die Liste verwendet (vgl. SQL FROM)
+baseWhereClause: wie werden die Daten dieser Tabellen eingeschränkt (vgl. SQL WHERE)
+data: Datenbeschreibung aus Sicht der Datenbank (vgl SQL SELECT)
+columns: Spaltenbeschreibung aus Sicht der Ausgabe des plugins
+filters: Definitionen der verfügbaren Filter
+Detaillierte Beschreibung der einzelnen Bestandteile in Tabelle:
+List Configuration – Main parts
+All the following configuration settings refer to the tx_ptlist_typo3Tables_list class. You are free to implement your own list class (you only need to inherit from tx_ptlist_list), but then you need an own way to configure your list. 
+Hint: A powerful possibility to this approach is that you might implement a list class that does not use (mysql) database as a backend storage but maybe a web service or plain-text files or whatever. Have a look in EXT:pt_list/ext_localconf.php on how to add your new list class (or the same with your new pager strategy classes) to the select field in the plugins flexform configuration.
+Hint: A good practice is to construct the MySQL command completely (e.g. in phpmyadmin) until you get the result list you expected and then splitting it up into the following parts.
+[plugin.tx_ptlist.listConfig.<listIdentifier>.]
+Property:
+Data type:
+Description:
+tables
+string / ->stdWrap
+Defines the database tables used for the list. Comma separated list of database table with optional alias (if you use table aliases in the “data” section you need to define them here or in the baseFromClause if you use one):
+table_name_1 [alias_1], table_name_2 [alias_2]
+
+Example:
+static_countries, static_territories territory
+baseWhereClause
+string / ->stdWrap
+MySQL WHERE snippet that describes how the tables are joined to each other and / or set some other restrictions if necessary.
+
+Example:
+static_countries.cn_parent_tr_iso_nr = territory.tr_iso_nr
+baseFromClause
+string / ->stdWrap
+This configuration parameter is optional. If you do not set it the tables defined in “tables” will be (inner) joined.
+If you need other joins define the complete “FROM” clause here. If you do so, you are in charge of that all table aliases used in the “data” section.
+If defining how the tables are connected to each other in the baseFromClause you do not need to define it in the baseWhereClause, too.
+If you use a baseFromClause the tables defined under “tables” will be ignored. (Only the first table defined there will be further on used as default table if no table is set in a data description)
+
+Hint: Use typoscript “( )” notation for multi-line values to increase clarity
+
+Example:
+baseFromClause (
+  static_countries 
+  LEFT JOIN static_territories AS st_subcontinent
+    ON (static_countries.cn_parent_tr_iso_nr =
+      st_subcontinent.tr_iso_nr)
+  LEFT JOIN static_territories AS st_continent
+    ON (st_subcontinent.tr_parent_iso_nr = 
+      st_continent.tr_iso_nr)
+)
+baseGroupByClause
+string / ->stdWrap
+This goes into the group by clause of the resulting mysql statement
+database
+string / uid / ->stdWrap
+If this parameter is empty, the TYPO3 database will be used (this is the default).
+If you want to use an external database you have to define a dsn or a uid of a tx_ptlist_databases record containing all login information to the external database.
+
+Hint: if you define the login data in a dsn string in your list configuration, be sure that the file containing this string is not accessible from outside!
+
+Hint: Because of a bug not related to pt_list it will lead to problems if your “external database” is on the same mysql instance and you use the same user. Create a mysql user different to the typo3 user to access this database!
+
+Example:
+database = 5
+(5 is the uid of the tx_ptlist_databases record containing all information)
+
+database = mysql://<username>:<password>@<host>/<database>
+defaults.sortingColumn
+string / ->stdWrap
+columnDescriptionIdentifier (not dataDescriptionIdentifier!) of the column the list should be sorted with by default.
+defaults.sortingDirection
+“asc” (default) or “desc”
+Sorting direction that should be used for the column defined in defaults.sortingColumn
+noElementsFoundText
+string / ->stdWrap
+individual list-specific text to display if no items have been found for the current list request
+data
+<dataDescriptionIdentifier1>., <dataDescriptionIdentifier2>.,...
+Array with associative keys (=dataDescriptionIdentifier) of ->dataDescriptions. 
+	
+Example:
+data {
+
+  name_en {
+    field = cn_short_en
+    table = static_countries
+  }
+			
+  capital {
+    table = static_countries
+    field = cn_capital
+  }
+
+  [...]
+}
+columns
+10., 20., …
+Array with numeric keys of ->columnDescriptions
+
+Example:
+columns {
+
+  10 {
+    label = LLL:EXT:my_ext/locallang.xml:capital
+    columnIdentifier = capital
+    dataDescriptionIdentifier = capital
+  }
+
+}
+filters
+<filterBoxIdentifier1>.,  <filterBoxIdentifier2>., …
+Array of ->filterBoxDefinitions. The default Filter Box identifier is “defaultFilterbox”
+
+Example:
+filters {
+
+  defaultFilterBox {
+
+    10 {
+      ->filterDefinition
+    }
+
+    20 {
+    }
+
+    [...]
+
+  }
+
+  topFilterBox {
+
+    [...]
+
+  }
+}
+Aggregates
+
+Example:
+
+
+aggregateData
+array of aggregate definitions
+Array of aggregateDataDescipitionIdentifier and its sql statement.
+
+aggregateData.<aggregateDataDescipitionIdentifier> = <sql>
+
+Example:
+aggregateData {	
+  usedtimeSum = sum(projtime.usedtime)	
+  usedtimeAvg = avg(projtime.usedtime)
+  usedtimeMax = max(projtime.usedtime)
+  usedtimeMin = min(projtime.usedtime)
+}
+aggregateRows
+10, 20, 30,...
+array of ->aggregateRowDefinitions
+structureByCols
+string
+Comma separated list of DataDescriptionIdentifiers telling pt_list to structure a list by certain columns
+structureByHeaders
+string
+Comma-separated list of DataDescriptionIdentifiers telling pt_list to use the values of these fields as headings for a block generated by structuring the list.
+List Configuration – Details
+->dataDescriptionDefinition
+The dataDescription is the database part of the list. Here you define from which database column to fetch the data from. Settings defined here go into the select expression of the generated sql statement.
+You can either define the table and the field where to fetch the data from or a “special” statement that will be inserted as it is. The dataDescriptionIdentifier that is defined as key for this whole dataDescriptionDefinition will be used as field alias.
+Property:
+Data type:
+Description:
+Specifying <table>.<field>
+table
+string / ->stdWrap
+A database table or if an alias for this table was defined, its alias where the field should be taken from. If empty the first table defined in listConfig's tables configuration parameter will be used if set.
+field
+string / ->stdWrap
+The database field where to fetch the data from.
+Hint: Using the stdWrap toolkit you are able to retrieve the field name dynamically 
+
+Example:
+price {
+    table = pricelist
+    field {
+        cObject = USER
+        cObject {
+            userFunc = tx_myExt_div->getCurrentPriceColumn
+        }
+    }
+}
+
+Using “special” 
+special
+string / ->stdWrap
+You can define a custom string here that will be used as it is. If defined the setting in table and field will be ignored.
+
+Example:
+plugin.tx_ptlist.listConfig.myCountryList.data {
+  countryAndCapital {
+    special = CONCAT(static_countries.cn_short_local, ' ', static_countries.cn_capital)
+  }
+}
+
+Hint: Be sure to do things at the right place! E.g. concatenating two fields like in the example above is something regarding the output of the list and thus should be done with a ->renderDefinition!
+Other options
+isSortable
+boolean
+Define if this dataDescription can be sorted or not. The user cannot sort dataDescriptions, only columns. But as column depends on dataDescriptions the column can only be sorted if sorting is allowed on the column itself (the column has also an isSortable option) and if all dataDescription used for sorting (the column has a sortingDataDescriptions configuration parameter, and if this is not set, all dataDescriptionIdentifiers will be used as sortingDataDescriptionIdentifiers)
+access
+list of fe_groups uids
+Comma separated list of fe_groups uids. If empty everbody can access this dataDescription. A column and a filter will only be displayed if all they are accesible themselves (they also have an access configuration parameter) and if all dependent dataDescriptionIdentifiers are accessible be the current fe_user's fe_groups.
+
+Hint: Be careful when using “*” on a dataDescriptionIdentifier configuration parameter. If there is only one dataDescriptionIdentifier that is not accessible to the current user the filter or the column will not be displayed.
+->columnDescriptionDefinition
+Property:
+Data type:
+Description:
+columnIdentifier
+string 
+Chose an unique identifier for this column description
+label
+string / ->stdWrap
+Label to be displayed as column header
+dataDescriptionIdentifier
+list of dataDescriptionIdentifiers
+References data description identifier used for the content of this column. Usually only one data description is referenced, if you reference more than one values will be displayed comma separated by default. Use renderer or cObj to adapt output to your needs.
+isSortable
+boolean
+Flag if list items can be sorted according to this column. Default is true.
+access
+list of fe_groups uids
+Comma separated list of fe_groups uids
+sortingDataDescription
+list of dataDescriptionIdentifiers [[!]asc|desc]
+By default this setting is equal to dataDescriptionIdentifier. If you want to sort list items by other columns. 
+Add “asc” or “desc” after the dataDescriptionIdentifier to define the order. These orders will be inverted if the column is sorted descending. “Asc” is the default.
+You can force a direction (that will not be inverted) by adding a “!” before.
+
+Example:
+sortingDataDescription = tstamp, title
+sortingDataDescription = tstamp desc, title
+sortingDataDescription = tstamp !desc, title desc
+
+->renderDefinition properties
+By default all values from the dataDescriptions will be outputted comma-separated. in the order how the dataDescriptions were defined in the column's dataDescriptionIdentifier configuration parameter.
+As this is presumably not the output you want in most case you can render cell contents via typoscript and/or via php user functions. In both cases you have all data from the dataDescriptions available to create the cell content as you need. See the ->renderDefinition section for details.
+->filterBoxDefinition
+A filterBoxDefinition is a simple array of single filterDefinitions. Group your filters into filterboxes and place them on your website using the list controller with the pluginMode “filterbox” and choose the filterBoxIdentifier in the flexform.
+Property:
+Data type:
+Description:
+
+array
+Array of ->filterDefinitions with associative keys. Where the main key contains the path to the class file to be used for the filter (the class must be a child of the  tx_ptlist_filter class) and the subconfiguration will be passed to the created filter.
+
+Example: 
+Special filterbox: “renderInList”
+The items defined in the “renderInList” filterbox are available within the itemList template. Use this if you want to embed filters into the column header. 
+->filterDefinition
+Property:
+Data type:
+Description:
+filterIdentifier
+string
+Chose an unique identifier for this filter description
+label
+string
+Label (supports LLL:...)
+dataDescriptionIdentifier
+list of dataDescriptionIdentifiers / *
+List of dataDescriptionIdentifiers this filter operates on. 
+
+Use “*” if you want to use all available dataDescriptionIdentifiers.
+access
+list of fe_groups uids
+List of fe_groups uid who have access to this filter. If empty, everybody has access to it.
+
+Hint: A filter might not be available even if there is no access configuration here. A filter is not accessible if at least one of the dataDescriptionIdentifiers is not accessible, too.
+hideColumns
+list of columnDescriptionIdentifier
+If the filter is active the columns defined here will be hidden. You can use for example if every value in a column would be the same because of the filter restrictions (e.g. when using a group filter).
+resetListSortingStateOnSubmit
+bool
+Determines whether the filter should reset the sorting of the list after it is submitted. Default is 0 (list sorting state is not reset after submit).
+resetFilters
+string (list of filterIdentifiers or '__ALL__')
+filterIdentifiers to reset when this filter validates. 
+You can set one single  filterIdentifier, a comma separated list of  filterIdentifiers or '__ALL__' to reset all other filters.
+dependsOn
+filterIdentifier
+The filter will only be displayed if the filter defined here is active. You can realise subfilters with this mechanism.
+onValidated
+10, 20, 30,...
+Array with numeric keys. If the filter uses the default onValidatedAction() (or overwrites in a compatible way) you can define user-functions (hooks) that will be executed on validation.
+Subkeys will be passed to the user-function as configuration. 
+
+The pt_list extension offers a redirectOnValidate userfunction that can be used here. Optionally you have to possibility to pass URL parameters to the redirect target page URL. 
+
+Example:
+plugin.tx_ptlist.controller.filter_range.rangePhoneNumber {
+  onValidated {
+    10 = EXT:pt_list/model/class.tx_ptlist_div.php:tx_ptlist_div->redirectOnValidate
+    10 {
+      target = <TYPO3 PID or alias>
+      urlParameters {
+        <param1 key> = <param1 value>
+        <param2 key> = <param2 value>
+      }
+    }
+  }
+}
+invert
+boolean
+If set the generated mysql where clause snippet will be inverted (prepended with “not”)
+sortingColumnDescriptionOnSubmit
+string
+If set, the filter will set the sorting state of the list to the column description identifier given here using the sorting direction given in sortingDirectionOnSubmit
+sortingDirectionOnSubmit
+string (ASC|DESC)
+Sets the sorting direction of the column that is given in sortingColumnDescriptionOnSubmit
+Presetting value and state.
+The following configuration parameter can be used the define some defaults. When loading the list this state will be restored if no state is found in the session.
+isActive
+boolean
+Set to “1” if you want to the filter to be active by default.
+value
+string / array
+You have to know the way the filter stores its value. In some cases it is a single value (int or string), in other cases value is an array with defined keys (e.g. the range filter uses the keys “minval” and “maxval” to store its state)
+
+You can set the value
+by directly setting the value:
+value = 5
+by setting a serialized value:
+value = a:2:{s:6:"minval";s:1:"5";s:6:"maxval";s:2:"10";}
+value.serialized = 1
+by defining an array:
+value {
+  minval = 5
+  maxval = 10
+}
+resetFilterOnNoSubmit
+Boolean
+If set to 1, the filter will be reset if there is no submit value given (e.g. when re-visiting a page and you don't want the filter to be restored from session). TODO check, whether this works for all types of filters.
+Filters are simple mvc controllers inheriting from tx_ptmvc_controllerFrontend (have a look at EXT:pt_mvc's documentation). That means that you could configure some filter specific settings this way:
+plugin.tx_ptlist.controller.<controllerName> {
+}
+where <controllerName> is the name of the filter (e.g. “filter_min”, “filter_options_group”).
+To configure a filter specific to a filterIdentifier you could place settings in 
+plugin.tx_ptlist.controller.<controllerName>.<filterIdentifier> {
+}
+FilterIdentifier-specific settings overrule filter-specific settings.
+
+Example:
+plugin.tx_ptlist.controller.filter_options_group.groupContinents {
+  hideResetLink = 1
+  ignoreFilters = firstLetterCapital, groupSubContinents
+  orderBy = item asc
+}
+For convenience reasons all filterDefinition configuration parameters will be passed to the filter controller. That means you can configure the filter directly in the filterDefinition, too:
+Example:
+plugin.tx_ptlist.listConfig.myDemoList.filters.defaultFilterbox.50 {
+  hideResetLink = 1
+  ignoreFilters = firstLetterCapital, groupSubContinents
+  orderBy = item asc
+}
+Available Filters
+
+Filter
+Description
+integer
+This filter is a simple integer search. Type the integer you want to look for into the textbox, click 'Search' and get the rows fitting your integer number.
+
+Example:
+
+
+min
+Example:
+
+max
+Example: 
+
+range
+Example:
+
+string
+This filter is a simple string search for defined dataDescriptionIdentifiers. When using “*” in the dataDescriptionIdentifier configuration this filter acts like a fulltext search. 
+
+Hint: By now it is not possible to have complex search string like “aaa bbb -ccc” (meaning search for “bbb” or “bbb” but not “ccc”). This is on my todo list...
+
+Example:
+
+firstLetter
+This filter extracts all first letters from a given dataDescriptionIdentifier and displays them in a menu. Even if it looks like a pager, this is only a filter. With some css styling of this filter and the filterbox containing this filter you can display it as nice tabs on top of the list:
+
+Example:
+
+timeSpan
+Example:
+
+Typoscript parameters:
+Property:
+Data type:
+Description:
+dataDescriptionIdentifier
+string
+Data description identifier to use for filtering. Only one identifier is allowed!
+submitValue
+string
+String to label submit button of filter with. This label will be translated, if translation is given!
+dateFieldType
+string
+Determines, whether database field to filter is a timestamp or a date field. Possible values: 'timestamp', 'date'
+spans
+string
+List of dates to be shown as selection. Possible values:
+
+thisyear, lastyear, today, thisweek, thismonth, yesterday, lastweek, lastmonth
+
+Developer hint: You can add own spans by changing the tx_ptlist_controller_filter_timeSpan::getPresetTimestamps function.
+
+timeSpan2
+Example:
+
+
+This filter displays two fields to enter a lower and upper range for dates to filter your data by. This filter can only work on one Data description!
+
+If you have jquery ui set up and running, you will see two date pickers beneath the date fields.
+
+Typoscript parameters:
+Property:
+Data type:
+Description:
+dataDescriptionIdentifier
+string
+Data description identifier to use for filtering. Only one identifier is allowed!
+submitValue
+string
+String to label submit button of filter with. This label will be translated, if translation is given!
+dateFieldType
+string
+Determines, whether database field to filter is a timestamp or a date field. Possible values: 'timestamp', 'date'
+
+Make sure to include '[pt_list] TimeSpan2 Filter (jQuery)' into your static template!
+datePicker
+
+
+The filter extracts all dates of one or two dataDescriptionIdentifiers, which of course must refer to date fields of the respective table. In the case of two dataDescriptionIdentifiers the first one is considered to be the start date and the second one to be the end date. The calendar sheet will hightlight the relevant dates. These dates are responsive and can be selected. As a consequence pt_list filters any events, which take place on the selected day.
+
+TypoScript parameters:
+Property:
+Data type:
+Description:
+dataDescriptionIdentifier
+string
+Data description identifier to use for filtering. One or two identifiers are allowed. They have to refer to table fields of type date or timestamp. Be sure to set the 'dateFieldType' property properly.
+datePickerMode
+string
+Determines the display mode of the Date Picker. 
+Possible values: 'inline' (default), 'overlay'
+This filter has two display modes:
+1.overlay mode: input field with a calendar icon aside. If the icon is clicked, a calendar sheet pops up.
+2.inline mode: inline calendar sheet
+changeMonth
+bool
+Determines, whether the month can be selected by a drop-down list.
+changeYear
+bool
+Determines, whether the year can be selected by a drop-down list.
+submitValue
+string
+String to label submit button of filter with. 
+dateFieldType
+string
+Determines, whether database field to filter is a timestamp or a date field. Possible values: 'timestamp', 'date'
+
+Make sure to include '[pt_list] DatePicker Filter (jQuery)' into your TS template!
+datePager
+
+
+The filter allows you to navigate through dates in terms of days, weeks, months and years. Therefore the dataDescriptionIdentifier  has to refer to one or two 'date' fields of the respective table, which are either of type date or timestamp. In the case of two dataDescriptionIdentifiers the first one is considered to be the start date and the second one to be the end date. In order to get the correct output of day- , week- and month names according to your local language you have to set the valid locale information. For this purpose TYPO3 provides the global TypoScript property config.locale_all.
+Example:
+config.locale_all = de_DE.UTF-8
+
+Remark: 
+The week number of a year sticks to the ISO 8601 norm, i.e. week 1 is the first week, which has at least 4 days in the current year. Monday is the first day of a week. The week numbers range from 0 to 53. 
+
+TypoScript parameters:
+Property:
+Data type:
+Description:
+dataDescriptionIdentifier
+string
+Data description identifiers to use for filtering. One or two identifiers are allowed. They have to refer to table fields of type date or timestamp. Be sure to set the 'dateFieldType' property properly.
+dateFieldType
+string
+Determines, whether database field to filter is a timestamp or a date field. Default: timestamp
+Values possible:
+timestamp
+date
+entity
+string
+Determines the entity of paging. Default: day
+Values possible:
+day
+week
+month
+year
+header
+cObject
+You can use TypoScript to render the header content. The types field:begin and field:end refer to the first and last day of an entity.
+Example:
+header = TEXT
+header {
+    dataWrap (
+        Events from {field:begin} to {field:end}
+    )
+}
+beginFormat
+string
+Determines the format of the field:begin type. The syntax of the format string complies with the syntax of the PHP strftime() function. Default: %G-%m-%d. See http://de.php.net/manual/en/function.date.php for further details.
+Example:
+beginFormat = %G-%m-%d
+-> 2009-09-15
+endFormat
+string
+Determines the format of the field:end type. The syntax of the format string complies with the syntax of the PHP strftime() function. Default: %G-%m-%d. See http://de.php.net/manual/en/function.date.php for further details.
+labelPrevious
+string / ->stdWrap
+Sets the navigation label for navigating backwards.
+Default: '<'
+labelNext
+string / ->stdWrap
+Sets the navigation label for navigating forwards.
+Default: '<'
+
+options_base
+This filter cannot be used directly. It is an abstract base class for all filters that have multiple options. At this time there is the options_group filter, that reads all available values from a dataDescription by grouping by this database column and the options_explicit, where you can define options manually by typoscript.
+
+Appearances:
+Mode
+Single selection (multiple=0)
+Multiple Selection (multiple=1)
+select
+(default)
+
+Options:
+selectBoxSize=<itemsToBeDisplayedAtOnce>/"ALL"
+links
+
+Multiple is only possible in “toggleMode” (click activates the options, click again to deactivate)
+
+Options:
+toggleMode=0/1
+radio
+
+Not available in multiple mode!
+checkbox
+Not available in single mode!
+
+advmultiselect
+Not available in single mode!
+Hint: Needs PEAR's HTML_QuickForm and HTML_QuickForm_advmultiselect packages!
+
+Options:
+advmultiselectConf.size=<itemsToBeDisplayedAtOnce>/"ALL"
+
+options_group
+The options_group filter can operate on only one dataDescription. It groups for this database column and lists all available values (with their quantity).
+options_explicit
+Define options manually
+
+Example:
+options {
+  10 {
+    item = 5
+    label = MyFirstValue
+  } 
+  20 {
+    item = 6
+    label = MySecondValue
+  }
+}
+
+->renderDefinition
+TODO: describe caching...
+Property:
+Data type:
+Description:
+renderObj
+cObject
+The typoscript way of rendering cell contents:
+
+
+renderUserFunctions
+10, 20, 30,...
+The php way of rendering cell contents: 
+Array with numeric keys of renderer user functions for rendering the contents of a cell. If there exist subentries with the same key, those values will be passed to the renderer as configuration.
+
+Example:
+renderUserFunctions {
+  10 = EXT:pt_list/model/class.tx_ptlist_renderer.php:tx_ptlist_renderer->regexReplace
+
+  10 {
+    pattern = /([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])               *@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})/
+    replace = <a href="mailto:$1">$1</a>
+  }
+}
+
+The renderer shown in the example parses the cell content for an email adress and converts it into a mailto link.
+Available renderUserFunctions
+EXT:pt_list/model/class.tx_ptlist_renderer.php:tx_ptlist_renderer->
+Renderer
+Description
+editIcon
+
+cObject
+
+regexReplace
+
+fetchExternalData
+Caching,...
+Writing your own renderUserFunction
+Write a function that accepts an array with following keys as parameter:
+key
+description
+$params['currentContent']
+The current content while rendering the content (from the renderUserFunction called before...)
+$params['conf']
+The configuration passed to the renderUserFunction configuration
+$params['values']
+The source values to be rendered
+Example:
+class tx_myext_renderer {
+  public static function nameAndCapitalRenderer(array $params) {
+    $values = $params['values'];
+    return sprintf('%s (%s)', $values['name_local'], $values['capital']);
+  }
+}
+->aggregateRowDefinition
+Property:
+Data type:
+Description:
+<columDescriptionIdentifier>.
+->aggregateCellDefinition
+columnDescriptionIdentifier of the column this aggregate content should be attached to.
+->aggregateCellDefinition
+
+Property:
+Data type:
+Description:
+aggregateDataDescriptionIdentifier
+list of aggregateDataDescriptionIdentifier
+List of aggregateDataDescriptionIdentifier that should be used in this cell.
+
+->renderDefinition properties
+This defines how the display the aggregates. All  aggregateData values are available as fields with the userFunctions and the renderObj.
+Plugin Configuration
+plugin.tx_ptlist.controller.list
+Property:
+Data type:
+Description:
+listId
+string
+
+listClass
+string
+
+pagerStrategyClass
+string
+
+pagerStrategyConfiguration.
+->pagerStrategy-Configuration
+
+itemsPerPage
+int
+
+maxRows
+int
+
+bookmark_uid
+int
+
+doNotUseSession
+boolean
+
+
+ATTENTION: All these settings can be overwritten for a certain list prefix by the following syntax:
+plugin.tx_ptlist.controller.list.<listPrefix>
+<listPrefix> = <controllerClassName>_listId_<listId>
+plugin.tx_ptlist.view.pdf_rendering
+Property:
+Data type:
+Description:
+fileHandlingType
+string
+Set whether file should be generated for I (send to browser), D (send to browser, force download), F (local file), S (return as string)
+fileName
+string
+Name of generated PDF file.
+dbEncoding
+string
+Encoding of database. This is required, as the created XML file needs to be encoded in UTF-8.
+pageFormat
+string
+Format of PDF page. Use either
+
+1) One of the following values: A4, A3, A5, Letter, Legal
+2) Custom format coded as <width>x<height>, e.g. 210x297 for DIN A4
+
+ATTENTION: Remind, that the “orientation” configuration might “flip” height and width!
+pageHeight
+float
+Height of page (used for pre-calculating column widths, so format cannot be used!). 
+
+ATTENTION: If you use “orientation” landscape, make sure to use the right height here!
+paperWidth
+float
+Width of page (used for pre-calculating column widths, so format cannot be used!)
+
+ATTENTION: If you use “orientation” landscape, make sure to use the right width here!
+fontSize
+int
+Font size for list contents
+marginTop
+float
+Margin on the top of the page
+marginBottom
+float
+Margin on the bottom of the page
+marginLeft
+float
+Margin on the left side of the page
+marginRight
+float
+Margin on the right side of the page
+paperOrientation
+“L”, “P”
+(L)andscape or (P)ortrait
+increaseColWidth
+boolean
+If set to “1”, the columns are stretched, if there is empty space between page margins.
+decreaseColWidth
+boolean 
+If set to “1”, the columns are shrinked, if they overflow the available space on page.
+listHeading
+string
+Heading of the list
+listHeadingFontSize
+int
+Font size for the header
+plugin.tx_ptlist.listConfig.<list_name>.columns.pdf
+Property:
+Data type:
+Description:
+width
+float
+Width of column (in mm)
+multiline
+boolean
+Should column be rendered as multiline cell?
+dontScale
+boolean
+If set to “1”, the cell will not be stretched or shrinked (overrides “increaseColWidth” and “decreaseColWidth” from above).
+alignment
+“L”, “C”, “R”
+Alignment of cell: (L)eft, (C)enter or (R)ight
+plugin.tx_ptlist.view.csv_rendering
+Property:
+Data type:
+Description:
+fileHandlingType
+string
+Set whether file should be generated for I (send to browser), D (send to browser, force download)
+fileName
+string
+Name of generated CSV file.
+useDateAndTimestampInFilename
+string
+Set whether date and time should appear in filename of generated CSV file
+fileNamePrefix
+string
+Set prefix to appear before date and time if upper value is set to 1
+->pagerStrategyConfiguration
+The pager strategy configuration depends on the strategy object that is used. By default this is “EXT:pt_list/model/pagerStrategy/class.tx_ptlist_pagerStrategy_default.php:tx_ptlist_pagerStrategy_default”. 
+
+The following settings are supported by the default pagerStrategy class:
+Property:
+Data type:
+Description:
+delta
+int
+The delta is the amount of page that should be displayed left and right from the current page. Left out pages will be displayed as “...”
+Example (current page is 7):
+delta=3 => … 4 5 6 7 8 9 10 …
+delta=5 => … 2 3 4 5 6 7 8 9 10 11 12...
+elements
+string
+Comma separated list of following elements. The elements will be displayed in the order in the list
+first, prev, pages, next, last, offsetinfo
+Using aliases
+In the typoscript configuration under plugin.tx_ptlist.alias. there all classes that can be loaded via typoscript are “registered”. Instead of inserting the whole path in your typoscript configuration you can copy the content of the alias
+Example:
+plugin.tx_ptlist.listConfig.myList.listClass < plugin.tx_ptlist.alias.list_typo3Tables
+instead of
+plugin.tx_ptlist.listConfig.myList.listClass = EXT:pt_list/model/typo3Tables/class.tx_ptlist_typo3Tables_list.php:tx_ptlist_typo3Tables_list
+Developers
+How pt_list controllers are processed
+As pt_list is based on pt_mvc, you might be interested in reading the pt_mvc manual on how pt_mvc controllers are processed. This section should give you a rough overview on how pt_list controllers and methods are processed to easily find out where to start if you want to change something or add new functionality. Remind that tx_ptlist_controller_list extends tx_ptmvc_frontendController that extends tx_ptmvc_controller.
+
+tx_ptmvc_controller
+tx_ptlist_controller_list
+
+
+__construct()
+initialize cObj
+__construct()
+init local configuration
+? calls
+main()
+sets current content
+merges localconf (from constructor) and given conf 
+sets prefixId
+[not implemented here]
+
+prepare() 
+[not implemented here]
+
+
+
+bootstrap()
+bootstrap()
+? calls
+sets prefixId
+adds subcontroller prefixId (optionally)
+
+
+
+getConfiguration()
+loads EM configuration for plugin
+getConfiguration()
+? calls
+
+merge local configuration over existing configuration
+set CurrentListId
+set ListPrefix
+set pluginMode
+set filterboxId (optionally)
+merge list Id specific configuration over existing config 
+
+
+
+getParameters()
+initializes empty parameters array
+getParameters()
+? calls
+
+loads parameters for current listPrefix
+
+
+getPluginMode()
+sets plugin mode (from flexform)
+[not implemented here]
+
+
+[not implemented here]
+init()
+initialize registry
+store reference to controller in registry
+create new list class object and store in registry
+setup current list object
+restore filter states
+process filter subcontrollers
+Retrieve where clause from filters
+process sorting parameters
+create pager object
+store “processed” flag in registry
+
+
+
+doAction()
+determines which action to call
+calls action
+default: ? calls
+doAction()
+set optionally forced next action
+? calls
+
+
+listDefaultAction()
+set up view
+set listIdentifier
+set columns
+set listItems
+set filterbox
+set aggregateRows
+render view
+beforeExit() [empty method]
+[not implemented here]
+outputException()
+Called only, if exception is thrown
+[not implemented here]
+
+How pt_list handles configuration
+For your understanding of pt_list configuration it's most important to know that there are two main configuration parts: the first part handles “standard” MVC configuration and is overwritten several times (see below). The second part handles the “modell” configuration of the list.
+MVC configuration
+Modell configuration
+All this happens in tx_ptlist_controller_list::getConfiguration()
+
+1. MVC configuration is loaded from pt_mvc controller_frontend class
+2. Configuration given to tx_ptlist_controller::construct() is merged with this configuration
+3. Prefix ID specific configuration from TS is merged with this configuration. This configuration is given by
+plugin.tx_<condensedExtKey>.controller.<controllerName>.<listPrefix>
+where
+<condensedExtKey> = pt_list
+<controllerName> = list
+<listPrefix> = <controllerClassName>_listId_<listId>
+Given by TS with the key 
+plugin.tx_ptlist.listConfig.<listId>
+
+Here are two examples on how to overwrite plugin.tx_ptlist.controller.list can be overwritten by individual listId-specific configuration:
+
+1.Example: Overwrite template for a given list ID only on a certain page (pageId = 10)
+[globalVar = TSFE:id = 10]
+plugin.tx_ptlist.controller.list.tx_ptlist_controller_list_listId_<myListId> {
+    view.list_itemList.template = EXT:<myExtensionName>/template/<someTemplateToBeUsed>
+}
+[end]
+
+2.Example: Set the number of items to 4 for a given list ID only 
+plugin.tx_ptlist.controller.list.tx_ptlist_controller_list_listId_<myListId> {
+    itemsPerPage = 4
+}
+How filters are processed
+Filter controllers have multiple actions that are performed in the following order:
+1.Display filter form
+2.Validate filter form on submit
+3.Do User-Defined action after validation
+4.Serve as SQL Snippet generator for list generation
+Steps 1. to 3. are taken, if the filter is displayed as a form. Step 4 is taken, whenever a list is displayed that has an active filter filtering the contents of the list.
+As filters extend tx_ptmvc_controller, the call order of the methods is almost the same as above.
+Creating an own filter class
+Take a look at pt_list/controller/filter/developmentTemplate/class.FILTER_TEMPLATE.php and copy this file as a basis for your own filter class!
+For writing your own filter classes, you normally have to add 3 files:
+A controller for your filter
+A view for your filter
+A template for your filter
+The meaning of these files and where to put them is described now
+The controller for your filter
+Where to put it
+Put this file into EXT:pt_list/controller/filter/class.tx_pt_list_controller_filter_<yourFilterName>.php
+What class to extend
+Normally your filter class extends tx_ptlist_filter which resides in the model directory of the pt_list extension (although it's a controller class!). So have to include the base class via
+require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_filter.php';
+What to put in your filter controllers
+There are several template methods you have to overwrite / implement in your filter controller to make them work:
+
+Method name
+Parameters
+Description
+public function init()
+None
+Do some initialization. Don't forget to call  parent::init(); to initialize the base filter class.
+public function isActiveAction()
+None
+Returns source code for filter, if filter is active. If you wish to return the same source for active an non-active view, simply use
+return $this->doAction('isNotActive');
+public function isNotActiveAction()
+None
+Returns source code for filter, if filter is not activce.
+public function validate()
+None
+Do some validation here. Return 'true' if filter validates.
+public function breadcrumbAction()
+None
+Return filter-breadcrumb entry for your filter. E.g.:
+public function breadcrumbAction() {		
+  if (!empty($this->value)) {
+    $value = 'Zeitspanne: ' . 
+      $this->formatTimeSpan(
+        $this->value['from'], $this->value['to']);
+  } else {
+     $value = 'Not set';
+  }
+  $view = $this->getView('filter_breadcrumb');
+  $view->addItem($this->label, 'label');
+  $view->addItem($value, 'value');
+  return $view->render();
+}
+public function getSqlWhereClauseSnippet()
+None
+Generates the SQL WHERE clause for your filter that is used to constrain the data retrieved from database. 
+
+Taking a look at the functions above, you will find out, that the controller has some basic things to do:
+Showing a User interface, if filter is in active state
+Showing a user interface, if filter is in non-active state
+Validating user input
+Showing a breadcrumb for the filter-breadcrumb plugin
+Generating an SQL snippet to filter data
+The view for your filter
+Where to put it
+The place to put your view class is EXT:pt_list/view/filter/class.tx_ptlist_view_filter_<yourFilterName>_userInterface.php
+What class to extend
+Filter-view classes extend standard pt_mvc view classes. So you have to include the base class via:
+require_once t3lib_extMgm::extPath('pt_mvc').'classes/class.tx_ptmvc_view.php';
+What to put in your view class
+The filter view will be empty unless you don't want to change the standard rendering process of your filter. To use standard pt_mvc mechanism, you still have to create an empty view class.
+The template for your filter
+Where to put it
+The place to put your template is EXT:pt_list/template/filter/<yourFilterName>/filter_timeSpan2_userInterface.tpl
+Some naming-conventions
+As you are in pt_mvc context, it's important to use the right prefix for the values you want to submit to your controller:
+<input type="text" value="{$value.from}" name="{$prefixId}[from]" class="date-pick dp-applied"  id="date_from">
+So use $prefixId for your Post and Get vars!
+Further conventions
+TS Configuration for filters
+To set up a filter, you have to use some TS on the TS template of the page where you want to insert your pt_list instance:
+filters {
+
+        devFilterBox {
+        
+            10 =  EXT:pt_list/controller/filter/class.tx_ptlist_controller_filter_timeSpan.php: tx_ptlist_controller_filter_timeSpan
+            10 {
+                filterIdentifier = sucheTimeSpanFilter
+                dataDescriptionIdentifier = DatKund
+                spans = today,thisweek,thismonth,thisyear
+                submitValue = Suchen
+            }
+}            
+
+Everything inside the 10 = Block above will be passed to the filter controller and is accessible via $this->conf and is passed to the view as 'filter'. So you can for example access the value for your submit button via
+<input type="submit" value="{$filter.submitValue|ll:0}" />
+in your template.
+Using the list controller as a subcontroller within your plugins
+Todo: write this section. (Hint: ask Rainer for help, I've showed him how to do this... :)
+Using pt_list to generate PDF documents
+pt_list allows you to generate PDF documents by simply changing the view for the list generation. pt_list uses pt_xml2pdf for PDF generation. Follow the next steps to set up a PDF rendering for your lists.
+Setting up page structure
+Set up a page that is used for the PDF output [2]. Typically this page is a sub page of a page containing all the pt_list configuration you need to show a HTML list [1]. 
+
+The PDF page should be hidden in menu!
+Inserting Plugin
+Insert a “[pt_list] list” plugin instance on the sub page for PDF rendering [2]. Set the list identifier to the identifier of the list you want to render as PDF.
+
+Setting up PDF view in Typoscript
+On the sub page you created [2], include the static Typoscript for PDF rendering shipping with pt_list:
+
+The next step is to set up the column configuration for the columns of the list that should be displayed in the PDF. You can simply “overwrite” values set in the Typoscript of the parent page. Take a look at the following example to make things clearer:
+plugin.tx_ptlist.listConfig.list_name {
+
+    columns {
+        # Override "parent TS config"
+        10 >
+        10 {
+            pdf {
+                width = 8
+                multiline = 1
+                dontScale = 1
+                alignment = L
+            }
+            columnIdentifier = col_identifier
+            label = col_header 
+            dataDescriptionIdentifier = DDI1, DDI2, ...
+            renderObj = TEXT
+            renderObj {
+                # Set a default value for example
+                value = EL
+                
+                # Override default value if the following object is not empty
+                override.cObject = COA
+                override.cObject {
+                    10 = TEXT
+                    10 {
+                        if.isTrue.field = DDI_XY
+                        value = ALTERNATE_VALUE
+                    }
+                    20 = TEXT
+                    20 {
+                        if.isTrue.field = DDI_YZ
+                        value = ALTERNATE_VALUE
+                    }
+                }
+            }
+        }
+
+	  # Add pdf config to parent TS config:
+        40 {
+            pdf {
+                width = 17
+                multiline = 1
+                dontScale = 0
+                alignment = L
+            }
+        }
+
+        # ... more columns
+
+    }
+}
+Creating xml2pdf template with Smarty
+pt_list ships with a default table template to output lists. If you want to generate your own PDF templates it might be interesting for you, what data is passed to the Smarty template from pt_list. Use 
+{debug}
+at the beginning of your template to see, which data is available.
+You can create templates for PDF generation using XML format. This templates can be manipulated with Smarty so that you get a really comfortable template mechanism for PDF rendering. Refer to the pt_xml2pdf manual to find a description of the XML syntax.
+Your template can look somehow similar to this:
+<?xml version="1.0" encoding="UTF-8"?>
+<document orientation="L" unit="mm" format="A4"><!--{strip}-->
+    <!-- Main configuration -->
+    <!--{assign var="borderLeft" value="20"}-->
+    <!--{assign var="borderRight" value="20"}-->
+    <!--{assign var="borderTop" value="20"}-->
+    <!--{assign var="borderBottom" value="20"}-->
+    <!--{assign var="paperWidth" value="297"}-->
+    <!--{assign var="paperHeight" value="210"}-->
+
+    <!-- Table configuration -->
+    <!--{assign_array var="colpos" values="20,30,40,70,85,100,130,145,160,190,235,280"}-->
+    <!--{assign_array var="colwidths" values="10,10,30,15,15 ,30 ,15 ,15 ,30 ,45 ,42"}-->
+    <!--{assign_array var="colaligns" values="L,C,L,L,C,L,L,L,L,L,L"}-->
+    <!-- {assign_array var="tableHeadings" values="tableHeadings"|ll} -->
+    <!--{/strip}-->
+
+    <content>
+        <addpage />
+        
+        <!-- ########################### GENERATE TABLE HEADERS #################################### -->
+        
+        <setfont family="Arial" style="" size="8" />
+        <sety y="<!--{$borderTop}-->" />
+        <setx x="<!--{$borderRight}-->" />
+
+		<!--{foreach name="headers" from=$columns key="number" item="columnArray"}-->
+			<!--{assign var="col" value=$smarty.foreach.headers.iteration-1}-->
+			<setx x="<!--{$colpos[$col]}-->" />
+			<setfillcolor r="220" g="220" b="220"/>
+			<cell h="5" fill="1" w="<!--{$colwidths[$col]}-->" align="L">
+				<!--{$columnArray.label}--></cell>
+			<setfillcolor r="255" g="255" b="255" />
+		<!--{/foreach}-->
+		<sety y="+5" />
+		<line x1="<!--{$borderLeft}-->" x2="<!--{$paperWidth-$borderRight}-->" />
+		<sety y="+2" />
+		
+		<!-- ######################## GENERATE TABLE CONTENTS ################################## -->
+		
+		<!--{foreach from=$listItems item=row name="rows"}-->
+			<!--{foreach name="listItems" from=$row item=value key=columnDescriptionIdentifier}-->
+				<!--{assign var="col" value=$smarty.foreach.listItems.iteration-1}-->
+				<setx x="<!--{$colpos[$col]}-->" />
+				<cell w="<!--{$colwidths[$col]}-->" align="<!--{$colaligns[$col]}-->">
+					<!--{$value}--></cell>
+			<!--{/foreach}-->
+			<sety y="+5" />
+		<!--{/foreach}-->
+		<addpage iflessthan="<!--{$borderBottom}-->" />
+		<line x1="<!--{$borderLeft}-->" x2="<!--{$paperWidth-$borderRight}-->" /> 
+
+    </content>
+</document>
+
+The headers of the list data is given to your template in the variable $columns, the content is given in $listItems.
+For an explanation of the xml commands you can use refer to http://www.fpdf.de/dokumentation/. Every XML command is transferred directly into a fpdf function call, the name of the attributes is transferred to the name of the fpdf function parameter names. The content of your tag is passed as the content to be written in the methods.
+Using pt_list to generate XLS documents
+pt_list allows you to generate XLS documents by simply changing the view for the list generation. pt_list uses PEAR package Spreadsheet/Excel/Writer to generate the XLS output. See the following example for setting up a XLS Export:
+# we create a minimal page object the uses only the content of the middle column (no menues etc.)
+page >
+page = PAGE
+page.10 < styles.content.get
+
+###########################################################################
+# MVC config: change view
+###########################################################################
+
+plugin.tx_ptlist.view.list_itemList {
+	class = EXT:pt_list/view/list/itemlist/class.tx_ptlist_view_list_itemList_xls.php: tx_ptlist_view_list_itemList_xls
+}
+
+###########################################################################
+# MVC config: change view
+###########################################################################
+
+plugin.tx_ptlist.view {
+	
+    xls_rendering {
+    	
+    	# Set file name of download file
+    	fileName = dateiname.xls
+    	
+    	# Set to 1 if date and timestamp should be used for filename
+    	useDateAndTimestampInFilename = 0
+    	
+    	# Name of sheet in XLS file
+    	sheetName = Worksheet 1
+
+    }
+    
+    # Deactivate filtering of HTML for XLS output
+    filterHtml = 0
+    
+}
+Using pt_list to generate structured lists
+If you want to generate lists that are structured by certain columns, you can use the following configuration in you TS:
+plugin.tx_ptlist.listConfig.<listId> {
+    defaults {
+        sortingColumn = <NameOfListColumnToSortSubsectionsBy>
+        sortingDirection = <ASC|DESC>
+    }
+    
+    # Columns to structure list by - 
+    # REMIND: Must be the column identifiers of the GUI colums (columns.[n].columnIdentifier)!
+    structureByCols = <Comma seperated list of columns to structure list by>
+    structureByHeaders = <Comma seperated list of columns to generate section headers from>
+}
+
+If you are rendering a structured list, none of the following features of pt_list will be working:
+Paging is not possible due to the problem, that the list is not structured in the modell but in the view and the pager has not the right effect on the data gathered from the database.
+Standard-sorting is not possible, as this happens in the database and structured lists are sorted in the view after the generation of the modell.
+XSS 
+TODO write some text about XSS prevention in pt_list
+For global XSS prevention of column contents use
+plugin.tx_ptlist.view.filterHtml = 1
+in your Typoscript Setup of the page you put the pt_list plugin on. This will filter all contents that come from the database BEFORE they are renderd by TS settings. HTML that is generated during the TS rendering process will pass unfiltered!
+SQL Injections
+As there are many SQL Snippets configured in Typoscript, make sure to encode parameters taken from GET and POST variables. Here is an example on how to encode GET and POST parameters:
+
+baseWhereClause = TEXT
+baseWhereClause {
+    cObject = COA
+    cObject {
+        10 = TEXT
+        10 {
+           # Encoding INTEGER params
+           data = GPvar:prefix|param
+           intval = 1
+           noTrimWrap = |tablename.UID = | |
+        }
+        20 = TEXT
+        20 {
+            cObject = TEXT
+            cObject {
+                data = GPvar:tablename|date 
+                postUserFunc = tx_pttools_div->quoteStr
+                postUserFunc.table = tablename
+            }
+            wrap = AND tablename.DATE = "|"
+        }
+    }
+}
+
+
+Generic pager
+If you have any object collections and want to use a pager to thumb through your items, you can use tx_ptlist_view_list_genericPager to display a pager for your collections. First of all, you have to include the required classes:
+require_once t3lib_extMgm::extPath('pt_list').'view/list/class.tx_ptlist_view_list_dropdownPager.php';
+require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_pager.php';
+require_once t3lib_extMgm::extPath('pt_list').'model/pagerStrategy/class.tx_ptlist_pagerStrategy_default.php';
+There are some lines of code to write to use the pager in your code. In the controller, you have to set some parameters for the pager to work correctly:
+
+protected function createPager(tx_pttools_iPageable $anyCollection) {
+     $currentPageNumber = ($this->params['page'] > 0 ? intval($this->params['page']) : 1);
+     // create pager model
+     $pagerStrategy = new tx_ptlist_pagerStrategy_default();
+     $pagerStrategy->setConfiguration(array());
+        
+     $pager = new tx_ptlist_pager();
+     $pager->set_itemsPerPage(1);
+     $pager->set_itemCollection($anyCollection);
+     $pager->set_currentPageNumber($currentPageNumber);
+     $pager->set_pagerStrategy($pagerStrategy);
+      
+    // create pager view
+    $pagerView = new tx_ptlist_view_list_genericPager($this);
+    $pagerView->addItem($pager->getMarkerArray(), 'pager');
+    $pagerView->addItem($this->getPrefixId(), 'controllerName');
+    $pagerView->addItem('controller_'.$this->getControllerName().'_historie_pager_form', 	'pager_form_name');
+
+
+    // add hidden fields for MVC
+    $hiddenFields = array($this->getPrefixId().'[action]' =>'showHistory');  
+    $pagerView->addItem($hiddenFields, 'hidden_fields_array');
+      
+    // render and return  pager HTML
+    $pagerHtml = $pagerView->render();
+       
+    return $pagerHtml;
+        
+}
+
+This method will output the HTML for your pager. 
+Cookbook
+This section includes some 'out-of-topic' recepts on how to use pt_list. Feel free to add some hacks you think that other users might be interested in.
+Typoscript Configuration
+Hacks on Data Descriptions
+Showing a timestamp as a formatted date
+When showing a date in your lists, you often have a database field of the type 'timestamp' underneath it. Here is the TS configuration to format this timestamp as a date:
+20 {
+	label = Start
+	columnIdentifier = seminars_begin_date
+	dataDescriptionIdentifier = seminars_begin_date
+	isSortable = 1
+	renderObj = COA
+	renderObj {
+		10 = TEXT
+		10.data = field:seminars_begin_date
+		10.strftime = %d.%m.%y
+	}		
+}
+Rendering links in columns
+When using pt_list in a CRUD context, you often need to have a field linked to a detail page. Therefore you have to generate a link. This can be done with the following TS:
+10 {	
+	label = Nr
+	columnIdentifier = seminars_accreditation_number
+	dataDescriptionIdentifier = seminars_accreditation_number, seminars_title, seminars_uid
+	isSortable = 1
+	renderObj = COA
+	renderObj {
+		20 = TEXT
+		20.data = field:seminars_accreditation_number
+		20.typolink.parameter = 348
+		20.typolink.additionalParams.dataWrap = 
+			&tx_jdavsv_controller_schulungsDetails[seminars_uid]={field:seminars_uid}
+	}
+}
+Remind that via 'typolink.parameter' you can set the page ID where the link should go to and that the field you want to use in the uid-value needs to be present in the data descriptions and declared in 'dataDescriptionIdentifier' in the column description configuration.
+Hacks on SQL-Queries
+Using GET / POST parameters in pt_list SQL clauses
+When you want to add information from URL parameters in your pt_list configuration you can use the following TS to access URL parameters from within Typoscript:
+baseWhereClause {
+        cObject = COA
+        cObject {
+            10 = TEXT
+            10 {
+                data = GPvar:tx_yourextension|parameter
+                intval = 1
+                noTrimWrap = |table.field = | |
+            }
+	}
+}
+Attention: Remind that YOU are responsible for avoiding SQL-incjections when using GET- or POST-paramters in your SQL queries!
+Hacks on Filters
+How to overwrite template for a filter user interface
+If you want to overwrite a template for a filter user interface, you can use the followin lines of Typoscript to do so:
+plugin.tx_ptlist.view.<name_of_filter_view>.template = EXT:<path_to_filter_template_file>
+TODO: How can you set this changes list-specific?
+Known problems
+see http://forge.typo3.org/projects/show/extension-pt_list
+
+To-Do list
+see http://forge.typo3.org/projects/show/extension-pt_list
+ChangeLog
+

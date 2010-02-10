@@ -75,6 +75,21 @@ CHANGELOG
 Version 0.0.4dev:
 ----------------
 
++ (fb) ADD: added manual in txt Format.
+
+HINT: What are the text files used for?
+Every SXW file has a pendant in text-file format. It should always reflect
+the latest version of the SXW file it belongs to.  This is very useful
+because txt files can be used for comparing changes while binary SXW
+files can't.
+
+How can I create txt files from an SXW file?
+Just choose "Save as..." in OpenOffice.org and select "Text (.txt)" as
+output format.
+You can also use the script in trunk/update_txtfiles.sh to perform
+mass-conversion of all documents. Just follow the steps explained in the
+beginning of that script.
+
 + (nf) ADD: added a filter_integer
 + (fb) RFT: minor changes
 + (fb) ADD: added some setters in tx_ptlist_typo3Tables_list (They are needed if pt_list is extendend from other controllers and configuration should
