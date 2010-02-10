@@ -86,9 +86,6 @@ files can't.
 How can I create txt files from an SXW file?
 Just choose "Save as..." in OpenOffice.org and select "Text (.txt)" as
 output format.
-You can also use the script in trunk/update_txtfiles.sh to perform
-mass-conversion of all documents. Just follow the steps explained in the
-beginning of that script.
 
 + (nf) ADD: added a filter_integer
 + (fb) RFT: minor changes
