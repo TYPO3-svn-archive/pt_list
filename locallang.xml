@@ -31,5 +31,16 @@
 			<label index="displayRows">Ergebnisse %s - %s von %s</label><!-- Variables: offSetStart, offSetEnd, totalItemCount-->
 			<label index="activeFilters">Aktive Filter</label>
 		</languageKey>
+
+		<languageKey index="nl" type="array">
+			<label index="noItemsFound">Geen elementen gevonden</label>
+			<label index="reset">Reset</label>
+			<label index="set_filter">Filter activeren</label>
+			<label index="filter_group_all">[Alle]</label>
+			<label index="displayTopics">Onderwerpen {0} - {1} van {2}</label>
+			<label index="displayRows">Resultaat %s - %s van %s</label><!-- Variables: offSetStart, offSetEnd, totalItemCount-->
+			<label index="activeFilters">Actieve filters</label>
+		</languageKey>
+
 	</data>
 </T3locallang>
