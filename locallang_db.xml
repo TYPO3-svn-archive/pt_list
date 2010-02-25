@@ -11,6 +11,7 @@
 				Controller 
 			-->		
 				<label index="tt_content.list_type_controller_list">[pt_list] list</label>
+				<label index="tt_content.list_type_controller_clist">[pt_list] list (cached)</label>
 					<label index="tt_content.list_type_controller_list.pluginMode.list">List</label>
 					<label index="tt_content.list_type_controller_list.pluginMode.filterbox">Filterbox</label>
 					<label index="tt_content.list_type_controller_list.pluginMode.pager">Pager</label>

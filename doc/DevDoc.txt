@@ -75,6 +75,9 @@ CHANGELOG
 Version 0.0.4dev:
 ----------------
 
++ (fb) ADD: Cached version of the list controller. Use this only if you know how caching works. You will need to configure
+       your list in a way that is safe for use with caches (sessions will not work...)
++ (wz) ADD: added tranlastion to locallang.xml
 + (fb) ADD: added manual in txt Format.
 
 HINT: What are the text files used for?

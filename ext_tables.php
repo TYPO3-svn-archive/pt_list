@@ -69,7 +69,7 @@ foreach ($GLOBALS[$_EXTKEY.'_controllerArray'] as $prefix => $configuration) {
 	// Include flexform
 	if ($configuration['includeFlexform']) {
 		$TCA['tt_content']['types']['list']['subtypes_addlist'][$_EXTKEY.$prefix] = 'pi_flexform';
-		t3lib_extMgm::addPiFlexFormValue($_EXTKEY.$prefix, 'FILE:EXT:'.$_EXTKEY.'/controller/flexform'.$prefix.'.xml');
+		t3lib_extMgm::addPiFlexFormValue($_EXTKEY.$prefix, $configuration['includeFlexform']);
 	}
 }
 
