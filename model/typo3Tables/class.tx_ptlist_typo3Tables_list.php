@@ -208,7 +208,7 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 	 * Get collection "part" for given limit parameter
 	 *
 	 * @param 	string	mysql limit clause
-	 * @return 	tx_ptlistdemo_country_countryCollection
+	 * @return 	tx_ptlist_typo3Tables_dataObjectCollection
 	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-19
 	 */
@@ -339,11 +339,13 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 	 * 
 	 * @param string navLink
 	 * @param array $currentItem
-	 * @return 
+	 * @return string HTML output
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
+	 * @since	2010-03-10
 	 */
 	public function getNavLink($navLink) {
 		
-		$currentItem = empty($this->conf['currentItemSpecifier.']) ? array() : $this->conf['currentItemSpecifier.']; 
+		$currentItem = empty($this->conf['currentItemSpecifier.']) ? array() : $this->conf['currentItemSpecifier.'];
 		$currentItem = tx_pttools_div::stdWrapArray($currentItem);
 		
 		tx_pttools_assert::isNotEmptyArray($currentItem, array('message' => 'No current item configuration found'));
@@ -351,31 +353,45 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 		$supportedNavLinks = array('next', 'prev');
 		tx_pttools_assert::isInArray($navLink, $supportedNavLinks, array('message' => 'Unsupported nav link'));
 		
-		// get where clause
+		// get all items
 		$items = $this->getItems();
+		
+		// get the id of the given current item
 		$id = $items->searchItem($currentItem);
 		if ($id === false) {
-			throw new tx_pttools_exception('Item not found');
+			throw new tx_pttools_exception(sprintf('Item not found for the given currentItem "%s"', var_export($currentItem, 1)));
 		}
 		
 		$idx = $items->getIndexByItemId($id);
 		
-		$output = '';
-		
 		if ($navLink == 'next') {
-			$item = $items->hasIndex($idx+1) ? $items->getItemByIndex($idx+1) : false;
-			if ($item !== false) {
-				$output .= tx_ptlist_div::renderValues($item->getData(), $this->conf['nextItem.']); 
-			}
+			$direction = 1;
+			$renderConf = $this->conf['nextItem.'];
 		} elseif ($navLink == 'prev') {
-			$item = $items->hasIndex($idx-1) ? $items->getItemByIndex($idx-1) : false;
-			if ($item !== false) {
-				$output .= tx_ptlist_div::renderValues($item->getData(), $this->conf['prevItem.']); 
-			}
+			$direction = -1;
+			$renderConf = $this->conf['prevItem.'];
+		} else {
+			throw new tx_pttools_exception('Unknown navLink');
 		}
-		return $output;		
+			
+		// if goOnSearching the loop will go on searching for the first element that returns something. Otherwise it will only check the direct neighbour
+		$stop = !($renderConf['goOnSearching']);
+		do {
+			$idx += $direction;	
+			$item = $items->hasIndex($idx) ? $items->getItemByIndex($idx) : false;
+			if ($item !== false) {
+				$renderedItem = tx_ptlist_div::renderValues($item->getData(), $renderConf);
+				if (!empty($renderedItem)) {
+					$stop = true;
+				}
+			} else {
+				$stop = true;
+			}
+		} while(!$stop);
+		
+		return $renderedItem;
 	}
-
+	
 	/***************************************************************************
 	 * Getter / Setter methods
 	 **************************************************************************/

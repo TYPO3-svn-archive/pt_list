@@ -552,7 +552,14 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 	 * @since 2010-01-19 
 	 */
 	public function navLinkDefaultAction($navLinks=NULL) {
-		if (is_null($navLinks)) {
+		
+		// try getting navLinks from parameters if not found in method arguments
+		if (empty($navLinks) && !empty($this->params['navLinks'])) {
+			$navLinks = $this->params['navLinks'];
+		}
+		
+		// get navLinks from configuration
+		if (empty($navLinks)) {
 			$navLinks = $this->conf['navLinks'];
 		}
 		tx_pttools_assert::isNotEmptyString($navLinks);

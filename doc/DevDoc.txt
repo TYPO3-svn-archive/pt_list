@@ -75,6 +75,7 @@ CHANGELOG
 Version 0.0.4dev:
 ----------------
 
++ (fb) ADD: added feature to generate prev/next links and updated the manual
 + (wz) FIX: Committed forgotten parts of filter_integer
 + (fb) ADD: Cached version of the list controller. Use this only if you know how caching works. You will need to configure
        your list in a way that is safe for use with caches (sessions will not work...)
