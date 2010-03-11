@@ -192,31 +192,43 @@ class tx_ptlist_controller_filter_datePager extends tx_ptlist_filter {
                          . $this->dataDescriptions->getItemByIndex(1)->get_field();
         $sqlDateFunction = $this->determineSqlDateFunction();
         $dateEntity = $this->determineDateEntity();
+        $entityAdjustment = intval($this->value['value']);
+
         switch ($dateEntity) {
-		case 'day':
-			$sqlWhereClauseSnippet = "STR_TO_DATE(" . $sqlDateFunction . "(" . $startDateColumn . ", '%Y-%m-%d'), '%Y-%m-%d') <= STR_TO_DATE('" . date('Y-m-d', mktime(0, 0 ,0, date('n'), date('j') + intval($this->value['value']), date('Y'))) . "', '%Y-%m-%d') "
-                                     . "AND "
-                                     . "STR_TO_DATE(" . $sqlDateFunction . "(" . $endDateColumn . ", '%Y-%m-%d'), '%Y-%m-%d') >= STR_TO_DATE('" . date('Y-m-d', mktime(0, 0 ,0, date('n'), date('j') + intval($this->value['value']), date('Y'))) . "', '%Y-%m-%d')";
+			case 'day':
+				$timestampOfNewDay = mktime(0, 0, 0, date('n'), date('j') + $entityAdjustment, date('Y'));
 
-            break;
-		case 'week':
-			$sqlWhereClauseSnippet = "WEEKOFYEAR(" . $sqlDateFunction . "(" . $startDateColumn . ", '%Y-%m-%d')) <= '" . date('W', mktime(0, 0 ,0, date('n'), date('j') + 7 * intval($this->value['value']), date('Y'))) . "' AND " . $sqlDateFunction . "(" . $startDateColumn . ", '%Y') <= '" . date('Y', mktime(0, 0 ,0, date('n'), date('j') + 7 * intval($this->value['value']), date('Y'))) . "' "
-                                     . "AND "
-                                     . "WEEKOFYEAR(" . $sqlDateFunction . "(" . $endDateColumn . ", '%Y-%m-%d')) >= '" . date('W', mktime(0, 0 ,0, date('n'), date('j') + 7 * intval($this->value['value']), date('Y'))) . "' AND " . $sqlDateFunction . "(" . $endDateColumn . ", '%Y') >= '" . date('Y', mktime(0, 0 ,0, date('n'), date('j') + 7 * intval($this->value['value']), date('Y'))) . "'";
-			break;
-		case 'month':
-            $sqlWhereClauseSnippet = "STR_TO_DATE(" . $sqlDateFunction . "(" . $startDateColumn . ", '%Y-%m'), '%Y-%m') <= STR_TO_DATE('" . date('Y-m', mktime(0, 0, 0 , date('n') + intval($this->value['value']), date('j'), date('Y'))) . "', '%Y-%m') "
-                                     . "AND "
-                                     . "STR_TO_DATE(" . $sqlDateFunction . "(" . $endDateColumn . ", '%Y-%m'), '%Y-%m') >= STR_TO_DATE('" . date('Y-m', mktime(0, 0, 0 , date('n') + intval($this->value['value']), date('j'), date('Y'))) . "', '%Y-%m')";
+				$start = "STR_TO_DATE(" . $sqlDateFunction . "(" . $startDateColumn . ", '%Y-%m-%d'), '%Y-%m-%d')";
+				$end =   "STR_TO_DATE(" . $sqlDateFunction . "(" . $endDateColumn .   ", '%Y-%m-%d'), '%Y-%m-%d')";
 
-            break;
-		case 'year':
-			$sqlWhereClauseSnippet = "STR_TO_DATE(" . $sqlDateFunction . "(" . $startDateColumn . ", '%Y'), '%Y') <= STR_TO_DATE('" . date('Y', mktime(0, 0, 0, date('n'), date('j'), date('Y') + intval($this->value['value']))) . "', '%Y') "
-                                     . "AND "
-                                     . "STR_TO_DATE(" . $sqlDateFunction . "(" . $endDateColumn . ", '%Y'), '%Y') >= STR_TO_DATE('" . date('Y', mktime(0, 0, 0, date('n'), date('j'), date('Y') + intval($this->value['value']))) . "', '%Y')";
-			break;
-		default:
-			throw new tx_pttools_exceptionConfiguration("No valid 'dateEntity' set in Typoscript configuration.");
+				$adjustmentDate = "STR_TO_DATE('" . date('Y-m-d', $timestampOfNewDay) . "', '%Y-%m-%d')";
+
+				$sqlWhereClauseSnippet = $start . ' <= ' . $adjustmentDate . ' AND ' . $end . ' >= ' . $adjustmentDate;
+	            break;
+			case 'week':
+				$timestampOfNewWeek = mktime(0, 0, 0, date('n'), date('j') + 7 * $entityAdjustment, date('Y'));
+
+				$sqlWhereClauseSnippet = "WEEKOFYEAR(" . $sqlDateFunction . "(" . $startDateColumn . ", '%Y-%m-%d')) <= '" . date('W', $timestampOfNewWeek) . "' AND " . $sqlDateFunction . "(" . $startDateColumn . ", '%Y') <= '" . date('Y', $timestampOfNewWeek) . "' "
+	                                     . "AND "
+	                                     . "WEEKOFYEAR(" . $sqlDateFunction . "(" . $endDateColumn . ", '%Y-%m-%d')) >= '" . date('W', $timestampOfNewWeek) . "' AND " . $sqlDateFunction . "(" . $endDateColumn . ", '%Y') >= '" . date('Y', $timestampOfNewWeek) . "'";
+				break;
+			case 'month':
+				$timestampOfNewMonth = mktime(0, 0, 0, date('n') + $entityAdjustment, date('j'), date('Y'));
+
+	            $sqlWhereClauseSnippet = "STR_TO_DATE(" . $sqlDateFunction . "(" . $startDateColumn . ", '%Y-%m'), '%Y-%m') <= STR_TO_DATE('" . date('Y-m', $timestampOfNewMonth) . "', '%Y-%m') "
+	                                     . "AND "
+	                                     . "STR_TO_DATE(" . $sqlDateFunction . "(" . $endDateColumn . ", '%Y-%m'), '%Y-%m') >= STR_TO_DATE('" . date('Y-m', $timestampOfNewMonth) . "', '%Y-%m')";
+
+	            break;
+			case 'year':
+				$timestampOfNewYear = mktime(0, 0, 0, date('n'), date('j'), date('Y') + $entityAdjustment);
+
+				$sqlWhereClauseSnippet = "STR_TO_DATE(" . $sqlDateFunction . "(" . $startDateColumn . ", '%Y'), '%Y') <= STR_TO_DATE('" . date('Y', $timestampOfNewYear) . "', '%Y') "
+	                                     . "AND "
+	                                     . "STR_TO_DATE(" . $sqlDateFunction . "(" . $endDateColumn . ", '%Y'), '%Y') >= STR_TO_DATE('" . date('Y', $timestampOfNewYear) . "', '%Y')";
+				break;
+			default:
+				throw new tx_pttools_exceptionConfiguration("No valid 'dateEntity' set in Typoscript configuration.");
 		}
         return $sqlWhereClauseSnippet;
     }
