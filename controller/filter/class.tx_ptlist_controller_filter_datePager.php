@@ -248,8 +248,8 @@ class tx_ptlist_controller_filter_datePager extends tx_ptlist_filter {
 
         // Get configuration from TypoScript
         $entity = $this->conf['entity'] == '' ? 'day' : $this->conf['entity'];
-        $beginFormat = $this->conf['beginFormat'] == '' ? '%G-%m-%d' : $this->conf['beginFormat'];
-        $endFormat = $this->conf['endFormat'] == '' ? '%G-%m-%d' : $this->conf['endFormat'];
+        $beginFormat = $this->conf['beginFormat'] == '' ? '%Y-%m-%d' : $this->conf['beginFormat'];
+        $endFormat = $this->conf['endFormat'] == '' ? '%Y-%m-%d' : $this->conf['endFormat'];
 
         $firstDayOfWeek = $this->firstDayOfWeek;
 
@@ -295,10 +295,10 @@ class tx_ptlist_controller_filter_datePager extends tx_ptlist_filter {
 		case 'year':
             $dateEntityBegin = strftime($beginFormat,
                                     mktime(0, 0, 0,
-                                           1, 1, date('Y')));
+                                           1, 1, date('Y') + intval($this->value['value'])));
             $dateEntityEnd = strftime($endFormat,
                                   mktime(0, 0, 0,
-                                         12, 31, date('Y')));
+                                         12, 31, date('Y') + intval($this->value['value'])));
 			break;
 		default:
 			throw new tx_pttools_exceptionConfiguration("No valid 'entity' set in Typoscript configuration.");
