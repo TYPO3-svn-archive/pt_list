@@ -149,8 +149,8 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 
 		// save local configuration to a property
 		if (!empty($localConfiguration)) {
-		    $this->localConfiguration = $localConfiguration;
-		    if (TYPO3_DLOG) t3lib_div::devLog('storing localConfiguration to property', 'pt_list', 0, $localConfiguration);
+		    $this->localConfiguration = t3lib_div::array_merge_recursive_overrule($this->localConfiguration, $localConfiguration);
+		    if (TYPO3_DLOG) t3lib_div::devLog('Merging localConfiguration to property', 'pt_list', 0, $localConfiguration);
 		}
 
 		parent::__construct();
