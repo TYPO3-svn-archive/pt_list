@@ -108,14 +108,14 @@ class tx_ptlist_controller_filter_datePager extends tx_ptlist_filter {
 	 */
 	public function submitAction() {
         switch ($this->params['mode']) {
-        case 'next':
-            $this->incrementPagerValues();
-            break;
-        case 'prev':
-            $this->decrementPagerValues();
-            break;
-        default:
-			throw new tx_pttools_exceptionConfiguration("No valid 'mode' set in GET parameters.");
+	        case 'next':
+	            $this->incrementPagerValues();
+	            break;
+	        case 'prev':
+	            $this->decrementPagerValues();
+	            break;
+	        default:
+				throw new tx_pttools_exceptionConfiguration("No valid 'mode' set in GET parameters.");
         }
 		return parent::submitAction();
 	}
@@ -247,7 +247,7 @@ class tx_ptlist_controller_filter_datePager extends tx_ptlist_filter {
     protected function renderHeader() {
 
         // Get configuration from TypoScript
-        $entity = $this->conf['entity'] == '' ? 'day' : $this->conf['entity'];
+        $entity = $this->determineDateEntity();
         $beginFormat = $this->conf['beginFormat'] == '' ? '%Y-%m-%d' : $this->conf['beginFormat'];
         $endFormat = $this->conf['endFormat'] == '' ? '%Y-%m-%d' : $this->conf['endFormat'];
 
@@ -350,7 +350,7 @@ class tx_ptlist_controller_filter_datePager extends tx_ptlist_filter {
 	 * @since   2009-11-09
 	 */
     protected function defineSmartyTemplateVariables() {
-        $this->smartyTemplateVariables['entity'] = $this->conf['entity'] == '' ? 'day' : $this->conf['entity'];
+        $this->smartyTemplateVariables['entity'] = $this->determineDateEntity();
         $this->smartyTemplateVariables['nextValue'] = isset($this->value['nextValue']) ? intval($this->value['nextValue']) : 1;
         $this->smartyTemplateVariables['prevValue'] = isset($this->value['prevValue']) ? intval($this->value['prevValue']) : -1;
         $this->smartyTemplateVariables['labelPrevious'] = $this->conf['labelPrevious'] == '' ? '<' : $GLOBALS['TSFE']->cObj->stdWrap($this->conf['labelPrevious'],  $this->conf['labelPrevious.']);
