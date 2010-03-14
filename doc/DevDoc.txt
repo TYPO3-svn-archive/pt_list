@@ -75,6 +75,19 @@ CHANGELOG
 Version 0.0.4dev:
 ----------------
 
++ (fb) ADD: New Feature: Out of the box language overlay support:
+	   Example:
+	    plugin.tx_ptlist.listConfig.yourList {
+			languageOverlays {
+				tx_yourlist_article = 1
+			}
+			[...]
+		}
+	   pt_list will take care of getting the correct overlay records in an efficient way and to set the values of the dataDescriptions automatically
+	   with the translated values. Tables needs to be have a languageFieldand a transOrigPointerField defined in TCA (this is how translation overlays work in TYPO3).
+	   Fields that are excluded from translation (l10n_mode == 'exclude') are supported.
+	   The original values will be added in additional dataDescription identifiers <dataDescriptionIdentifier>_default
+	   (Tip for debugging: Use following renderObj for debugging: renderObj = TEXT, renderObj.debugData = 1)
 + (fb) CHG: localConfiguration will be merged over property instead of overwriting (has only effect, if you use pt_list as a subcontroller)
 + (fb) ADD: added feature to generate prev/next links and updated the manual
 + (wz) FIX: Committed forgotten parts of filter_integer

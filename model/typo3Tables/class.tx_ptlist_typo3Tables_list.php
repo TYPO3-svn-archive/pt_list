@@ -45,6 +45,11 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 	 */
 	protected $tables = array();
 	
+	/**
+	 * @var array	language overlay configuration
+	 */
+	protected $languageOverlays = array();
+	
 
 	/***************************************************************************
 	 * Implementing abstract methods from the "tx_ptlist_list" class
@@ -113,6 +118,10 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 		// SQL base from clause
 		$this->baseFromClause = $GLOBALS['TSFE']->cObj->stdWrap($dataArray['baseFromClause'], $dataArray['baseFromClause.']);
 		
+
+		
+		// TODO: check if this table can be localized
+		
 		if (TYPO3_DLOG) t3lib_div::devLog('base clauses', 'pt_list', 0, array(
 			'baseWhereClause' => $this->baseWhereClause,
 			'baseGroupByClause' => $this->baseGroupByClause,
@@ -127,6 +136,31 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 		// the default table is the first defined table (or its alias)
 		$this->dataDescriptions->set_defaultTable(end(t3lib_div::trimExplode(' ', $this->tables[0])));
 		$this->dataDescriptions->setPropertiesFromArray($dataArray['data.']);
+		
+		$postFix = '_ptlistOL';
+		
+		// language overlays
+		if ($languageUid = $GLOBALS['TSFE']->sys_language_content) {
+			foreach ($dataArray['languageOverlays.'] as $tableName => $flag) {
+				if ($flag) {
+					$languageField = $GLOBALS['TCA'][$tableName]['ctrl']['languageField'];
+					tx_pttools_assert::isNotEmptyString($languageField, array('message' => 'No languageField found for table "'.$tableName.'"'));
+					$this->languageOverlays[$tableName]['languageField'] = $languageField;
+					
+					$parentField = $GLOBALS['TCA'][$tableName]['ctrl']['transOrigPointerField'];
+					tx_pttools_assert::isNotEmptyString($parentField, array('message' => 'No parentField found for table "'.$tableName.'"'));
+					
+					$this->baseFromClause .= sprintf(' LEFT JOIN %1$s AS %1$s%3$s ON (%1$s%3$s.%2$s = %1$s.uid)', $tableName, $parentField, $postFix);
+					$this->baseWhereClause .= sprintf(' AND (%1$s%4$s.%2$s = %3$s OR %1$s.%2$s in (-1,0))', $tableName, $languageField, intval($languageUid), $postFix);
+
+					// add uid field for translation overlay to dataDescriptions
+					$tmpDataDescription = new tx_ptlist_dataDescription('uid'.$postFix, $tableName.$postFix, 'uid');
+					$this->dataDescriptions->addItem($tmpDataDescription);
+				}
+			}
+			
+			$this->dataDescriptions->addLanguageOverlays($this->languageOverlays);
+		}		
 
 		// setup columns
 		$this->columnDescriptions = new tx_ptlist_columnDescriptionCollection($this->listId);
@@ -141,6 +175,7 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 			$this->filters->setPropertiesFromArray($dataArray['filters.']);
 		}
 
+		// sorting
 		if(!empty($dataArray['defaults.']['sortingColumn']) || !empty($dataArray['defaults.']['sortingColumn.'])) {
 			$sortingColumn = $GLOBALS['TSFE']->cObj->stdWrap($dataArray['defaults.']['sortingColumn'], $dataArray['defaults.']['sortingColumn.']);
 			$sortingDirection = $GLOBALS['TSFE']->cObj->stdWrap($dataArray['defaults.']['sortingDirection'], $dataArray['defaults.']['sortingDirection.']);
@@ -149,7 +184,7 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 		}
 		
 	}
-
+	
 
 	/***************************************************************************
 	 * Methods for the "tx_ptlist_iFilterable" interface

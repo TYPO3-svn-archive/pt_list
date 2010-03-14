@@ -197,6 +197,37 @@ class tx_ptlist_dataDescriptionCollection extends tx_pttools_objectCollection im
 	}
 	
 	
+	
+	/**
+	 * Add additional dataDescriptions if we're not in the default language
+	 * 
+	 * @param array $table configuration
+	 * @return void
+	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
+	 * @since 2010-03-13
+	 */
+	public function addLanguageOverlays(array $tables) {
+		
+		$postFix = '_ptlistOL';
+		
+		foreach($this as $dataDescription) { /* @var $dataDescription tx_ptlist_dataDescription */ 
+			
+			$table = $dataDescription->get_table();
+			if (!($dataDescription->get_special()) && in_array($table, array_keys($tables))) {
+				t3lib_div::loadTCA($table);
+				$field = $dataDescription->get_field();
+				if (!empty($field) && ($field != 'uid') && $GLOBALS['TCA'][$table]['columns'][$field]['l10n_mode'] != 'exclude') {
+					// create a dataDescription object and add it to the collection
+					$tmpDataDescription = new tx_ptlist_dataDescription(
+						$dataDescription->get_identifier() . $postFix, 
+						$table . $postFix, 
+						$field
+					);
+					$this->addItem($tmpDataDescription);
+				}
+			}
+		}
+	}
 
 
 

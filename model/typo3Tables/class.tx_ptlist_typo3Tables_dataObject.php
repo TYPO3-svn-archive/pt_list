@@ -70,6 +70,27 @@ class tx_ptlist_typo3Tables_dataObject implements ArrayAccess, tx_pttools_iSetta
 		foreach ($dataArray as $key => $value) {
 			$this->_data[$key] = $value;
 		}
+		$this->overlayFields();
+	}
+	
+	
+	
+	/**
+	 * Check if there are fields from an overlay record an copy them over the original fields
+	 * 
+	 * @param void
+	 * @return void
+	 */
+	public function overlayFields() {
+		$postFix = '_ptlistOL';
+		if ($this->_data['uid'.$postFix]) {
+			foreach (array_keys($this->_data) as $key) {
+				if (array_key_exists($key . $postFix, $this->_data)) {
+					$this->_data[$key . '_default'] = $this->_data[$key];
+					$this->_data[$key] = $this->_data[$key . $postFix];
+				}
+			}
+		}
 	}
 	
 	
