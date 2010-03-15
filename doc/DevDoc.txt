@@ -75,6 +75,10 @@ CHANGELOG
 Version 0.0.4dev:
 ----------------
 
++ (jm) ADD: Updated documentation
+       + list configuration properties
+  	   + group filter properties
+       + new pictures for datePicker and datePager filters
 + (fb) ADD: New Feature: Out of the box language overlay support:
 	   Example:
 	    plugin.tx_ptlist.listConfig.yourList {
