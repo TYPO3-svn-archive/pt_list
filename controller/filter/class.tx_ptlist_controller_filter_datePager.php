@@ -27,6 +27,7 @@ require_once t3lib_extMgm::extPath('pt_tools').'res/staticlib/class.tx_pttools_a
 require_once t3lib_extMgm::extPath('pt_tools').'res/staticlib/class.tx_pttools_debug.php';
 require_once t3lib_extMgm::extPath('pt_tools').'res/staticlib/class.tx_pttools_div.php';
 
+require_once t3lib_extMgm::extPath('pt_list').'classes/class.tx_ptlist_dateX.php';
 require_once t3lib_extMgm::extPath('pt_list').'model/class.tx_ptlist_filter.php';
 require_once t3lib_extMgm::extPath('pt_list').'view/filter/datePager/class.tx_ptlist_view_filter_datePager_userInterface.php';
 
@@ -41,11 +42,11 @@ require_once t3lib_extMgm::extPath('pt_list').'view/filter/datePager/class.tx_pt
  */
 class tx_ptlist_controller_filter_datePager extends tx_ptlist_filter {
 	protected $value = array();
-    protected $smartyTemplateVariables = array();
-    protected $firstDayOfWeek = 1; // sets index to monday, which is the first day of the week according to DIN 1355
+	protected $smartyTemplateVariables = array();
+	protected $firstDayOfWeek = 1; // sets index to monday, which is the first day of the week according to DIN 1355
 
 	/**
-     * MVC init method
+	 * MVC init method
 	 *
 	 * @param   void
 	 * @return  void
@@ -54,12 +55,16 @@ class tx_ptlist_controller_filter_datePager extends tx_ptlist_filter {
 	 * @since   2009-09-08
 	 */
 	public function init() {
+
+		//init dateX and store today in session
+		tx_ptlist_dateX::getInstance();
+
 		parent::init();
-        tx_pttools_assert::isInRange(count($this->dataDescriptions),
-                                     1,
-                                     2,
-                                     array('message' => sprintf('This filter can only be used with 1 or 2 dataDescriptions (dataDescriptions found: "%s")',
-                                                                count($this->dataDescriptions))));
+		tx_pttools_assert::isInRange(count($this->dataDescriptions),
+			1,
+			2,
+			array('message' => sprintf('This filter can only be used with 1 or 2 dataDescriptions (dataDescriptions found: "%s")',
+				count($this->dataDescriptions))));
 	}
 
 	/**
@@ -83,8 +88,8 @@ class tx_ptlist_controller_filter_datePager extends tx_ptlist_filter {
 	 * @since   2009-09-08
 	 */
 	public function isNotActiveAction() {
-        return $this->renderView();
-    }
+		return $this->renderView();
+	}
 
 	/**
 	 * Validate
@@ -107,42 +112,42 @@ class tx_ptlist_controller_filter_datePager extends tx_ptlist_filter {
 	 * @since   2009-09-08
 	 */
 	public function submitAction() {
-        switch ($this->params['mode']) {
-	        case 'next':
-	            $this->incrementPagerValues();
-	            break;
-	        case 'prev':
-	            $this->decrementPagerValues();
-	            break;
-	        default:
+		switch ($this->params['mode']) {
+			case 'next':
+				$this->incrementPagerValues();
+				break;
+			case 'prev':
+				$this->decrementPagerValues();
+				break;
+			default:
 				throw new tx_pttools_exceptionConfiguration("No valid 'mode' set in GET parameters.");
-        }
+		}
 		return parent::submitAction();
 	}
 
 	/**
 	 * Get SQL where clause snippet
-     *
+	 *
 	 * @param   void
 	 * @return  string	SQL where clause snippet
 	 * @author  Joachim Mathes <mathes@punkt.de>
 	 * @since   2009-09-08
 	 */
 	public function getSqlWhereClauseSnippet() {
-        switch(count($this->dataDescriptions)) {
-            case 1:
-                $sqlWhereClauseSnippet = $this->getPointOfTimeSqlWhereClauseSnippet();
-                break;
-            case 2:
-                $sqlWhereClauseSnippet = $this->getPeriodOfTimeSqlWhereClauseSnippet();
-                break;
-            default:
-                throw new tx_pttools_exceptionConfiguration("No valid number of data descriptions.");
-        }
-        return $sqlWhereClauseSnippet;
-    }
+		switch(count($this->dataDescriptions)) {
+			case 1:
+				$sqlWhereClauseSnippet = $this->getPointOfTimeSqlWhereClauseSnippet();
+				break;
+			case 2:
+				$sqlWhereClauseSnippet = $this->getPeriodOfTimeSqlWhereClauseSnippet();
+				break;
+			default:
+				throw new tx_pttools_exceptionConfiguration("No valid number of data descriptions.");
+		}
+		return $sqlWhereClauseSnippet;
+	}
 
-    /**
+	/**
 	 * Get point of time SQL where clause snippet
 	 *
 	 * @param   void
@@ -150,32 +155,37 @@ class tx_ptlist_controller_filter_datePager extends tx_ptlist_filter {
 	 * @author  Joachim Mathes <mathes@punkt.de>
 	 * @since   2009-11-09
 	 */
-    protected function getPointOfTimeSqlWhereClauseSnippet() {
-		$startDateColumn = $this->dataDescriptions->getItemByIndex(0)->get_table()
-                           . '.'
-                           . $this->dataDescriptions->getItemByIndex(0)->get_field();
-        $sqlDateFunction = $this->determineSqlDateFunction();
-        $dateEntity = $this->determineDateEntity();
-        switch ($dateEntity) {
-		case 'day':
-			$sqlWhereClauseSnippet = $sqlDateFunction . "(" . $startDateColumn . ", '%Y-%m-%d') = '" . date('Y-m-d', mktime(0, 0 ,0, date('n'), date('j') + intval($this->value['value']), date('Y'))) . "'";
-			break;
-		case 'week':
-			$sqlWhereClauseSnippet = "WEEKOFYEAR(" . $sqlDateFunction . "(" . $startDateColumn . ", '%Y-%m-%d')) = '" . date('W', mktime(0, 0 ,0, date('n'), date('j') + 7 * intval($this->value['value']), date('Y'))) . "' AND " . $sqlDateFunction . "(" . $startDateColumn . ", '%Y') = '" . date('Y', mktime(0, 0 ,0, date('n'), date('j') + 7 * intval($this->value['value']), date('Y'))) . "'";
-			break;
-		case 'month':
-            $sqlWhereClauseSnippet = $sqlDateFunction . "(" . $startDateColumn . ", '%Y-%m') = '" . date('Y-m', mktime(0, 0, 0 , date('n') + intval($this->value['value']), date('j'), date('Y'))) . "'";
-			break;
-		case 'year':
-			$sqlWhereClauseSnippet =  $sqlDateFunction . "(" . $startDateColumn . ", '%Y') = '" . date('Y', mktime(0, 0, 0, date('n'), date('j'), date('Y') + intval($this->value['value']))) . "'";
-			break;
-		default:
-			throw new tx_pttools_exceptionConfiguration("No valid 'dateEntity' set in Typoscript configuration.");
-		}
-        return $sqlWhereClauseSnippet;
-    }
+	protected function getPointOfTimeSqlWhereClauseSnippet() {
 
-    /**
+		$dateX = tx_ptlist_dateX::getInstance();
+		$date = $dateX->getDateX();
+		$dateTimestamp = $dateX->getDateXAsTimestamp();
+
+		$startDateColumn = $this->dataDescriptions->getItemByIndex(0)->get_table()
+			. '.'
+			. $this->dataDescriptions->getItemByIndex(0)->get_field();
+		$sqlDateFunction = $this->determineSqlDateFunction();
+		$dateEntity = $this->determineDateEntity();
+		switch ($dateEntity) {
+			case 'day':
+				$sqlWhereClauseSnippet = $sqlDateFunction . "(" . $startDateColumn . ", '%Y-%m-%d') = '" . $date . "'";
+				break;
+			case 'week':
+				$sqlWhereClauseSnippet = "WEEKOFYEAR(" . $sqlDateFunction . "(" . $startDateColumn . ", '%Y-%m-%d')) = '" . date('W', $dateTimestamp) . "' AND " . $sqlDateFunction . "(" . $startDateColumn . ", '%Y') = '" . date('Y', $dateTimestamp) . "'";
+				break;
+			case 'month':
+				$sqlWhereClauseSnippet = $sqlDateFunction . "(" . $startDateColumn . ", '%Y-%m') = '" . date('Y-m', $dateTimestamp) . "'";
+				break;
+			case 'year':
+				$sqlWhereClauseSnippet =  $sqlDateFunction . "(" . $startDateColumn . ", '%Y') = '" . date('Y', $dateTimestamp) . "'";
+				break;
+			default:
+				throw new tx_pttools_exceptionConfiguration("No valid 'dateEntity' set in Typoscript configuration.");
+		}
+		return $sqlWhereClauseSnippet;
+	}
+
+	/**
 	 * Get period of time SQL where clause snippet
 	 *
 	 * @param   void
@@ -183,55 +193,56 @@ class tx_ptlist_controller_filter_datePager extends tx_ptlist_filter {
 	 * @author  Joachim Mathes <mathes@punkt.de>
 	 * @since   2009-11-09
 	 */
-    protected function getPeriodOfTimeSqlWhereClauseSnippet() {
+	protected function getPeriodOfTimeSqlWhereClauseSnippet() {
+
+		$dateX = tx_ptlist_dateX::getInstance();
+		$date = $dateX->getDateX();
+		$dateTimestamp = $dateX->getDateXAsTimestamp();
+
 		$startDateColumn = $this->dataDescriptions->getItemByIndex(0)->get_table()
-                           . '.'
-                           . $this->dataDescriptions->getItemByIndex(0)->get_field();
-        $endDateColumn = $this->dataDescriptions->getItemByIndex(1)->get_table()
-                         . '.'
-                         . $this->dataDescriptions->getItemByIndex(1)->get_field();
-        $sqlDateFunction = $this->determineSqlDateFunction();
-        $dateEntity = $this->determineDateEntity();
-        $entityAdjustment = intval($this->value['value']);
+			. '.'
+			. $this->dataDescriptions->getItemByIndex(0)->get_field();
+		$endDateColumn = $this->dataDescriptions->getItemByIndex(1)->get_table()
+			. '.'
+			. $this->dataDescriptions->getItemByIndex(1)->get_field();
+		$sqlDateFunction = $this->determineSqlDateFunction();
+		$dateEntity = $this->determineDateEntity();
 
-        switch ($dateEntity) {
+		$entityAdjustment = intval($this->value['value']);
+
+		switch ($dateEntity) {
 			case 'day':
-				$timestampOfNewDay = mktime(0, 0, 0, date('n'), date('j') + $entityAdjustment, date('Y'));
-
 				$start = "STR_TO_DATE(" . $sqlDateFunction . "(" . $startDateColumn . ", '%Y-%m-%d'), '%Y-%m-%d')";
 				$end =   "STR_TO_DATE(" . $sqlDateFunction . "(" . $endDateColumn .   ", '%Y-%m-%d'), '%Y-%m-%d')";
 
-				$adjustmentDate = "STR_TO_DATE('" . date('Y-m-d', $timestampOfNewDay) . "', '%Y-%m-%d')";
+				$adjustmentDate = "STR_TO_DATE('" . $date . "', '%Y-%m-%d')";
 
 				$sqlWhereClauseSnippet = $start . ' <= ' . $adjustmentDate . ' AND ' . $end . ' >= ' . $adjustmentDate;
-	            break;
+				break;
 			case 'week':
-				$timestampOfNewWeek = mktime(0, 0, 0, date('n'), date('j') + 7 * $entityAdjustment, date('Y'));
-
-				$sqlWhereClauseSnippet = "WEEKOFYEAR(" . $sqlDateFunction . "(" . $startDateColumn . ", '%Y-%m-%d')) <= '" . date('W', $timestampOfNewWeek) . "' AND " . $sqlDateFunction . "(" . $startDateColumn . ", '%Y') <= '" . date('Y', $timestampOfNewWeek) . "' "
-	                                     . "AND "
-	                                     . "WEEKOFYEAR(" . $sqlDateFunction . "(" . $endDateColumn . ", '%Y-%m-%d')) >= '" . date('W', $timestampOfNewWeek) . "' AND " . $sqlDateFunction . "(" . $endDateColumn . ", '%Y') >= '" . date('Y', $timestampOfNewWeek) . "'";
+				$sqlWhereClauseSnippet =
+					"WEEKOFYEAR(" . $sqlDateFunction . "(" . $startDateColumn . ", '%Y-%m-%d')) <= '" . date('W', $dateTimestamp) . "' AND " . $sqlDateFunction . "(" . $startDateColumn . ", '%Y') <= '" . date('Y', $dateTimestamp) . "' "
+					. "AND "
+					. "WEEKOFYEAR(" . $sqlDateFunction . "(" . $endDateColumn . ", '%Y-%m-%d')) >= '" . date('W', $dateTimestamp) . "' AND " . $sqlDateFunction . "(" . $endDateColumn . ", '%Y') >= '" . date('Y', $dateTimestamp) . "'";
 				break;
 			case 'month':
-				$timestampOfNewMonth = mktime(0, 0, 0, date('n') + $entityAdjustment, date('j'), date('Y'));
+				$sqlWhereClauseSnippet =
+					"STR_TO_DATE(" . $sqlDateFunction . "(" . $startDateColumn . ", '%Y-%m'), '%Y-%m') <= STR_TO_DATE('" . date('Y-m', $dateTimestamp) . "', '%Y-%m') "
+					. "AND "
+					. "STR_TO_DATE(" . $sqlDateFunction . "(" . $endDateColumn . ", '%Y-%m'), '%Y-%m') >= STR_TO_DATE('" . date('Y-m', $dateTimestamp) . "', '%Y-%m')";
 
-	            $sqlWhereClauseSnippet = "STR_TO_DATE(" . $sqlDateFunction . "(" . $startDateColumn . ", '%Y-%m'), '%Y-%m') <= STR_TO_DATE('" . date('Y-m', $timestampOfNewMonth) . "', '%Y-%m') "
-	                                     . "AND "
-	                                     . "STR_TO_DATE(" . $sqlDateFunction . "(" . $endDateColumn . ", '%Y-%m'), '%Y-%m') >= STR_TO_DATE('" . date('Y-m', $timestampOfNewMonth) . "', '%Y-%m')";
-
-	            break;
+				break;
 			case 'year':
-				$timestampOfNewYear = mktime(0, 0, 0, date('n'), date('j'), date('Y') + $entityAdjustment);
-
-				$sqlWhereClauseSnippet = "STR_TO_DATE(" . $sqlDateFunction . "(" . $startDateColumn . ", '%Y'), '%Y') <= STR_TO_DATE('" . date('Y', $timestampOfNewYear) . "', '%Y') "
-	                                     . "AND "
-	                                     . "STR_TO_DATE(" . $sqlDateFunction . "(" . $endDateColumn . ", '%Y'), '%Y') >= STR_TO_DATE('" . date('Y', $timestampOfNewYear) . "', '%Y')";
+				$sqlWhereClauseSnippet =
+					"STR_TO_DATE(" . $sqlDateFunction . "(" . $startDateColumn . ", '%Y'), '%Y') <= STR_TO_DATE('" . date('Y', $dateTimestamp) . "', '%Y') "
+					. "AND "
+					. "STR_TO_DATE(" . $sqlDateFunction . "(" . $endDateColumn . ", '%Y'), '%Y') >= STR_TO_DATE('" . date('Y', $dateTimestamp) . "', '%Y')";
 				break;
 			default:
 				throw new tx_pttools_exceptionConfiguration("No valid 'dateEntity' set in Typoscript configuration.");
 		}
-        return $sqlWhereClauseSnippet;
-    }
+		return $sqlWhereClauseSnippet;
+	}
 
 	/**
 	 * Renders the header text for the filter
@@ -244,68 +255,41 @@ class tx_ptlist_controller_filter_datePager extends tx_ptlist_filter {
 	 * @author  Joachim Mathes <mathes@punkt.de>
 	 * @since   2009-09-15
 	 */
-    protected function renderHeader() {
+	protected function renderHeader() {
 
-        // Get configuration from TypoScript
-        $entity = $this->determineDateEntity();
-        $beginFormat = $this->conf['beginFormat'] == '' ? '%Y-%m-%d' : $this->conf['beginFormat'];
-        $endFormat = $this->conf['endFormat'] == '' ? '%Y-%m-%d' : $this->conf['endFormat'];
+		$dateX = tx_ptlist_dateX::getInstance();
+		$dateAsTimestamp = $dateX->getDateXAsTimestamp();
 
-        $firstDayOfWeek = $this->firstDayOfWeek;
+		//Get configuration from TypoScript
+		$entity = $this->determineDateEntity();
+		$beginFormat = $this->conf['beginFormat'] == '' ? '%Y-%m-%d' : $this->conf['beginFormat'];
+		$endFormat = $this->conf['endFormat'] == '' ? '%Y-%m-%d' : $this->conf['endFormat'];
 
-        // Evaluate day, week or month number depending on 'entity'
+		$firstDayOfWeek = $this->firstDayOfWeek;
+
+		// Evaluate day, week or month number depending on 'entity'
 		switch ($entity) {
-		case 'day':
-            $dateEntityBegin = strftime($beginFormat,
-                                     mktime(0, 0, 0,
-                                            date('n'),
-                                            date('j') + intval($this->value['value']),
-                                            date('Y')));
-            $dateEntityEnd = strftime($endFormat,
-                                   mktime(0, 0, 0,
-                                          date('n'),
-                                          date('j') + intval($this->value['value']),
-                                          date('Y')));
-			break;
-		case 'week':
-			$value = date('W', mktime(0, 0, 0, date('n'), date('j') + 7 * intval($this->value['value']), date('Y')));
-            $dateEntityBegin = strftime($beginFormat,
-                                    mktime(0, 0, 0,
-                                           date('n'),
-                                           date('j') + 7 * intval($this->value['value']) - date('w') + $firstDayOfWeek,
-                                           date('Y')));
-            $dateEntityEnd = strftime($endFormat,
-                                  mktime(0, 0, 0,
-                                         date('n'),
-                                         date('j') + 7 * intval($this->value['value']) - date('w') + $firstDayOfWeek  + 6,
-                                         date('Y')));
-			break;
-		case 'month':
-            $dateEntityBegin = strftime($beginFormat,
-                                    mktime(0, 0, 0,
-                                           date('n') + intval($this->value['value']),
-                                           1,
-                                           date('Y')));
-            $dateEntityEnd = strftime($endFormat,
-                                  mktime(0, 0, 0,
-                                         date('n') + intval($this->value['value']),
-                                         date('t'),
-                                         date('Y')));
-			break;
-		case 'year':
-            $dateEntityBegin = strftime($beginFormat,
-                                    mktime(0, 0, 0,
-                                           1, 1, date('Y') + intval($this->value['value'])));
-            $dateEntityEnd = strftime($endFormat,
-                                  mktime(0, 0, 0,
-                                         12, 31, date('Y') + intval($this->value['value'])));
-			break;
-		default:
-			throw new tx_pttools_exceptionConfiguration("No valid 'entity' set in Typoscript configuration.");
+			case 'day':
+				$dateEntityBegin = strftime($beginFormat, $dateAsTimestamp);
+				$dateEntityEnd = strftime($endFormat, $dateAsTimestamp);
+				break;
+			case 'week':
+				$dateEntityBegin = strftime($beginFormat, $dateX->getFirstDayOfWeekAsTimestamp($firstDayOfWeek));
+				$dateEntityEnd = strftime($endFormat, $dateX->getLastDayOfWeekAsTimestamp($firstDayOfWeek));
+				break;
+			case 'month':
+				$dateEntityBegin = strftime($beginFormat, $dateX->getFirstDayOfMonthAsTimestamp());
+				$dateEntityEnd = strftime($endFormat, $dateX->getLastDayOfMonthAsTimestamp());
+				break;
+			case 'year':
+				$dateEntityBegin = strftime($beginFormat, $dateX->getFirstDayOfYearAsTimestamp());
+				$dateEntityEnd = strftime($endFormat, $dateX->getLastDayOfYearAsTimestamp());
+				break;
+			default:
+				throw new tx_pttools_exceptionConfiguration("No valid 'entity' set in Typoscript configuration.");
 		}
 
-        $renderValues = array('begin' => $dateEntityBegin,
-                              'end' => $dateEntityEnd);
+		$renderValues = array('begin' => $dateEntityBegin, 'end' => $dateEntityEnd);
 
 		// Rendering configuration
 		if (isset($this->conf['header']) && isset($this->conf['header.'])) {
@@ -316,17 +300,16 @@ class tx_ptlist_controller_filter_datePager extends tx_ptlist_filter {
 			$renderConfig['renderUserFunctions.'] = $this->conf['renderUserFunctions.'];
 		}
 
-        if (isset($renderConfig)) {
-            $header = tx_ptlist_div::renderValues($renderValues, $renderConfig);
-        }
-        else {
-            $header = '';
-        }
+		if (isset($renderConfig)) {
+			$header = tx_ptlist_div::renderValues($renderValues, $renderConfig);
+		}
+		else {
+			$header = '';
+		}
+		return $header;
+	}
 
-        return $header;
-    }
-
-  	/**
+	/**
 	 * Render view
 	 *
 	 * @param   void
@@ -334,12 +317,12 @@ class tx_ptlist_controller_filter_datePager extends tx_ptlist_filter {
 	 * @author  Joachim Mathes <mathes@punkt.de>
 	 * @since   2009-11-09
 	 */
-    protected function renderView() {
-        $this->defineSmartyTemplateVariables();
-        $view = $this->getView('filter_datePager_userInterface');
+	protected function renderView() {
+		$this->defineSmartyTemplateVariables();
+		$view = $this->getView('filter_datePager_userInterface');
 		$view->addItem($this->smartyTemplateVariables, 'span');
-        return $view->render();
-    }
+		return $view->render();
+	}
 
 	/**
 	 * Define Smarty template variables
@@ -349,14 +332,14 @@ class tx_ptlist_controller_filter_datePager extends tx_ptlist_filter {
 	 * @author  Joachim Mathes <mathes@punkt.de>
 	 * @since   2009-11-09
 	 */
-    protected function defineSmartyTemplateVariables() {
-        $this->smartyTemplateVariables['entity'] = $this->determineDateEntity();
-        $this->smartyTemplateVariables['nextValue'] = isset($this->value['nextValue']) ? intval($this->value['nextValue']) : 1;
-        $this->smartyTemplateVariables['prevValue'] = isset($this->value['prevValue']) ? intval($this->value['prevValue']) : -1;
-        $this->smartyTemplateVariables['labelPrevious'] = $this->conf['labelPrevious'] == '' ? '<' : $GLOBALS['TSFE']->cObj->stdWrap($this->conf['labelPrevious'],  $this->conf['labelPrevious.']);
-        $this->smartyTemplateVariables['labelNext'] = $this->conf['labelNext'] == '' ? '>' : $GLOBALS['TSFE']->cObj->stdWrap($this->conf['labelNext'],  $this->conf['labelNext.']);
-        $this->smartyTemplateVariables['header'] = $this->renderHeader();
-    }
+	protected function defineSmartyTemplateVariables() {
+		$this->smartyTemplateVariables['entity'] = $this->determineDateEntity();
+		$this->smartyTemplateVariables['prevValue'] = $this->conf['prevValue'] == '' ? -1 : intval($this->conf['prevValue']);
+		$this->smartyTemplateVariables['nextValue'] = $this->conf['nextValue'] == '' ? 1 : intval($this->conf['nextValue']);
+		$this->smartyTemplateVariables['labelPrevious'] = $this->conf['labelPrevious'] == '' ? '<' : $GLOBALS['TSFE']->cObj->stdWrap($this->conf['labelPrevious'],  $this->conf['labelPrevious.']);
+		$this->smartyTemplateVariables['labelNext'] = $this->conf['labelNext'] == '' ? '>' : $GLOBALS['TSFE']->cObj->stdWrap($this->conf['labelNext'],  $this->conf['labelNext.']);
+		$this->smartyTemplateVariables['header'] = $this->renderHeader();
+	}
 
 	/**
 	 * Increment pager values
@@ -366,13 +349,12 @@ class tx_ptlist_controller_filter_datePager extends tx_ptlist_filter {
 	 * @author  Joachim Mathes <mathes@punkt.de>
 	 * @since   2009-11-09
 	 */
-    protected function incrementPagerValues() {
-        $this->value['value'] = $this->params['nextValue'];
-        $this->value['nextValue'] = intval($this->params['nextValue']) + 1;
-        $this->value['prevValue'] = $this->value['nextValue'] - 2;
-    }
+	protected function incrementPagerValues() {
+		$dateX = tx_ptlist_dateX::getInstance();
+		$dateX->incrementDateXByEntity(1, $this->determineDateEntity());
+	}
 
-    /**
+	/**
 	 * Decrement pager values
 	 *
 	 * @param   void
@@ -380,13 +362,12 @@ class tx_ptlist_controller_filter_datePager extends tx_ptlist_filter {
 	 * @author  Joachim Mathes <mathes@punkt.de>
 	 * @since   2009-11-09
 	 */
-    protected function decrementPagerValues() {
-        $this->value['value'] = $this->params['prevValue'];
-        $this->value['prevValue'] = intval($this->params['prevValue']) - 1;
-        $this->value['nextValue'] = $this->value['prevValue'] + 2;
-    }
+	protected function decrementPagerValues() {
+		$dateX = tx_ptlist_dateX::getInstance();
+		$dateX->decrementDateXByEntity(1, $this->determineDateEntity());
+	}
 
-    /**
+	/**
 	 * Determine SQL date function
 	 *
 	 * @param   void
@@ -394,21 +375,21 @@ class tx_ptlist_controller_filter_datePager extends tx_ptlist_filter {
 	 * @author  Joachim Mathes <mathes@punkt.de>
 	 * @since   2009-11-09
 	 */
-    protected function determineSqlDateFunction() {
-        switch ($this->conf['dateFieldType']) {
-        case 'date':
-            $sqlDateFunction = 'DATE_FORMAT';
-            break;
-        case 'timestamp':
-            $sqlDateFunction = 'FROM_UNIXTIME';
-            break;
-		default:
-			throw new tx_pttools_exceptionConfiguration("No valid 'dateFieldType' set in Typoscript configuration.");
-        }
-        return $sqlDateFunction;
-    }
+	protected function determineSqlDateFunction() {
+		switch ($this->conf['dateFieldType']) {
+			case 'date':
+				$sqlDateFunction = 'DATE_FORMAT';
+				break;
+			case 'timestamp':
+				$sqlDateFunction = 'FROM_UNIXTIME';
+				break;
+			default:
+				throw new tx_pttools_exceptionConfiguration("No valid 'dateFieldType' set in Typoscript configuration.");
+		}
+		return $sqlDateFunction;
+	}
 
-    /**
+	/**
 	 * Determine date entity
 	 *
 	 * @param   void
@@ -416,7 +397,7 @@ class tx_ptlist_controller_filter_datePager extends tx_ptlist_filter {
 	 * @author  Joachim Mathes <mathes@punkt.de>
 	 * @since   2009-11-09
 	 */
-    protected function determineDateEntity() {
-        return $this->conf['entity'] == '' ? 'day' : $this->conf['entity'];
-    }
+	protected function determineDateEntity() {
+		return $this->conf['entity'] == '' ? 'day' : $this->conf['entity'];
+	}
 }
