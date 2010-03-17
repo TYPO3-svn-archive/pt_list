@@ -209,7 +209,7 @@ class tx_ptlist_dateX_testcase extends tx_phpunit_testcase {
 	public function test_getFirstDayOfWeekAsTimestamp() {
 		$dateX = tx_ptlist_dateX::getInstance();
 		$dateX->setDateX('2010-05-05');
-		tx_pttools_assert::isEqual('', $dateX->getFirstDayOfWeekAsTimestamp());
+		tx_pttools_assert::isEqual('1272751200', $dateX->getFirstDayOfWeekAsTimestamp());
 		$dateX->_deleteDateX();
 	}
 
@@ -219,8 +219,7 @@ class tx_ptlist_dateX_testcase extends tx_phpunit_testcase {
 	public function test_getLastDayOfWeekAsTimestamp() {
 		$dateX = tx_ptlist_dateX::getInstance();
 		$dateX->setDateX('2010-05-05');
-		echo $dateX->getLastDayOfWeekAsTimestamp();
-		tx_pttools_assert::isEqual('', $dateX->getLastDayOfWeekAsTimestamp());
+		tx_pttools_assert::isEqual('1273269600', $dateX->getLastDayOfWeekAsTimestamp());
 		$dateX->_deleteDateX();
 	}
 
@@ -231,7 +230,7 @@ class tx_ptlist_dateX_testcase extends tx_phpunit_testcase {
 	public function test_getFirstDayOfMonthAsTimestamp() {
 		$dateX = tx_ptlist_dateX::getInstance();
 		$dateX->setDateX('2010-05-05');
-		tx_pttools_assert::isEqual('', $dateX->getFirstDayOfMonthAsTimestamp());
+		tx_pttools_assert::isEqual('1273096800', $dateX->getFirstDayOfMonthAsTimestamp());
 		$dateX->_deleteDateX();
 	}
 
@@ -241,7 +240,7 @@ class tx_ptlist_dateX_testcase extends tx_phpunit_testcase {
 	public function test_getLastDayOfMonthAsTimestamp() {
 		$dateX = tx_ptlist_dateX::getInstance();
 		$dateX->setDateX('2010-05-05');
-		tx_pttools_assert::isEqual('', $dateX->getLastDayOfMonthAsTimestamp());
+		tx_pttools_assert::isEqual('1272924000', $dateX->getLastDayOfMonthAsTimestamp());
 		$dateX->_deleteDateX();
 	}
 
