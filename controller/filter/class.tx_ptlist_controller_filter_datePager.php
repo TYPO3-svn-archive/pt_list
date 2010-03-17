@@ -351,7 +351,8 @@ class tx_ptlist_controller_filter_datePager extends tx_ptlist_filter {
 	 */
 	protected function incrementPagerValues() {
 		$dateX = tx_ptlist_dateX::getInstance();
-		$dateX->incrementDateXByEntity(1, $this->determineDateEntity());
+		$quantity = $this->conf['nextValue'] == '' ? 1 : intval($this->conf['nextValue']);
+		$dateX->incrementDateXByEntity($quantity, $this->determineDateEntity());
 	}
 
 	/**
@@ -364,7 +365,8 @@ class tx_ptlist_controller_filter_datePager extends tx_ptlist_filter {
 	 */
 	protected function decrementPagerValues() {
 		$dateX = tx_ptlist_dateX::getInstance();
-		$dateX->decrementDateXByEntity(1, $this->determineDateEntity());
+		$quantity = $this->conf['prevValue'] == '' ? 1 : abs( intval($this->conf['prevValue']) );
+		$dateX->decrementDateXByEntity($quantity, $this->determineDateEntity());
 	}
 
 	/**
