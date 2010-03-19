@@ -75,6 +75,8 @@ CHANGELOG
 Version 0.0.4dev:
 ----------------
 
++ (fb) CHG: Commented out the inclusion of <INCLUDE_TYPOSCRIPT: source="FILE:EXT:pt_list/typoscript/static/_default/pageAjax.ts">
+       If you need this in your project include it by yourself. But this should not be available in all projects using pt_list
 + (jm) ADD: Updated documentation
        + list configuration properties
   	   + group filter properties
