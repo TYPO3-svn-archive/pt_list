@@ -424,6 +424,10 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 			}
 		} while(!$stop);
 		
+		if (empty($renderedItem)) {
+			$renderedItem = $GLOBALS['TSFE']->cObj->stdWrap($renderConf['ifEmpty'], $renderConf['ifEmpty.']);
+		}
+		
 		return $renderedItem;
 	}
 	
