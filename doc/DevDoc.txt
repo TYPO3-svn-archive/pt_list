@@ -75,6 +75,15 @@ CHANGELOG
 Version 0.0.4dev:
 ----------------
 
++ (fb) ADD: Added recursive postRendering for renderValues method (which renders the renderObj)
+       Example:
+       renderObj = TEXT
+       renderObj.field = username 
+       postRendering.renderObj = TEXT
+	   postRendering.renderObj {
+	       current = 1
+           htmlSpecialChars = 1
+       }
 + (fb) CHG: Commented out the inclusion of <INCLUDE_TYPOSCRIPT: source="FILE:EXT:pt_list/typoscript/static/_default/pageAjax.ts">
        If you need this in your project include it by yourself. But this should not be available in all projects using pt_list
 + (jm) ADD: Updated documentation

@@ -115,14 +115,16 @@ class tx_ptlist_div {
 	 * @author 	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-02-21
 	 */
-	public static function renderValues(array $values, array $config=array(), $forceCacheUpdate=false) {
+	public static function renderValues(array $values, array $config=array(), $forceCacheUpdate=false, $renderedContent=NULL) {
 
 		$cacheId = md5(serialize(func_get_args()));
 
 		if ($forceCacheUpdate || !isset(self::$renderCache[$cacheId])) {
 
-			// values will be concatenated with ", " by default
-			$renderedContent = implode(', ', $values);
+			if (is_null($renderedContent)) {
+				// values will be concatenated with ", " by default
+				$renderedContent = implode(', ', $values);
+			}
 
 			if (!empty($config)) {
 
@@ -148,12 +150,24 @@ class tx_ptlist_div {
 				// render typoscript cObj if defined
 				if (!empty($config['renderObj.'])) {
 
-					$local_cObj = t3lib_div::makeInstance('tslib_cObj');
+					$local_cObj = t3lib_div::makeInstance('tslib_cObj'); /* @var $local_cObj tslib_cObj */
 					$local_cObj->start($values);
 
 					$config['renderObj.']['setCurrent'] = $renderedContent;
 					// $renderedContent = $GLOBALS['TSFE']->cObj->cObjGetSingle($this->cObj['name'], $this->cObj['conf']);
 					$renderedContent = $local_cObj->cObjGetSingle($config['renderObj'], $config['renderObj.']);
+				}
+				
+				// post processing
+				/* Example
+				postRendering.renderObj = TEXT
+				postRendering.renderObj {
+					current = 1
+					htmlSpecialChars = 1
+				}
+				 */
+				if (!empty($config['postRendering.'])) {
+					$renderedContent = self::renderValues($values, $config['postRendering.'], $forceCacheUpdate, $renderedContent);
 				}
 			}
 			self::$renderCache[$cacheId] = $renderedContent;
