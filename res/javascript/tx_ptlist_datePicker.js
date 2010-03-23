@@ -17,30 +17,34 @@
  * @since  2009-07-15
  */
 
-$(function(){
-    // define config options
-    var pickerOpts = {
-      showOn: "button",
-      buttonImage: "../jqueryui/development-bundle/demos/datepicker/images/calendar.gif",
-      buttonImageOnly: "true"
-    };
+jQuery.noConflict();
 
-    // set date picker defaults
-    // todo get date picker regional settings from typo3 settings
-    $.datepicker.setDefaults($.extend({showMonthAfterYear: false},
-                                      $.datepicker.regional[""],
-                                      pickerOpts));
+jQuery(document).ready( function($) {
+	// define config options
+	var pickerOpts = {
+		showOn: "button",
+		buttonImage: "../jqueryui/development-bundle/demos/datepicker/images/calendar.gif",
+		buttonImageOnly: "true"
+	};
 
-    // create the date picker for the "from" field
-    $("#date_from").datepicker($.datepicker.regional["de"]);
-    $("#locale").change(function() {
-                          $("#date_from").datepicker("option", $.extend({showMonthAfterYear: false},
-                                                                   $.datepicker.regional[$(this).val()]));
-                        });
-    // create the date picker for the "to" field
-    $("#date_to").datepicker($.datepicker.regional["de"]);
-    $("#locale").change(function() {
-                          $("#date_to").datepicker("option", $.extend({showMonthAfterYear: false},
-                                                                   $.datepicker.regional[$(this).val()]));
-                        });
- });
+	// set date picker defaults
+	// todo get date picker regional settings from typo3 settings
+	$.datepicker.setDefaults($.extend({showMonthAfterYear: false},
+		$.datepicker.regional[""],
+		pickerOpts
+	));
+
+	// create the date picker for the "from" field
+	$("#date_from").datepicker($.datepicker.regional["de"]);
+	$("#locale").change(function() {
+		$("#date_from").datepicker("option", $.extend({showMonthAfterYear: false},
+			$.datepicker.regional[$(this).val()]));
+	});
+
+	// create the date picker for the "to" field
+	$("#date_to").datepicker($.datepicker.regional["de"]);
+	$("#locale").change(function() {
+		$("#date_to").datepicker("option", $.extend({showMonthAfterYear: false},
+			$.datepicker.regional[$(this).val()]));
+	});
+});
