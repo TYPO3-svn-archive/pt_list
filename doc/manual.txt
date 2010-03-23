@@ -1,4 +1,4 @@
-ï»¿
+
 EXT: List generator
 Extension Key: pt_list
 Language: en
@@ -24,8 +24,8 @@ Installation	5
 How to set up the demo list	5
 Administration	6
 Setting up a list Step-by-step	6
-List Configuration â€“ Main parts	6
-List Configuration â€“ Details	9
+List Configuration – Main parts	6
+List Configuration – Details	9
 Plugin Configuration	20
 Using aliases	22
 Developers	23
@@ -72,36 +72,36 @@ The extension contains a demo list that shows pt_list's main features. Follow th
 [pt_list] Themes / Default (pt_list)
 [pt_list] Demo list (static_info_tables) (pt_list)
 3.Put three instances of the pt_list plugin on the page you just created. 
-4.Set the first plugin's â€œPlugin Modeâ€ to â€œFilterboxâ€, the second plugin's â€œPlugin Modeâ€ to â€œListâ€ and the third plugin's â€œPlugin Modeâ€ to â€œPagerâ€.
-Make sure to set the list identifier of all three plugin instances to â€œmyDemoListâ€ to make the example working and the â€œList Typeâ€ to â€œTYPO3 Tablesâ€. 
-Make sure, the field â€œFilterbox identifierâ€ says â€œdefaultFilterboxâ€ in the plugin instance where you chose â€œFilterboxâ€ as â€œPlugin Modeâ€.
-Make sure to select â€œDefault Pagerâ€ in the selectbox â€œPagerâ€ on the plugin instance where you chose â€œPagerâ€ as â€œPlugin Modeâ€.
-5.Have a look at the frontend â€“ voilÃ , there comes your demo list.
+4.Set the first plugin's “Plugin Mode” to “Filterbox”, the second plugin's “Plugin Mode” to “List” and the third plugin's “Plugin Mode” to “Pager”.
+Make sure to set the list identifier of all three plugin instances to “myDemoList” to make the example working and the “List Type” to “TYPO3 Tables”. 
+Make sure, the field “Filterbox identifier” says “defaultFilterbox” in the plugin instance where you chose “Filterbox” as “Plugin Mode”.
+Make sure to select “Default Pager” in the selectbox “Pager” on the plugin instance where you chose “Pager” as “Plugin Mode”.
+5.Have a look at the frontend – voilà, there comes your demo list.
 
 Administration
-ErklÃ¤ren, wie die ganze Sache funktioniert
+Erklären, wie die ganze Sache funktioniert
 Definition der zugrundeliegenden Datenstrukturen
 Zuweisung von Listenspalten auf Datenstrukturen
-Datenspalten und Listenspalten haben zunÃ¤chst nichts miteinander zu tun, Ã¼berlicherweise ist Listenspalte aber ein Verweis auf Datenspalte, Listenspalten kÃ¶nnen aber auch 0 oder beliebige Datenspalten sein.
-Beschreibung der FunktionalitÃ¤t am Beispiel der Demoliste
-Evtl. Grafik einfÃ¼gen: Datenbanksicht (Tabellen) fÃ¼r die Beschreibung der Daten vs. Listenansicht im Frontend mit der Spaltenbeschreibung.
-pt_list ermÃ¶glicht Implementierung eigener Listen.
-Mitgeliefert ist eine generische Liste, die sich komplett per TS konfigurieren lÃ¤sst
-FÃ¼r die Entwicklung eigener Listentypen dient der Abschnitt â€œDevelopersâ€
-Mitgelieferte Liste ist â€œTypo3 Tablesâ€
+Datenspalten und Listenspalten haben zunächst nichts miteinander zu tun, überlicherweise ist Listenspalte aber ein Verweis auf Datenspalte, Listenspalten können aber auch 0 oder beliebige Datenspalten sein.
+Beschreibung der Funktionalität am Beispiel der Demoliste
+Evtl. Grafik einfügen: Datenbanksicht (Tabellen) für die Beschreibung der Daten vs. Listenansicht im Frontend mit der Spaltenbeschreibung.
+pt_list ermöglicht Implementierung eigener Listen.
+Mitgeliefert ist eine generische Liste, die sich komplett per TS konfigurieren lässt
+Für die Entwicklung eigener Listentypen dient der Abschnitt “Developers”
+Mitgelieferte Liste ist “Typo3 Tables”
 Setting up a list Step-by-step
 Liste wird in TS definiert
 List Identifier ordnet TS Config den Plugins zu:
 plugin.tx_ptlist.listConfig.<list identifier>
-Referenztabelle fÃ¼r die Beschreibung der einzelnen TypoScript Befehle
+Referenztabelle für die Beschreibung der einzelnen TypoScript Befehle
 Die Definition einer Liste in TypoScript setzt sich aus der Definition folgender Bestandteile zusammen:
-tables: welche Datenbank-Tabellen werden fÃ¼r die Liste verwendet (vgl. SQL FROM)
-baseWhereClause: wie werden die Daten dieser Tabellen eingeschrÃ¤nkt (vgl. SQL WHERE)
+tables: welche Datenbank-Tabellen werden für die Liste verwendet (vgl. SQL FROM)
+baseWhereClause: wie werden die Daten dieser Tabellen eingeschränkt (vgl. SQL WHERE)
 data: Datenbeschreibung aus Sicht der Datenbank (vgl SQL SELECT)
 columns: Spaltenbeschreibung aus Sicht der Ausgabe des plugins
-filters: Definitionen der verfÃ¼gbaren Filter
+filters: Definitionen der verfügbaren Filter
 Detaillierte Beschreibung der einzelnen Bestandteile in Tabelle:
-List Configuration â€“ Main parts
+List Configuration – Main parts
 All the following configuration settings refer to the tx_ptlist_typo3Tables_list class. You are free to implement your own list class (you only need to inherit from tx_ptlist_list), but then you need an own way to configure your list. 
 Hint: A powerful possibility to this approach is that you might implement a list class that does not use (mysql) database as a backend storage but maybe a web service or plain-text files or whatever. Have a look in EXT:pt_list/ext_localconf.php on how to add your new list class (or the same with your new pager strategy classes) to the select field in the plugins flexform configuration.
 Hint: A good practice is to construct the MySQL command completely (e.g. in phpmyadmin) until you get the result list you expected and then splitting it up into the following parts.
@@ -111,7 +111,7 @@ Data type:
 Description:
 tables
 string / ->stdWrap
-Defines the database tables used for the list. Comma separated list of database table with optional alias (if you use table aliases in the â€œdataâ€ section you need to define them here or in the baseFromClause if you use one):
+Defines the database tables used for the list. Comma separated list of database table with optional alias (if you use table aliases in the “data” section you need to define them here or in the baseFromClause if you use one):
 table_name_1 [alias_1], table_name_2 [alias_2]
 
 Example:
@@ -124,12 +124,12 @@ Example:
 static_countries.cn_parent_tr_iso_nr = territory.tr_iso_nr
 baseFromClause
 string / ->stdWrap
-This configuration parameter is optional. If you do not set it the tables defined in â€œtablesâ€ will be (inner) joined.
-If you need other joins define the complete â€œFROMâ€ clause here. If you do so, you are in charge of that all table aliases used in the â€œdataâ€ section.
+This configuration parameter is optional. If you do not set it the tables defined in “tables” will be (inner) joined.
+If you need other joins define the complete “FROM” clause here. If you do so, you are in charge of that all table aliases used in the “data” section.
 If defining how the tables are connected to each other in the baseFromClause you do not need to define it in the baseWhereClause, too.
-If you use a baseFromClause the tables defined under â€œtablesâ€ will be ignored. (Only the first table defined there will be further on used as default table if no table is set in a data description)
+If you use a baseFromClause the tables defined under “tables” will be ignored. (Only the first table defined there will be further on used as default table if no table is set in a data description)
 
-Hint: Use typoscript â€œ( )â€ notation for multi-line values to increase clarity
+Hint: Use typoscript “( )” notation for multi-line values to increase clarity
 
 Example:
 baseFromClause (
@@ -151,7 +151,7 @@ If you want to use an external database you have to define a dsn or a uid of a t
 
 Hint: if you define the login data in a dsn string in your list configuration, be sure that the file containing this string is not accessible from outside!
 
-Hint: Because of a bug not related to pt_list it will lead to problems if your â€œexternal databaseâ€ is on the same mysql instance and you use the same user. Create a mysql user different to the typo3 user to access this database!
+Hint: Because of a bug not related to pt_list it will lead to problems if your “external database” is on the same mysql instance and you use the same user. Create a mysql user different to the typo3 user to access this database!
 
 Example:
 database = 5
@@ -162,7 +162,7 @@ defaults.sortingColumn
 string / ->stdWrap
 columnDescriptionIdentifier (not dataDescriptionIdentifier!) of the column the list should be sorted with by default.
 defaults.sortingDirection
-â€œascâ€ (default) or â€œdescâ€
+“asc” (default) or “desc”
 Sorting direction that should be used for the column defined in defaults.sortingColumn
 noElementsFoundText
 string / ->stdWrap
@@ -187,7 +187,7 @@ data {
   [...]
 }
 columns
-10., 20., â€¦
+10., 20., …
 Array with numeric keys of ->columnDescriptions
 
 Example:
@@ -201,8 +201,8 @@ columns {
 
 }
 filters
-<filterBoxIdentifier1>.,  <filterBoxIdentifier2>., â€¦
-Array of ->filterBoxDefinitions. The default Filter Box identifier is â€œdefaultFilterboxâ€
+<filterBoxIdentifier1>.,  <filterBoxIdentifier2>., …
+Array of ->filterBoxDefinitions. The default Filter Box identifier is “defaultFilterbox”
 
 Example:
 filters {
@@ -272,10 +272,10 @@ Array that will be used to find the current item. The next level keys are pt_lis
 Example:
 currentItemSpecifier.uid.data = GP:tx_myext|uid
 currentItemSpecifier.uid.intval = 1
-List Configuration â€“ Details
+List Configuration – Details
 ->dataDescriptionDefinition
 The dataDescription is the database part of the list. Here you define from which database column to fetch the data from. Settings defined here go into the select expression of the generated sql statement.
-You can either define the table and the field where to fetch the data from or a â€œspecialâ€ statement that will be inserted as it is. The dataDescriptionIdentifier that is defined as key for this whole dataDescriptionDefinition will be used as field alias.
+You can either define the table and the field where to fetch the data from or a “special” statement that will be inserted as it is. The dataDescriptionIdentifier that is defined as key for this whole dataDescriptionDefinition will be used as field alias.
 Property:
 Data type:
 Description:
@@ -299,7 +299,7 @@ price {
     }
 }
 
-Using â€œspecialâ€ 
+Using “special” 
 special
 string / ->stdWrap
 You can define a custom string here that will be used as it is. If defined the setting in table and field will be ignored.
@@ -320,7 +320,7 @@ access
 list of fe_groups uids
 Comma separated list of fe_groups uids. If empty everbody can access this dataDescription. A column and a filter will only be displayed if all they are accesible themselves (they also have an access configuration parameter) and if all dependent dataDescriptionIdentifiers are accessible be the current fe_user's fe_groups.
 
-Hint: Be careful when using â€œ*â€ on a dataDescriptionIdentifier configuration parameter. If there is only one dataDescriptionIdentifier that is not accessible to the current user the filter or the column will not be displayed.
+Hint: Be careful when using “*” on a dataDescriptionIdentifier configuration parameter. If there is only one dataDescriptionIdentifier that is not accessible to the current user the filter or the column will not be displayed.
 ->columnDescriptionDefinition
 Property:
 Data type:
@@ -343,8 +343,8 @@ Comma separated list of fe_groups uids
 sortingDataDescription
 list of dataDescriptionIdentifiers [[!]asc|desc]
 By default this setting is equal to dataDescriptionIdentifier. If you want to sort list items by other columns. 
-Add â€œascâ€ or â€œdescâ€ after the dataDescriptionIdentifier to define the order. These orders will be inverted if the column is sorted descending. â€œAscâ€ is the default.
-You can force a direction (that will not be inverted) by adding a â€œ!â€ before.
+Add “asc” or “desc” after the dataDescriptionIdentifier to define the order. These orders will be inverted if the column is sorted descending. “Asc” is the default.
+You can force a direction (that will not be inverted) by adding a “!” before.
 
 Example:
 sortingDataDescription = tstamp, title
@@ -355,7 +355,7 @@ sortingDataDescription = tstamp !desc, title desc
 By default all values from the dataDescriptions will be outputted comma-separated. in the order how the dataDescriptions were defined in the column's dataDescriptionIdentifier configuration parameter.
 As this is presumably not the output you want in most case you can render cell contents via typoscript and/or via php user functions. In both cases you have all data from the dataDescriptions available to create the cell content as you need. See the ->renderDefinition section for details.
 ->filterBoxDefinition
-A filterBoxDefinition is a simple array of single filterDefinitions. Group your filters into filterboxes and place them on your website using the list controller with the pluginMode â€œfilterboxâ€ and choose the filterBoxIdentifier in the flexform.
+A filterBoxDefinition is a simple array of single filterDefinitions. Group your filters into filterboxes and place them on your website using the list controller with the pluginMode “filterbox” and choose the filterBoxIdentifier in the flexform.
 Property:
 Data type:
 Description:
@@ -364,8 +364,8 @@ array
 Array of ->filterDefinitions with associative keys. Where the main key contains the path to the class file to be used for the filter (the class must be a child of the  tx_ptlist_filter class) and the subconfiguration will be passed to the created filter.
 
 Example: 
-Special filterbox: â€œrenderInListâ€
-The items defined in the â€œrenderInListâ€ filterbox are available within the itemList template. Use this if you want to embed filters into the column header. 
+Special filterbox: “renderInList”
+The items defined in the “renderInList” filterbox are available within the itemList template. Use this if you want to embed filters into the column header. 
 ->filterDefinition
 Property:
 Data type:
@@ -380,7 +380,7 @@ dataDescriptionIdentifier
 list of dataDescriptionIdentifiers / *
 List of dataDescriptionIdentifiers this filter operates on. 
 
-Use â€œ*â€ if you want to use all available dataDescriptionIdentifiers.
+Use “*” if you want to use all available dataDescriptionIdentifiers.
 access
 list of fe_groups uids
 List of fe_groups uid who have access to this filter. If empty, everybody has access to it.
@@ -421,7 +421,7 @@ plugin.tx_ptlist.controller.filter_range.rangePhoneNumber {
 }
 invert
 boolean
-If set the generated mysql where clause snippet will be inverted (prepended with â€œnotâ€)
+If set the generated mysql where clause snippet will be inverted (prepended with “not”)
 sortingColumnDescriptionOnSubmit
 string
 If set, the filter will set the sorting state of the list to the column description identifier given here using the sorting direction given in sortingDirectionOnSubmit
@@ -432,10 +432,10 @@ Presetting value and state.
 The following configuration parameter can be used the define some defaults. When loading the list this state will be restored if no state is found in the session.
 isActive
 boolean
-Set to â€œ1â€ if you want to the filter to be active by default.
+Set to “1” if you want to the filter to be active by default.
 value
 string / array
-You have to know the way the filter stores its value. In some cases it is a single value (int or string), in other cases value is an array with defined keys (e.g. the range filter uses the keys â€œminvalâ€ and â€œmaxvalâ€ to store its state)
+You have to know the way the filter stores its value. In some cases it is a single value (int or string), in other cases value is an array with defined keys (e.g. the range filter uses the keys “minval” and “maxval” to store its state)
 
 You can set the value
 by directly setting the value:
@@ -455,18 +455,18 @@ Special group filter parameters.
 The following configuration parameter can only be used in the context of group filters.
 includeEmptyOption
 boolean
-If set to â€œ1â€, an all value is prepended to the array of possible values. 
+If set to “1”, an all value is prepended to the array of possible values. 
 includeEmptyOption.
 label
 string
 Label (supports LLL:...) 
 submitOnChange
 boolean
-If set to â€œ1â€, the filter value is submitted on change.
+If set to “1”, the filter value is submitted on change.
 Filters are simple mvc controllers inheriting from tx_ptmvc_controllerFrontend (have a look at EXT:pt_mvc's documentation). That means that you could configure some filter specific settings this way:
 plugin.tx_ptlist.controller.<controllerName> {
 }
-where <controllerName> is the name of the filter (e.g. â€œfilter_minâ€, â€œfilter_options_groupâ€).
+where <controllerName> is the name of the filter (e.g. “filter_min”, “filter_options_group”).
 To configure a filter specific to a filterIdentifier you could place settings in 
 plugin.tx_ptlist.controller.<controllerName>.<filterIdentifier> {
 }
@@ -505,9 +505,9 @@ range
 Example:
 
 string
-This filter is a simple string search for defined dataDescriptionIdentifiers. When using â€œ*â€ in the dataDescriptionIdentifier configuration this filter acts like a fulltext search. 
+This filter is a simple string search for defined dataDescriptionIdentifiers. When using “*” in the dataDescriptionIdentifier configuration this filter acts like a fulltext search. 
 
-Hint: By now it is not possible to have complex search string like â€œaaa bbb -cccâ€ (meaning search for â€œbbbâ€ or â€œbbbâ€ but not â€œcccâ€). This is on my todo list...
+Hint: By now it is not possible to have complex search string like “aaa bbb -ccc” (meaning search for “bbb” or “bbb” but not “ccc”). This is on my todo list...
 
 Example:
 
@@ -652,6 +652,11 @@ labelNext
 string / ->stdWrap
 Sets the navigation label for navigating forwards.
 Default: '<'
+firstDayOfWeek
+int
+Only available in week modus (entity = week).
+Adjustment of the first day of the week. 0 stands for sunday.
+Default is 1 which is monday.
 
 options_base
 This filter cannot be used directly. It is an abstract base class for all filters that have multiple options. At this time there is the options_group filter, that reads all available values from a dataDescription by grouping by this database column and the options_explicit, where you can define options manually by typoscript.
@@ -667,7 +672,7 @@ Options:
 selectBoxSize=<itemsToBeDisplayedAtOnce>/"ALL"
 links
 
-Multiple is only possible in â€œtoggleModeâ€ (click activates the options, click again to deactivate)
+Multiple is only possible in “toggleMode” (click activates the options, click again to deactivate)
 
 Options:
 toggleMode=0/1
@@ -827,17 +832,17 @@ Format of PDF page. Use either
 1) One of the following values: A4, A3, A5, Letter, Legal
 2) Custom format coded as <width>x<height>, e.g. 210x297 for DIN A4
 
-ATTENTION: Remind, that the â€œorientationâ€ configuration might â€œflipâ€ height and width!
+ATTENTION: Remind, that the “orientation” configuration might “flip” height and width!
 pageHeight
 float
 Height of page (used for pre-calculating column widths, so format cannot be used!). 
 
-ATTENTION: If you use â€œorientationâ€ landscape, make sure to use the right height here!
+ATTENTION: If you use “orientation” landscape, make sure to use the right height here!
 paperWidth
 float
 Width of page (used for pre-calculating column widths, so format cannot be used!)
 
-ATTENTION: If you use â€œorientationâ€ landscape, make sure to use the right width here!
+ATTENTION: If you use “orientation” landscape, make sure to use the right width here!
 fontSize
 int
 Font size for list contents
@@ -854,14 +859,14 @@ marginRight
 float
 Margin on the right side of the page
 paperOrientation
-â€œLâ€, â€œPâ€
+“L”, “P”
 (L)andscape or (P)ortrait
 increaseColWidth
 boolean
-If set to â€œ1â€, the columns are stretched, if there is empty space between page margins.
+If set to “1”, the columns are stretched, if there is empty space between page margins.
 decreaseColWidth
 boolean 
-If set to â€œ1â€, the columns are shrinked, if they overflow the available space on page.
+If set to “1”, the columns are shrinked, if they overflow the available space on page.
 listHeading
 string
 Heading of the list
@@ -874,7 +879,7 @@ Data type:
 Description:
 dontProcessTwice
 boolean
-If set to â€œ1â€, the filters are only processed once. This brings speed up and e.g. the "toggle" functionality in the options filters only work with this option set. The drawback is, that filters that have dependencies to each other won't work correctly then.
+If set to “1”, the filters are only processed once. This brings speed up and e.g. the "toggle" functionality in the options filters only work with this option set. The drawback is, that filters that have dependencies to each other won't work correctly then.
 plugin.tx_ptlist.listConfig.<list_name>.columns.pdf
 Property:
 Data type:
@@ -887,9 +892,9 @@ boolean
 Should column be rendered as multiline cell?
 dontScale
 boolean
-If set to â€œ1â€, the cell will not be stretched or shrinked (overrides â€œincreaseColWidthâ€ and â€œdecreaseColWidthâ€ from above).
+If set to “1”, the cell will not be stretched or shrinked (overrides “increaseColWidth” and “decreaseColWidth” from above).
 alignment
-â€œLâ€, â€œCâ€, â€œRâ€
+“L”, “C”, “R”
 Alignment of cell: (L)eft, (C)enter or (R)ight
 plugin.tx_ptlist.view.csv_rendering
 Property:
@@ -908,7 +913,7 @@ fileNamePrefix
 string
 Set prefix to appear before date and time if upper value is set to 1
 ->pagerStrategyConfiguration
-The pager strategy configuration depends on the strategy object that is used. By default this is â€œEXT:pt_list/model/pagerStrategy/class.tx_ptlist_pagerStrategy_default.php:tx_ptlist_pagerStrategy_defaultâ€. 
+The pager strategy configuration depends on the strategy object that is used. By default this is “EXT:pt_list/model/pagerStrategy/class.tx_ptlist_pagerStrategy_default.php:tx_ptlist_pagerStrategy_default”. 
 
 The following settings are supported by the default pagerStrategy class:
 Property:
@@ -916,16 +921,16 @@ Data type:
 Description:
 delta
 int
-The delta is the amount of page that should be displayed left and right from the current page. Left out pages will be displayed as â€œ...â€
+The delta is the amount of page that should be displayed left and right from the current page. Left out pages will be displayed as “...”
 Example (current page is 7):
-delta=3 => â€¦ 4 5 6 7 8 9 10 â€¦
-delta=5 => â€¦ 2 3 4 5 6 7 8 9 10 11 12...
+delta=3 => … 4 5 6 7 8 9 10 …
+delta=5 => … 2 3 4 5 6 7 8 9 10 11 12...
 elements
 string
 Comma separated list of following elements. The elements will be displayed in the order in the list
 first, prev, pages, next, last, offsetinfo
 Using aliases
-In the typoscript configuration under plugin.tx_ptlist.alias. there all classes that can be loaded via typoscript are â€œregisteredâ€. Instead of inserting the whole path in your typoscript configuration you can copy the content of the alias
+In the typoscript configuration under plugin.tx_ptlist.alias. there all classes that can be loaded via typoscript are “registered”. Instead of inserting the whole path in your typoscript configuration you can copy the content of the alias
 Example:
 plugin.tx_ptlist.listConfig.myList.listClass < plugin.tx_ptlist.alias.list_typo3Tables
 instead of
@@ -942,7 +947,7 @@ __construct()
 initialize cObj
 __construct()
 init local configuration
-â† calls
+? calls
 main()
 sets current content
 merges localconf (from constructor) and given conf 
@@ -956,7 +961,7 @@ prepare()
 
 bootstrap()
 bootstrap()
-â† calls
+? calls
 sets prefixId
 adds subcontroller prefixId (optionally)
 
@@ -965,7 +970,7 @@ adds subcontroller prefixId (optionally)
 getConfiguration()
 loads EM configuration for plugin
 getConfiguration()
-â† calls
+? calls
 
 merge local configuration over existing configuration
 set CurrentListId
@@ -979,7 +984,7 @@ merge list Id specific configuration over existing config
 getParameters()
 initializes empty parameters array
 getParameters()
-â† calls
+? calls
 
 loads parameters for current listPrefix
 
@@ -1000,17 +1005,17 @@ process filter subcontrollers
 Retrieve where clause from filters
 process sorting parameters
 create pager object
-store â€œprocessedâ€ flag in registry
+store “processed” flag in registry
 
 
 
 doAction()
 determines which action to call
 calls action
-default: â†’ calls
+default: ? calls
 doAction()
 set optionally forced next action
-â† calls
+? calls
 
 
 listDefaultAction()
@@ -1028,7 +1033,7 @@ Called only, if exception is thrown
 [not implemented here]
 
 How pt_list handles configuration
-For your understanding of pt_list configuration it's most important to know that there are two main configuration parts: the first part handles â€œstandardâ€ MVC configuration and is overwritten several times (see below). The second part handles the â€œmodellâ€ configuration of the list.
+For your understanding of pt_list configuration it's most important to know that there are two main configuration parts: the first part handles “standard” MVC configuration and is overwritten several times (see below). The second part handles the “modell” configuration of the list.
 MVC configuration
 Modell configuration
 All this happens in tx_ptlist_controller_list::getConfiguration()
@@ -1166,12 +1171,12 @@ Set up a page that is used for the PDF output [2]. Typically this page is a sub 
 
 The PDF page should be hidden in menu!
 Inserting Plugin
-Insert a â€œ[pt_list] listâ€ plugin instance on the sub page for PDF rendering [2]. Set the list identifier to the identifier of the list you want to render as PDF.
+Insert a “[pt_list] list” plugin instance on the sub page for PDF rendering [2]. Set the list identifier to the identifier of the list you want to render as PDF.
 
 Setting up PDF view in Typoscript
 On the sub page you created [2], include the static Typoscript for PDF rendering shipping with pt_list:
 
-The next step is to set up the column configuration for the columns of the list that should be displayed in the PDF. You can simply â€œoverwriteâ€ values set in the Typoscript of the parent page. Take a look at the following example to make things clearer:
+The next step is to set up the column configuration for the columns of the list that should be displayed in the PDF. You can simply “overwrite” values set in the Typoscript of the parent page. Take a look at the following example to make things clearer:
 plugin.tx_ptlist.listConfig.list_name {
 
     columns {
