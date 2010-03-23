@@ -23,12 +23,26 @@
  ***************************************************************/
 
 require_once t3lib_extMgm::extPath('pt_tools').'res/abstract/class.tx_pttools_iSingleton.php'; // interface for Singleton design pattern
+require_once t3lib_extMgm::extPath('pt_tools').'res/objects/class.tx_pttools_sessionStorageAdapter.php'; // class for session handling
 
 class tx_ptlist_dateX implements tx_pttools_iSingleton {
 
+	/**
+	 *
+	 * @var string
+	 */
 	const CURRENTLISTID = 'dateX';
+
+	/**
+	 * format to store date X
+	 * @var string
+	 */
 	const FORMAT = 'Y-m-d';
 
+	/**
+	 * dateX instance
+	 * @var tx_ptlist_dateX
+	 */
 	private static $uniqueInstance = NULL;
 
 	/**
@@ -67,17 +81,30 @@ class tx_ptlist_dateX implements tx_pttools_iSingleton {
 	}
 
 
-	public function getDateX() {
+	/**
+	 * Returns date X
+	 * @return string
+	 */
+	public static function getDateX() {
 		$dateX = self::load();
 		return $dateX;
 	}
 
-	public function getDateXAsTimestamp() {
+	/**
+	 *
+	 * @return int
+	 */
+	public static function getDateXAsTimestamp() {
 		$dateX = self::load();
 		return strtotime($dateX);
 	}
 
-	public function getFirstDayOfWeek($adjustment = 1) {
+	/**
+	 * Returns first day of week, default is monday
+	 * @param int $adjustment difference to sunday
+	 * @return string
+	 */
+	public static function getFirstDayOfWeek($adjustment = 1) {
 		$dateX = self::load();
 
 		$weekday = date_create($dateX)->format('w');
@@ -96,7 +123,12 @@ class tx_ptlist_dateX implements tx_pttools_iSingleton {
 		return $newDateX;
 	}
 
-	public function getLastDayOfWeek($adjustment = 1) {
+	/**
+	 * returns last day of week, default is sunday
+	 * @param int $adjustment difference to sunday
+	 * @return string
+	 */
+	public static function getLastDayOfWeek($adjustment = 1) {
 		$dateX = self::load();
 
 		$weekday = date_create($dateX)->format('w');
@@ -114,74 +146,117 @@ class tx_ptlist_dateX implements tx_pttools_iSingleton {
 		return $newDateX;
 	}
 
-	public function getFirstDayOfMonth() {
-		$newDateX = date_create(self::getFirstDayOfMonthUnformated())->format(self::FORMAT);
-		return $newDateX;
+	/**
+	 * get first day of month
+	 * @return string
+	 */
+	public static function getFirstDayOfMonth() {
+		return date_create(self::getFirstDayOfMonthUnformated())->format(self::FORMAT);
 	}
 
-	public function getLastDayOfMonth() {
-		$newDateX = date_create(self::getFirstDayOfMonthUnformated().' +1 month -1 day')->format(self::FORMAT);
-		return $newDateX;
+	/**
+	 * get last day of month
+	 * @return string
+	 */
+	public static function getLastDayOfMonth() {
+		return date_create(self::getFirstDayOfMonthUnformated().' +1 month -1 day')->format(self::FORMAT);
 	}
 
-	protected function getFirstDayOfMonthUnformated() {
+	/**
+	 *
+	 * @return string
+	 */
+	protected static function getFirstDayOfMonthUnformated() {
 		$dateX = self::load();
-		$newDateX = date_create($dateX)->format('Y-m-01');
-		return $newDateX;
+		return date_create($dateX)->format('Y-m-01');
 	}
 
-	public function getFirstDayOfYear() {
-		$dateX = self::load();
-		$newDateX = date_create( self::getYear() . '-01-01')->format(self::FORMAT);
-		return $newDateX;
+	/**
+	 * get first day of year
+	 * @return string
+	 */
+	public static function getFirstDayOfYear() {
+		return date_create( self::getYear() . '-01-01')->format(self::FORMAT);
 	}
 
-	public function getLastDayOfYear() {
-		$dateX = self::load();
-		$newDateX = date_create( self::getYear() . '12-31')->format(self::FORMAT);
-		return $newDateX;
+	/**
+	 * get last day of year
+	 * @return string
+	 */
+	public static function getLastDayOfYear() {
+		return date_create( self::getYear() . '12-31')->format(self::FORMAT);
 	}
 
-	protected function getYear() {
+	/**
+	 * get year
+	 * @return string
+	 */
+	protected static function getYear() {
 		$dateX = self::load();
 		return substr($dateX, 0, 4);
 	}
 
 	/* For datePicker */
-	public function setDateX($date) {
+	/**
+	 * store given date
+	 * @param string $date, format: YYYY-mm-dd
+	 * @return void
+	 */
+	public static function setDateX($date) {
 		self::store($date);
 	}
 
 	/* For datePager */
-	public function incrementDateXByEntity($quantity = 1, $entity = 'day') {
+	/**
+	 * increment date X by entity
+	 * @param int $quantity
+	 * @param string $entity
+	 * @return void
+	 */
+	public static function incrementDateXByEntity($quantity = 1, $entity = 'day') {
 		$currentDateX = self::load();
 		$newDateX = date_create($currentDateX . ' +'.$quantity.' '.$entity)->format(self::FORMAT);
 		self::store($newDateX);
 	}
 
-	public function decrementDateXByEntity($quantity = 1, $entity = 'day') {
+	/**
+	 * decrement date X by entity
+	 * @param int $quantity
+	 * @param string $entity
+	 * @return void
+	 */
+	public static function decrementDateXByEntity($quantity = 1, $entity = 'day') {
 		$currentDateX = self::load();
 		$newDateX = date_create($currentDateX . ' -'.$quantity.' '.$entity)->format(self::FORMAT);
 		self::store($newDateX);
 	}
 
 	/* For session handling */
-	protected function load() {
+	/**
+	 * load date X
+	 * @return string date
+	 */
+	protected static function load() {
 		$sessionKeyPrefix = $GLOBALS['TSFE']->fe_user->user['uid'] . '_' . self::CURRENTLISTID;
 		return tx_pttools_sessionStorageAdapter::getInstance()->read($sessionKeyPrefix . '_dateX');
 	}
 
-	protected function store($dateX) {
+	/**
+	 * store date X
+	 * @param string $dateX
+	 * @return void
+	 */
+	protected static function store($dateX) {
 		$sessionKeyPrefix = $GLOBALS['TSFE']->fe_user->user['uid'] . '_' . self::CURRENTLISTID;
 		tx_pttools_sessionStorageAdapter::getInstance()->store($sessionKeyPrefix . '_dateX', $dateX);
 	}
 
 	/* only for unit tests to make a clean test environment again!!! */
-	public function _deleteDateX() {
+	public static function _deleteDateX() {
 		self::delete();
 	}
 
-	protected function delete() {
+	protected static function delete() {
 		$sessionKeyPrefix = $GLOBALS['TSFE']->fe_user->user['uid'] . '_' . self::CURRENTLISTID;
 		tx_pttools_sessionStorageAdapter::getInstance()->delete($sessionKeyPrefix . '_dateX');
 	}
