@@ -43,7 +43,7 @@ require_once t3lib_extMgm::extPath('pt_list').'view/filter/datePager/class.tx_pt
 class tx_ptlist_controller_filter_datePager extends tx_ptlist_filter {
 	protected $value = array();
 	protected $smartyTemplateVariables = array();
-	protected $firstDayOfWeek = 1; // sets index to monday, which is the first day of the week according to DIN 1355
+	const FIRSTDAYOFWEEK = 1; // sets index to monday, which is the first day of the week according to DIN 1355
 
 	/**
 	 * MVC init method
@@ -134,6 +134,7 @@ class tx_ptlist_controller_filter_datePager extends tx_ptlist_filter {
 	 * @since   2009-09-08
 	 */
 	public function getSqlWhereClauseSnippet() {
+		$sqlWhereClauseSnippet = '';
 		switch(count($this->dataDescriptions)) {
 			case 1:
 				$sqlWhereClauseSnippet = $this->getPointOfTimeSqlWhereClauseSnippet();
@@ -258,32 +259,31 @@ class tx_ptlist_controller_filter_datePager extends tx_ptlist_filter {
 	protected function renderHeader() {
 
 		$dateX = tx_ptlist_dateX::getInstance();
-		$dateAsTimestamp = $dateX->getDateXAsTimestamp();
+		$date = $dateX->getDateX();
 
 		//Get configuration from TypoScript
 		$entity = $this->determineDateEntity();
 		$beginFormat = $this->conf['beginFormat'] == '' ? '%Y-%m-%d' : $this->conf['beginFormat'];
 		$endFormat = $this->conf['endFormat'] == '' ? '%Y-%m-%d' : $this->conf['endFormat'];
 
-		$firstDayOfWeek = $this->firstDayOfWeek;
+		$firstDayOfWeek = $this->conf['firstDayOfWeek'] == '' ? self::FIRSTDAYOFWEEK : intval($this->conf['firstDayOfWeek']);
 
-		// Evaluate day, week or month number depending on 'entity'
 		switch ($entity) {
 			case 'day':
-				$dateEntityBegin = strftime($beginFormat, $dateAsTimestamp);
-				$dateEntityEnd = strftime($endFormat, $dateAsTimestamp);
+				$dateEntityBegin = strftime($beginFormat, strtotime($date));
+				$dateEntityEnd = strftime($endFormat, strtotime($date));
 				break;
 			case 'week':
-				$dateEntityBegin = strftime($beginFormat, $dateX->getFirstDayOfWeekAsTimestamp($firstDayOfWeek));
-				$dateEntityEnd = strftime($endFormat, $dateX->getLastDayOfWeekAsTimestamp($firstDayOfWeek));
+				$dateEntityBegin = strftime($beginFormat, strtotime($dateX->getFirstDayOfWeek($firstDayOfWeek)));
+				$dateEntityEnd = strftime($endFormat, strtotime($dateX->getLastDayOfWeek($firstDayOfWeek)));
 				break;
 			case 'month':
-				$dateEntityBegin = strftime($beginFormat, $dateX->getFirstDayOfMonthAsTimestamp());
-				$dateEntityEnd = strftime($endFormat, $dateX->getLastDayOfMonthAsTimestamp());
+				$dateEntityBegin = strftime($beginFormat, strtotime($dateX->getFirstDayOfMonth()));
+				$dateEntityEnd = strftime($endFormat, strtotime($dateX->getLastDayOfMonth()));
 				break;
 			case 'year':
-				$dateEntityBegin = strftime($beginFormat, $dateX->getFirstDayOfYearAsTimestamp());
-				$dateEntityEnd = strftime($endFormat, $dateX->getLastDayOfYearAsTimestamp());
+				$dateEntityBegin = strftime($beginFormat, strtotime($dateX->getFirstDayOfYear()));
+				$dateEntityEnd = strftime($endFormat, strtotime($dateX->getLastDayOfYear()));
 				break;
 			default:
 				throw new tx_pttools_exceptionConfiguration("No valid 'entity' set in Typoscript configuration.");

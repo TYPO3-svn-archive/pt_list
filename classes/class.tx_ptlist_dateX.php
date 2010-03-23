@@ -77,50 +77,74 @@ class tx_ptlist_dateX implements tx_pttools_iSingleton {
 		return strtotime($dateX);
 	}
 
-	public function getFirstDayOfWeekAsTimestamp($adjustment = 0) {
+	public function getFirstDayOfWeek($adjustment = 1) {
 		$dateX = self::load();
-		$dateXAsTimetamp = self::getDateXAsTimestamp();
-		$newDateX = date_create($dateX . '-' . date('w', $dateXAsTimetamp) . 'day +'.$adjustment.' day')->format(self::FORMAT);
-		return strtotime($newDateX);
+
+		$weekday = date_create($dateX)->format('w');
+		if($weekday == 0) {
+			$weekday = 7;
+		}
+
+		$daydiff = $weekday-$adjustment;
+
+		if ($daydiff > 0) {
+			$newDateX = date_create($dateX . ' -'.$daydiff . 'days')->format(self::FORMAT);
+		}
+		else {
+			$newDateX = $dateX;
+		}
+		return $newDateX;
 	}
 
-	public function getLastDayOfWeekAsTimestamp($adjustment = 0) {
+	public function getLastDayOfWeek($adjustment = 1) {
 		$dateX = self::load();
-		$dateXAsTimetamp = self::getDateXAsTimestamp();
-		$newDateX = date_create($dateX . '-' . date('w', $dateXAsTimetamp) . 'day +'.($adjustment + 6).' day')->format(self::FORMAT);
-		return strtotime($newDateX);
+
+		$weekday = date_create($dateX)->format('w');
+		if($weekday == 0) {
+			$weekday = 7;
+		}
+		$daydiff = 8-$weekday-$adjustment;
+
+		if ($daydiff > 0) {
+			$newDateX = date_create($dateX . ' +'.$daydiff . 'days')->format(self::FORMAT);
+		}
+		else {
+			$newDateX = $dateX;
+		}
+		return $newDateX;
 	}
 
-	public function getFirstDayOfMonthAsTimestamp() {
-		$dateX = self::load();
-		$dateXAsTimetamp = self::getDateXAsTimestamp();
-		$newDateX = date_create($dateX . ' first day')->format(self::FORMAT);
-		return strtotime($newDateX);
+	public function getFirstDayOfMonth() {
+		$newDateX = date_create(self::getFirstDayOfMonthUnformated())->format(self::FORMAT);
+		return $newDateX;
 	}
 
-	public function getLastDayOfMonthAsTimestamp() {
-		$dateX = self::load();
-		$dateXAsTimetamp = self::getDateXAsTimestamp();
-		$newDateX = date_create($dateX . 'last day')->format(self::FORMAT);
-		return strtotime($newDateX);
+	public function getLastDayOfMonth() {
+		$newDateX = date_create(self::getFirstDayOfMonthUnformated().' +1 month -1 day')->format(self::FORMAT);
+		return $newDateX;
 	}
 
-	public function getFirstDayOfYearAsTimestamp() {
+	protected function getFirstDayOfMonthUnformated() {
 		$dateX = self::load();
-		$dateXAsTimetamp = self::getDateXAsTimestamp();
-		$newDateX = date_create( self::getYear($dateXAsTimetamp) . '-01-01')->format(self::FORMAT);
-		return strtotime($newDateX);
+		$newDateX = date_create($dateX)->format('Y-m-01');
+		return $newDateX;
 	}
 
-	public function getLastDayOfYearAsTimestamp() {
+	public function getFirstDayOfYear() {
 		$dateX = self::load();
-		$dateXAsTimetamp = self::getDateXAsTimestamp();
-		$newDateX = date_create( self::getYear($dateXAsTimetamp) . '12-31')->format(self::FORMAT);
-		return strtotime($newDateX);
+		$newDateX = date_create( self::getYear() . '-01-01')->format(self::FORMAT);
+		return $newDateX;
 	}
 
-	public function getYear($dateXAsTimetamp) {
-		return date('Y', $dateXAsTimetamp);
+	public function getLastDayOfYear() {
+		$dateX = self::load();
+		$newDateX = date_create( self::getYear() . '12-31')->format(self::FORMAT);
+		return $newDateX;
+	}
+
+	protected function getYear() {
+		$dateX = self::load();
+		return substr($dateX, 0, 4);
 	}
 
 	/* For datePicker */

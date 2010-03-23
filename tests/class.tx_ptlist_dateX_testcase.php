@@ -44,7 +44,7 @@ class tx_ptlist_dateX_testcase extends tx_phpunit_testcase {
 		$dateX = tx_ptlist_dateX::getInstance();
 		//overwrite today with fix date
 		$dateX->setDateX('2010-01-01');
-		tx_pttools_assert::isEqual('2010-01-01', $dateX->getDateX() );
+		tx_pttools_assert::isEqual('2010-01-01', $dateX->getDateX(), array('message' => 'Result: '.$dateX->getDateX()));
 		$dateX->_deleteDateX();
 	}
 
@@ -55,7 +55,7 @@ class tx_ptlist_dateX_testcase extends tx_phpunit_testcase {
 		$dateX = tx_ptlist_dateX::getInstance();
 		$dateX->setDateX('2010-01-01');
 		$dateX->incrementDateXByEntity(1, 'day');
-		tx_pttools_assert::isEqual('2010-01-02', $dateX->getDateX() );
+		tx_pttools_assert::isEqual('2010-01-02', $dateX->getDateX(), array('message' => 'Result: '.$dateX->getDateX()));
 		$dateX->_deleteDateX();
 	}
 
@@ -67,7 +67,7 @@ class tx_ptlist_dateX_testcase extends tx_phpunit_testcase {
 		$dateX->setDateX('2010-01-01');
 		$dateX->incrementDateXByEntity(1, 'day');
 		$dateX->incrementDateXByEntity(1, 'day');
-		tx_pttools_assert::isEqual('2010-01-03', $dateX->getDateX() );
+		tx_pttools_assert::isEqual('2010-01-03', $dateX->getDateX(), array('message' => 'Result: '.$dateX->getDateX()));
 		$dateX->_deleteDateX();
 	}
 
@@ -78,7 +78,7 @@ class tx_ptlist_dateX_testcase extends tx_phpunit_testcase {
 		$dateX = tx_ptlist_dateX::getInstance();
 		$dateX->setDateX('2010-01-01');
 		$dateX->incrementDateXByEntity(2, 'day');
-		tx_pttools_assert::isEqual('2010-01-03', $dateX->getDateX() );
+		tx_pttools_assert::isEqual('2010-01-03', $dateX->getDateX(), array('message' => 'Result: '.$dateX->getDateX()));
 		$dateX->_deleteDateX();
 	}
 
@@ -90,7 +90,7 @@ class tx_ptlist_dateX_testcase extends tx_phpunit_testcase {
 		$dateX->setDateX('2010-01-01');
 		$dateX->incrementDateXByEntity(1, 'day');
 		$dateX->incrementDateXByEntity(1, 'month');
-		tx_pttools_assert::isEqual('2010-02-02', $dateX->getDateX() );
+		tx_pttools_assert::isEqual('2010-02-02', $dateX->getDateX(), array('message' => 'Result: '.$dateX->getDateX()));
 		$dateX->_deleteDateX();
 	}
 
@@ -101,7 +101,7 @@ class tx_ptlist_dateX_testcase extends tx_phpunit_testcase {
 		$dateX = tx_ptlist_dateX::getInstance();
 		$dateX->setDateX('2010-01-01');
 		$dateX->decrementDateXByEntity(1, 'day');
-		tx_pttools_assert::isEqual('2009-12-31', $dateX->getDateX() );
+		tx_pttools_assert::isEqual('2009-12-31', $dateX->getDateX(), array('message' => 'Result: '.$dateX->getDateX()));
 		$dateX->_deleteDateX();
 	}
 
@@ -113,7 +113,7 @@ class tx_ptlist_dateX_testcase extends tx_phpunit_testcase {
 		$dateX->setDateX('2010-01-01');
 		$dateX->incrementDateXByEntity(1, 'day');
 		$dateX->decrementDateXByEntity(1, 'day');
-		tx_pttools_assert::isEqual('2010-01-01', $dateX->getDateX() );
+		tx_pttools_assert::isEqual('2010-01-01', $dateX->getDateX(), array('message' => 'Result: '.$dateX->getDateX()));
 		$dateX->_deleteDateX();
 	}
 
@@ -124,7 +124,7 @@ class tx_ptlist_dateX_testcase extends tx_phpunit_testcase {
 		$dateX = tx_ptlist_dateX::getInstance();
 		$dateX->setDateX('2010-01-01');
 		$dateX->incrementDateXByEntity(1, 'week');
-		tx_pttools_assert::isEqual('2010-01-08', $dateX->getDateX() );
+		tx_pttools_assert::isEqual('2010-01-08', $dateX->getDateX(), array('message' => 'Result: '.$dateX->getDateX()));
 		$dateX->_deleteDateX();
 	}
 
@@ -135,7 +135,7 @@ class tx_ptlist_dateX_testcase extends tx_phpunit_testcase {
 		$dateX = tx_ptlist_dateX::getInstance();
 		$dateX->setDateX('2010-01-01');
 		$dateX->decrementDateXByEntity(1, 'week');
-		tx_pttools_assert::isEqual('2009-12-25', $dateX->getDateX() );
+		tx_pttools_assert::isEqual('2009-12-25', $dateX->getDateX(), array('message' => 'Result: '.$dateX->getDateX()));
 		$dateX->_deleteDateX();
 	}
 
@@ -146,7 +146,7 @@ class tx_ptlist_dateX_testcase extends tx_phpunit_testcase {
 		$dateX = tx_ptlist_dateX::getInstance();
 		$dateX->setDateX('2010-01-01');
 		$dateX->incrementDateXByEntity(1, 'month');
-		tx_pttools_assert::isEqual('2010-02-01', $dateX->getDateX() );
+		tx_pttools_assert::isEqual('2010-02-01', $dateX->getDateX(), array('message' => 'Result: '.$dateX->getDateX()));
 		$dateX->_deleteDateX();
 	}
 
@@ -157,7 +157,7 @@ class tx_ptlist_dateX_testcase extends tx_phpunit_testcase {
 		$dateX = tx_ptlist_dateX::getInstance();
 		$dateX->setDateX('2010-01-01');
 		$dateX->decrementDateXByEntity(1, 'month');
-		tx_pttools_assert::isEqual('2009-12-01', $dateX->getDateX() );
+		tx_pttools_assert::isEqual('2009-12-01', $dateX->getDateX(), array('message' => 'Result: '.$dateX->getDateX()));
 		$dateX->_deleteDateX();
 	}
 
@@ -168,7 +168,7 @@ class tx_ptlist_dateX_testcase extends tx_phpunit_testcase {
 		$dateX = tx_ptlist_dateX::getInstance();
 		$dateX->setDateX('2010-01-01');
 		$dateX->incrementDateXByEntity(1, 'year');
-		tx_pttools_assert::isEqual('2011-01-01', $dateX->getDateX() );
+		tx_pttools_assert::isEqual('2011-01-01', $dateX->getDateX(), array('message' => 'Result: '.$dateX->getDateX()));
 		$dateX->_deleteDateX();
 	}
 
@@ -179,7 +179,7 @@ class tx_ptlist_dateX_testcase extends tx_phpunit_testcase {
 		$dateX = tx_ptlist_dateX::getInstance();
 		$dateX->setDateX('2010-01-01');
 		$dateX->decrementDateXByEntity(1, 'year');
-		tx_pttools_assert::isEqual('2009-01-01', $dateX->getDateX() );
+		tx_pttools_assert::isEqual('2009-01-01', $dateX->getDateX(), array('message' => 'Result: '.$dateX->getDateX()));
 		$dateX->_deleteDateX();
 	}
 
@@ -196,30 +196,40 @@ class tx_ptlist_dateX_testcase extends tx_phpunit_testcase {
 	/**
 	 * @test
 	 */
-	public function test_dateXAsTimestamp() {
+	public function test_getFirstDayOfWeek() {
 		$dateX = tx_ptlist_dateX::getInstance();
-		$dateX->setDateX('2010-01-01');
-		tx_pttools_assert::isEqual('1262300400', $dateX->getDateXAsTimestamp() );
+		$dateX->setDateX('2010-05-05');
+		tx_pttools_assert::isEqual('2010-05-03', $dateX->getFirstDayOfWeek(1), array('message' => 'Result: '.$dateX->getFirstDayOfWeek(1)));
 		$dateX->_deleteDateX();
 	}
 
 	/**
 	 * @test
 	 */
-	public function test_getFirstDayOfWeekAsTimestamp() {
+	public function test_getFirstDayOfWeekMonday() {
 		$dateX = tx_ptlist_dateX::getInstance();
-		$dateX->setDateX('2010-05-05');
-		tx_pttools_assert::isEqual('1272751200', $dateX->getFirstDayOfWeekAsTimestamp());
+		$dateX->setDateX('2010-03-29');
+		tx_pttools_assert::isEqual('2010-03-29', $dateX->getFirstDayOfWeek(1), array('message' => 'Result: '.$dateX->getFirstDayOfWeek(1)));
 		$dateX->_deleteDateX();
 	}
 
 	/**
 	 * @test
 	 */
-	public function test_getLastDayOfWeekAsTimestamp() {
+	public function test_getLastDayOfWeek() {
 		$dateX = tx_ptlist_dateX::getInstance();
 		$dateX->setDateX('2010-05-05');
-		tx_pttools_assert::isEqual('1273269600', $dateX->getLastDayOfWeekAsTimestamp());
+		tx_pttools_assert::isEqual('2010-05-09', $dateX->getLastDayOfWeek(1), array('message' => 'Result: '.$dateX->getLastDayOfWeek(1)));
+		$dateX->_deleteDateX();
+	}
+
+	/**
+	 * @test
+	 */
+	public function test_getLastDayOfWeekSunday() {
+		$dateX = tx_ptlist_dateX::getInstance();
+		$dateX->setDateX('2010-05-09');
+		tx_pttools_assert::isEqual('2010-05-09', $dateX->getLastDayOfWeek(1), array('message' => 'Result: '.$dateX->getLastDayOfWeek(1)));
 		$dateX->_deleteDateX();
 	}
 
@@ -227,20 +237,20 @@ class tx_ptlist_dateX_testcase extends tx_phpunit_testcase {
 	/**
 	 * @test
 	 */
-	public function test_getFirstDayOfMonthAsTimestamp() {
+	public function test_getFirstDayOfMonth() {
 		$dateX = tx_ptlist_dateX::getInstance();
 		$dateX->setDateX('2010-05-05');
-		tx_pttools_assert::isEqual('1273096800', $dateX->getFirstDayOfMonthAsTimestamp());
+		tx_pttools_assert::isEqual('2010-05-01', $dateX->getFirstDayOfMonth(), array('message' => 'Result: '.$dateX->getFirstDayOfMonth()));
 		$dateX->_deleteDateX();
 	}
 
 	/**
 	 * @test
 	 */
-	public function test_getLastDayOfMonthAsTimestamp() {
+	public function test_getLastDayOfMonth() {
 		$dateX = tx_ptlist_dateX::getInstance();
 		$dateX->setDateX('2010-05-05');
-		tx_pttools_assert::isEqual('1272924000', $dateX->getLastDayOfMonthAsTimestamp());
+		tx_pttools_assert::isEqual('2010-05-31', $dateX->getLastDayOfMonth(), array('message' => 'Result: '.$dateX->getLastDayOfMonth()));
 		$dateX->_deleteDateX();
 	}
 
