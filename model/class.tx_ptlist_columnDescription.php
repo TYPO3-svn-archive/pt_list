@@ -332,7 +332,7 @@ class tx_ptlist_columnDescription implements tx_pttools_iTemplateable, tx_pttool
         if (isset($dataArray['sortingDataDescription'])) {
             $this->sortingDataDescription = $dataArray['sortingDataDescription'];
         }
-        if (empty($this->sortingDataDescription)) {
+        if (empty($this->sortingDataDescription) && ($this->dataDescriptions->count() > 0)) {
             $this->sortingDataDescription = $this->dataDescriptions->getItemByIndex(0)->get_identifier();
         }
 

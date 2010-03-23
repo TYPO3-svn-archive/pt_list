@@ -75,6 +75,7 @@ CHANGELOG
 Version 0.0.4dev:
 ----------------
 
++ (fb) FIX: Fixed minor bugs that made it impossible to define column without any dataDescription (because of subsequent errors caused by sorting)
 + (fb) ADD: Added ifEmpty option on prev/next configuration
 + (fb) ADD: Added recursive postRendering for renderValues method (which renders the renderObj)
        Example:

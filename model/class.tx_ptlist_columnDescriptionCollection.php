@@ -220,7 +220,7 @@ class tx_ptlist_columnDescriptionCollection extends tx_pttools_objectCollection 
 				}
 			}
 			
-			$sortingDataDescriptions = t3lib_div::trimExplode(',', $column->get_sortingDataDescription());
+			$sortingDataDescriptions = t3lib_div::trimExplode(',', $column->get_sortingDataDescription(), true);
 			foreach ($sortingDataDescriptions as $sortingDataDescriptionIdentifier) {
 				if (!isset($selectSnippetArray[$sortingDataDescriptionIdentifier])) {
 					// remove asc, desc, !asc or !desc
