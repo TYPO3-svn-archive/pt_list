@@ -128,7 +128,11 @@ class tx_ptlist_view_list_itemList_xls extends tx_ptlist_view {
                 	$sheet->write($row, $col, iconv('UTF-8', 'ISO-8859-1', $column['label']));
         		} 
                 */
-                $columnLabel = iconv('UTF-8', 'ISO-8859-1', $column['label']);  // TODO: make encoding configurable via TS
+                
+				//  support LOCALLANG labels
+				$column['label'] = $GLOBALS['TSFE']->sL($column['label']);
+
+				$columnLabel = iconv('UTF-8', 'ISO-8859-1', $column['label']);  // TODO: make encoding configurable via TS
                 $sheet->writeString($row, $col, $columnLabel); // (rk) this assures that a numeric value will not be formatted by Excel, e.g. the '9000000000000' converted to '9E+12' for display
                 $col++;
         }
