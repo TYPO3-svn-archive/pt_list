@@ -30,7 +30,7 @@
 /**
  * Inclusion of external ressources
  */
-require_once t3lib_extMgm::extPath('pt_mvc').'classes/class.tx_ptmvc_view.php';
+require_once t3lib_extMgm::extPath('pt_mvc').'classes/class.tx_ptmvc_viewSmarty.php';
 
 
 
@@ -42,7 +42,7 @@ require_once t3lib_extMgm::extPath('pt_mvc').'classes/class.tx_ptmvc_view.php';
  * @since       2009-05-07
  * @author      Michael Knoll <knoll@punkt.de>
  */
-class tx_ptlist_view_list_genericPager extends tx_ptmvc_view {
+class tx_ptlist_view_list_genericPager extends tx_ptmvc_viewSmarty {
 	
 	
 	

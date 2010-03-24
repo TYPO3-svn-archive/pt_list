@@ -22,7 +22,7 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-require_once t3lib_extMgm::extPath('pt_mvc').'classes/class.tx_ptmvc_view.php';
+require_once t3lib_extMgm::extPath('pt_mvc').'classes/class.tx_ptmvc_viewSmarty.php';
 
 /**
  * Base class for view in the pt_list extension
@@ -31,7 +31,7 @@ require_once t3lib_extMgm::extPath('pt_mvc').'classes/class.tx_ptmvc_view.php';
  * @author		Fabrizio Branca <mail@fabrizio-branca.de>
  * @since		2009-01-22
  */
-class tx_ptlist_view extends tx_ptmvc_view {
+class tx_ptlist_view extends tx_ptmvc_viewSmarty {
 	
 	
 	
