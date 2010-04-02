@@ -140,7 +140,7 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 		$postFix = '_ptlistOL';
 		
 		// language overlays
-		if ($languageUid = $GLOBALS['TSFE']->sys_language_content) {
+		if (($languageUid = $GLOBALS['TSFE']->sys_language_content) && (is_array($dataArray['languageOverlays.']))) {
 			foreach ($dataArray['languageOverlays.'] as $tableName => $flag) {
 				if ($flag) {
 					$languageField = $GLOBALS['TCA'][$tableName]['ctrl']['languageField'];
