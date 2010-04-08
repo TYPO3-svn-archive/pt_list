@@ -1,4 +1,4 @@
-<ul class="tx-ptlist-filterbox {$filterboxId}" id="{$filterboxId}">
+<ul class="tx-ptlist-filterbox {$filterboxId}" id="tx-ptlist-filterbox-{$filterboxId}">
 {foreach from=$filterbox item=filter}
 	<li class="tx-ptlist-filter {$filter.filterClass}{if $filter.isActive} filteractive{/if} {$filter.filterId}">
 		{$filter.label|ll:0|wrap:'<h4 class="filterbox-label">|</h4>'}
