@@ -30,42 +30,45 @@
 
 
     {******** List headers for columns ********}
+	<thead>
 
-
-	<tr>
-		{foreach from=$columns item=column name="columnHeaders"}
-		    {if is_array($structure_by_cols) } {* Lazy evaluation is not working here!!! *}
-			    {if $column.identifier|in_array:$structure_by_cols}
-			        {*Don't show column header, if it's a structured column *}
-    			{else}
-    			    {* Column headers for structured lists *}
-    			    <th class="tx-ptlist-list-header">
-    			        {*Structured lists are NOT sortable!!!*}
-        				{$column.label|ll:0}
-        			</th>
-        	    {/if}
-        	{else}
-        	    {* Column headers for non-structured lists *}
-                <th class="tx-ptlist-list-header">
-                    {if $column.isSortable}
-                        {if $column.sortingState == 0}{* not sorted *}
-                            <a href="{url parameter=$currentPage additionalParams='&%4$s&%1$s[sorting_column]=%2$s&%1$s[sorting_direction]=%3$s'|vsprintf:$listPrefix:$column.identifier:'1':$appendToSortingUrl setup='lib.tx_ptlist.typolinks.columnSortLinks'}">{$column.label|ll:0} {image file="EXT:pt_list/res/icon_table_sort_default.png"}</a>
-                        {elseif $column.sortingState == 1}{* ascending sorted *}
-                            <a href="{url parameter=$currentPage additionalParams='&%4$s&%1$s[sorting_column]=%2$s&%1$s[sorting_direction]=%3$s'|vsprintf:$listPrefix:$column.identifier:'-1':$appendToSortingUrl setup='lib.tx_ptlist.typolinks.columnSortLinks'}">{$column.label|ll:0} {image file="EXT:pt_list/res/icon_table_sort_desc.png"}</a>
-                        {elseif $column.sortingState == -1}{* descending sorted *}
-                            <a href="{url parameter=$currentPage additionalParams='&%4$s&%1$s[sorting_column]=%2$s&%1$s[sorting_direction]=%3$s'|vsprintf:$listPrefix:$column.identifier:'1':$appendToSortingUrl setup='lib.tx_ptlist.typolinks.columnSortLinks'}">{$column.label|ll:0} {image file="EXT:pt_list/res/icon_table_sort_asc.png"}</a>
-                        {/if}
-                    {else}
-                        {$column.label|ll:0}
-                    {/if}
-                </th>       	
-        	{/if}
-		{/foreach}
-	</tr>
+		<tr>
+			{foreach from=$columns item=column name="columnHeaders"}
+			    {if is_array($structure_by_cols) } {* Lazy evaluation is not working here!!! *}
+				    {if $column.identifier|in_array:$structure_by_cols}
+				        {*Don't show column header, if it's a structured column *}
+	    			{else}
+	    			    {* Column headers for structured lists *}
+	    			    <th class="tx-ptlist-list-header">
+	    			        {*Structured lists are NOT sortable!!!*}
+	        				{$column.label|ll:0}
+	        			</th>
+	        	    {/if}
+	        	{else}
+	        	    {* Column headers for non-structured lists *}
+	                <th class="tx-ptlist-list-header">
+	                    {if $column.isSortable}
+	                        {if $column.sortingState == 0}{* not sorted *}
+	                            <a href="{url parameter=$currentPage additionalParams='&%4$s&%1$s[sorting_column]=%2$s&%1$s[sorting_direction]=%3$s'|vsprintf:$listPrefix:$column.identifier:'1':$appendToSortingUrl setup='lib.tx_ptlist.typolinks.columnSortLinks'}">{$column.label|ll:0} {image file="EXT:pt_list/res/icon_table_sort_default.png"}</a>
+	                        {elseif $column.sortingState == 1}{* ascending sorted *}
+	                            <a href="{url parameter=$currentPage additionalParams='&%4$s&%1$s[sorting_column]=%2$s&%1$s[sorting_direction]=%3$s'|vsprintf:$listPrefix:$column.identifier:'-1':$appendToSortingUrl setup='lib.tx_ptlist.typolinks.columnSortLinks'}">{$column.label|ll:0} {image file="EXT:pt_list/res/icon_table_sort_desc.png"}</a>
+	                        {elseif $column.sortingState == -1}{* descending sorted *}
+	                            <a href="{url parameter=$currentPage additionalParams='&%4$s&%1$s[sorting_column]=%2$s&%1$s[sorting_direction]=%3$s'|vsprintf:$listPrefix:$column.identifier:'1':$appendToSortingUrl setup='lib.tx_ptlist.typolinks.columnSortLinks'}">{$column.label|ll:0} {image file="EXT:pt_list/res/icon_table_sort_asc.png"}</a>
+	                        {/if}
+	                    {else}
+	                        {$column.label|ll:0}
+	                    {/if}
+	                </th>       	
+	        	{/if}
+			{/foreach}
+		</tr>
+	
+	</thead>
 	
 	
 	{******** List rows ********}
 	
+	<tbody>
 	
 	{assign var="odd_even" value="odd"}
 	{assign var="firstHeader" value="1"}
@@ -144,5 +147,7 @@
     		{/foreach}
     	</tr>
 	{/foreach}
+	
+	</tbody>
 
 </table>
