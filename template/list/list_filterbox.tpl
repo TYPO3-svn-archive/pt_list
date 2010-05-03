@@ -6,9 +6,13 @@
 			{$filter.userInterface}
 		</div>
 		
-		{if $filter.isActive && $filter.hideResetLink == false}
+		{if $filter.isActive && $filter.hideResetLink == false && !$filter.renderResetLinkWithinFilter}
 			{strip}{* This action is implemented in the abstract tx_ptlist_filter class *}
-			<a href="{url parameter=$resetLinkPid additionalParams='&%s[action]=reset'|vsprintf:$filter.filterPrefixId setup='lib.tx_ptlist.typolinks.filterResetLink'}" class="resetlink">{"reset"|ll}</a>
+			{if $filter.dropResetParameter}
+				<a href="{url parameter=$resetLinkPid additionalParams=$appendToUrl setup='lib.tx_ptlist.typolinks.filterResetLink'}" class="resetlink">{"reset"|ll}</a>
+			{else}
+				<a href="{url parameter=$resetLinkPid additionalParams='%2$s&%1$s[action]=reset'|vsprintf:$filter.filterPrefixId:$appendToUrl setup='lib.tx_ptlist.typolinks.filterResetLink'}" class="resetlink">{"reset"|ll}</a>
+			{/if}
 			{/strip}
 		{/if}
 		

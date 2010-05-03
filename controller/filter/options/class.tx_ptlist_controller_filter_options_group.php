@@ -64,7 +64,7 @@ class tx_ptlist_controller_filter_options_group extends tx_ptlist_controller_fil
 
 		// retrieve list object from regitry
 		$listObject = tx_pttools_registry::getInstance()->get($this->listIdentifier.'_listObject'); /* @var $listObject tx_ptlist_list */
-
+		
 		// prepare parameters for the "getGroupData" call
 		$select = sprintf('%1$s as item, %1$s as label, count(*) as quantity', $this->dataDescriptions->getItemByIndex(0)->getSelectClause(false));
 		$where = '';

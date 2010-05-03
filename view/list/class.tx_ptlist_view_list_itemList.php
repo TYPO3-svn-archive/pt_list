@@ -105,6 +105,8 @@ class tx_ptlist_view_list_itemList extends tx_ptlist_view {
 			$renderConfig = $this->viewConf['template.'];
 
 			$list = '';
+			
+			$cObj = t3lib_div::makeInstance('tslib_cObj'); /* @var $cObj tslib_cObj */
 
 			// iterate over all rows
 			foreach ($this->itemsArr['listItems'] as $item) {
@@ -113,29 +115,29 @@ class tx_ptlist_view_list_itemList extends tx_ptlist_view {
 
 				// iterate over all columns
 				foreach ($item as $columnIdentifier => $content) {
-
-					$GLOBALS['TSFE']->cObj->data = array(
+	
+					$cObj->start(array(
 						'columnIdentifier' => $columnIdentifier,
 						'columnContent' => $content
-					);
+					));
 
 					$field = $content;
 					// if there is a columnIdentifier-specific stdWrap use this, else use "field_stdWrap"
 					if (is_array($renderConfig[$columnIdentifier.'_stdWrap.'])) {
-						$field = $GLOBALS['TSFE']->cObj->stdWrap($field, $renderConfig[$columnIdentifier.'_stdWrap.']);
+						$field = $cObj->stdWrap($field, $renderConfig[$columnIdentifier.'_stdWrap.']);
 					} else {
-						$field = $GLOBALS['TSFE']->cObj->stdWrap($field, $renderConfig['field_stdWrap.']);
+						$field = $cObj->stdWrap($field, $renderConfig['field_stdWrap.']);
 					}
 
 					$row .= $field;
 				}
 
-				$row = $GLOBALS['TSFE']->cObj->stdWrap($row, $renderConfig['row_stdWrap.']);
+				$row = $cObj->stdWrap($row, $renderConfig['row_stdWrap.']);
 
 				$list .= $row;
 
 			}
-			$output = $GLOBALS['TSFE']->cObj->stdWrap($list, $renderConfig['list_stdWrap.']);
+			$output = $cObj->stdWrap($list, $renderConfig['list_stdWrap.']);
 		}
 
 		return $output;

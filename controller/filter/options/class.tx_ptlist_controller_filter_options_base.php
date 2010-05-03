@@ -157,8 +157,6 @@ abstract class tx_ptlist_controller_filter_options_base extends tx_ptlist_filter
 		$view->addItem((bool)$this->conf['multiple'], 'multiple');
 		$view->addItem((bool)$this->conf['submitOnChange'], 'submitOnChange');
 		$view->addItem($this->determineSelectBoxSize(), 'selectBoxSize');
-		
-		$view->addItem($selectBoxSize, $this->determineSelectBoxSize());
 
 		// render!
 		return $view->render();

@@ -256,6 +256,7 @@ class tx_ptlist_filterCollection extends tx_pttools_objectCollection implements 
 	 * @since	2009-10-01
 	 */
 	public function getAllFilterValueAsGetParameterString($ignoredFilters = '') {
+		
 		$ignoredFilterIdentifiers = t3lib_div::trimExplode(',', $ignoredFilters);
 		$parameterString = '';
 		/* @var $filter tx_ptlist_filter */
@@ -264,6 +265,7 @@ class tx_ptlist_filterCollection extends tx_pttools_objectCollection implements 
 				$parameterString .= $filter->getFilterValueAsGetParameterString();
 			}
 		}
+		
 		return $parameterString;
 	}
 

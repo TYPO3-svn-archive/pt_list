@@ -232,8 +232,9 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 
 		// as we need the pluginMode already here we fetch the pluginMode here
 		$this->getPluginMode();
+		
+		$this->filterboxId = $this->conf['filterboxId'];
 		if ($this->pluginMode == 'filterbox') {
-			$this->filterboxId = $this->conf['filterboxId'];
 			tx_pttools_assert::isNotEmptyString($this->filterboxId, array('message' => 'No "filterboxId" found in configuration.'));
 		}
 
@@ -273,6 +274,101 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 		
 		$this->params = t3lib_div::array_merge_recursive_overrule($this->listPrefixParams, $this->params);
 	}
+	
+	
+	
+	
+    /**
+     * Get view
+     * 
+     * @param string $viewName (optional) Name of view
+     * @return tx_ptmvc_view View for filter user interface
+     * @author Fabrizio Branca <mail@fabrizio-branca.de>
+     * @since  2010-05-03
+     */
+    public function getView($viewName='') {
+        
+        $view = parent::getView($viewName);
+        
+        // add appendToUrl variable to view if configured
+		if ($this->conf['appendFilterValuesToUrls']) {
+			$appendToUrl = $this->getCurrentListObject()->getCompleteListStateAsUrlParameters(false, $this->filterIdentifier);
+			$view->addItem($appendToUrl, 'appendToUrl', false);
+		}
+		
+        return $view;
+        
+    }
+	
+	
+	
+	/**
+	 * Setup / create list object
+	 * 
+	 * @return void
+	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
+	 * @since 2010-04-30
+	 */
+	protected function setupListObject() {
+		
+		tx_pttools_assert::isNull($this->currentListObject, array('message' => 'The list object has already been created before'));
+		
+		/**
+		 * Take passed list object (must be an instance from tx_ptlist_list).
+		 * e.g. pass a reference to the listObject in the localConfiguration passed to this controller in the constructor
+		 *
+		 * $listController = new tx_ptlist_controller_list(array(
+		 * 		'listObject' => $listObject;
+		 * 		[...]
+		 * ));
+		 */
+		if (!empty($this->conf['listObject'])) {
+			tx_pttools_assert::isInstanceOf($this->conf['listObject'], 'tx_ptlist_list');
+			$listObject = $this->conf['listObject'];
+		} else {
+			// Create a new instance of the class defined in "listClass" as the listObject
+			tx_pttools_assert::isNotEmptyString($this->conf['listClass'], array('message' => 'No "listClass" found in configuration!'));
+			$listObject = t3lib_div::getUserObj($this->conf['listClass']);
+		}
+		
+		/* @var $listObject tx_ptlist_list */ 
+		
+		// store reference to listObject into the registry
+		tx_pttools_registry::getInstance()->register($this->currentlistId.'_listObject', $listObject);
+		
+			// setup the current listObject (set list ID & prepare columns, filters etc. for the list)
+		$listObject->set_listId($this->currentlistId);
+		$listObject->setup();
+		
+		$this->setCurrentListObject($listObject);
+	}
+	
+	
+	
+	/**
+	 * Get current list object
+	 * 
+	 * @return tx_ptlist_list list object
+	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
+	 * @since 2010-04-30
+	 */
+	protected function getCurrentListObject() {
+		return $this->currentListObject;
+	}
+	
+	
+	
+	/**
+	 * Set current list object
+	 * 
+	 * @param tx_ptlist_list $listObject
+	 * @return void
+	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
+	 * @since 2010-04-30
+	 */
+	protected function setCurrentListObject(tx_ptlist_list $listObject) {
+		$this->currentListObject = $listObject;
+	}
 
 
 
@@ -286,7 +382,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 	 * @since	2009-01-15
 	 */
 	protected function init() {
-
+		
 		$registry = tx_pttools_registry::getInstance();
 
 		// if no processed state flag for current list found in registry: process list
@@ -299,48 +395,24 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 				$registry[$this->currentlistId.'_listControllerObject'] = $this;
 			}
 
-			/**
-			 * Take passed list object (must be an instance from tx_ptlist_list).
-			 * e.g. pass a reference to the listObject in the localConfiguration passed to this controller in the constructor
-			 *
-			 * $listController = new tx_ptlist_controller_list(array(
-			 * 		'listObject' => $listObject;
-			 * 		[...]
-			 * ));
-			 */
-			if (!empty($this->conf['listObject'])) {
-				tx_pttools_assert::isInstanceOf($this->conf['listObject'], 'tx_ptlist_list');
-				$this->currentListObject = $this->conf['listObject'];
-			} else {
-				// Create a new instance of the class defined in "listClass" as the listObject
-				tx_pttools_assert::isNotEmptyString($this->conf['listClass'], array('message' => 'No "listClass" found in configuration!'));
-				$this->currentListObject = t3lib_div::getUserObj($this->conf['listClass']);
-			}
-			tx_pttools_assert::isInstanceOf($this->currentListObject, 'tx_ptlist_list');
+			$this->setupListObject();
 			
-			// store reference to listObject into the registry
-			$registry[$this->currentlistId.'_listObject'] = $this->currentListObject;
-
-			// setup the current listObject (set list ID & prepare columns, filters etc. for the list)
-			$this->currentListObject->set_listId($this->currentlistId);
-			$this->currentListObject->setup();
-
 			$serializedFilterCollection = $this->restoreFilterCollection();
 
 			if (!empty($serializedFilterCollection)) {
 				$filterCollection = unserialize($serializedFilterCollection);
 				tx_pttools_assert::isInstanceOf($filterCollection, 'tx_ptlist_filterCollection', array('message' => sprintf('Class "%s" does not match "tx_ptlist_filterCollection"', get_class($filterCollection))));
-				$this->currentListObject->invokeFilterCollection($filterCollection);
+				$this->getCurrentListObject()->invokeFilterCollection($filterCollection);
 			}
 			
 			$this->processSorting();
 
 			// process filter sub controllers (processes all subcontrollers and retrieves the where clause from them)
-			$this->currentListObject->update();
+			$this->getCurrentListObject()->update();
 
 			$this->initPager();
 
-			$serializedFilterCollection = serialize($this->currentListObject->getAllFilters());
+			$serializedFilterCollection = serialize($this->getCurrentListObject()->getAllFilters());
 			
 			// store serialized filters into session
 			if (!$this->conf['doNotUseSession']) {
@@ -357,7 +429,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 		}
 
 		// set current listObject and pager from appropriate references stored in registry
-		$this->currentListObject = $registry[$this->currentlistId.'_listObject'];
+		$this->setCurrentListObject($registry[$this->currentlistId.'_listObject']);
 		$this->pager = $registry[$this->currentlistId.'_pager'];
 	}
 
@@ -375,7 +447,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 	protected function processSorting() {
 		if (isset($this->params['sorting_column']) && isset($this->params['sorting_direction'])) {
 		    // if sorting action submitted: set submitted sorting parameters in current list and store them into session
-			$this->currentListObject->setSortingParameters($this->params['sorting_column'], $this->params['sorting_direction']);
+			$this->getCurrentListObject()->setSortingParameters($this->params['sorting_column'], $this->params['sorting_direction']);
 
 			// store sorting info into session
 			if (!$this->conf['doNotUseSession']) {
@@ -392,7 +464,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 			$sortingColumn = tx_pttools_sessionStorageAdapter::getInstance()->read($GLOBALS['TSFE']->fe_user->user['uid'] . '_' . $this->currentlistId . '_sortingColumn');
 			$sortingDirection = tx_pttools_sessionStorageAdapter::getInstance()->read($GLOBALS['TSFE']->fe_user->user['uid'] . '_' . $this->currentlistId . '_sortingDirection');
 			if (!empty($sortingColumn) && !empty($sortingDirection)) {
-				$this->currentListObject->setSortingParameters($sortingColumn, $sortingDirection);
+				$this->getCurrentListObject()->setSortingParameters($sortingColumn, $sortingDirection);
 			}
 		}
 	}
@@ -417,7 +489,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 		if (!empty($this->conf['maxRows'])) {
 			$this->pager->set_maxRows($this->conf['maxRows']);
 		}
-		$this->pager->set_itemCollection($this->currentListObject);
+		$this->pager->set_itemCollection($this->getCurrentListObject());
 		$this->pager->set_currentPageNumber(!empty($this->params['page']) ? $this->params['page'] : 1);
 		tx_pttools_registry::getInstance()->register($this->currentlistId.'_pager', $this->pager);
 	}
@@ -532,10 +604,11 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 
 		$view = $this->getView('list_filterbox');
 
-		$view->addItem($this->currentListObject->getAllFilters(true, $this->filterboxId, true)->getMarkerArray(), 'filterbox', false);  // do not filter HTML here since the complete filterbox is already rendered as HTML
+		$fiterCollection = $this->getCurrentListObject()->getAllFilters(true, $this->filterboxId, true)->getMarkerArray(); /* @var $filterCollection array */
+		$view->addItem($fiterCollection, 'filterbox', false);  // do not filter HTML here since the complete filterbox is already rendered as HTML
 		$view->addItem($this->filterboxId, 'filterboxId');
 	
-		$resetLinkPid = !empty($this->conf['resetLinkPid']) ? $this->conf['resetLinkPid'] : $GLOBALS["TSFE"]->id;
+		$resetLinkPid = !empty($this->conf['resetLinkPid']) ? $this->conf['resetLinkPid'] : $GLOBALS['TSFE']->id;
 		$view->addItem($resetLinkPid, 'resetLinkPid');
 
 		return $view->render();
@@ -566,7 +639,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 		
 		$output = '';
 		foreach (t3lib_div::trimExplode(',', $navLinks) as $navLink) {
-			$output .= $this->currentListObject->getNavLink($navLink);
+			$output .= $this->getCurrentListObject()->getNavLink($navLink);
 		}
 		
 		return $output;
@@ -603,7 +676,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 
 		$appendToUrl = '';
 		if ($this->conf['appendFilterValuesToUrls']) {
-			$appendToUrl = $this->currentListObject->getCompleteListStateAsUrlParameters();
+			$appendToUrl = $this->getCurrentListObject()->getCompleteListStateAsUrlParameters();
 		}
 		$view->addItem($appendToUrl, 'appendToUrl', false);
 
@@ -624,34 +697,42 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 	protected function listDefaultAction() {
 
 		// hide columns from configuration
-		foreach(t3lib_div::trimExplode(',', $this->currentListObject->get_hideColumns(), 1) as $columnIdentifier) {
-			$this->currentListObject->getAllColumnDescriptions()->getItemById($columnIdentifier)->set_hidden(true);
+		foreach(t3lib_div::trimExplode(',', $this->getCurrentListObject()->get_hideColumns(), 1) as $columnIdentifier) {
+			$this->getCurrentListObject()->getAllColumnDescriptions()->getItemById($columnIdentifier)->set_hidden(true);
 		}
 
 		// hide columns from filters
-		foreach($this->currentListObject->getAllFilters() as $filter) { /* @var $filter tx_ptlist_filter */
+		foreach($this->getCurrentListObject()->getAllFilters() as $filter) { /* @var $filter tx_ptlist_filter */
 			if ($filter->get_isActive()) {
 				foreach(t3lib_div::trimExplode(',', $filter->get_hideColumns(), 1) as $columnIdentifier) {
-					$this->currentListObject->getAllColumnDescriptions()->getItemById($columnIdentifier)->set_hidden(true);
+					$this->getCurrentListObject()->getAllColumnDescriptions()->getItemById($columnIdentifier)->set_hidden(true);
 				}
 			}
 		}
 
 		// create view
 		$view = $this->getView('list_itemList');
-		$view->addItem($this->currentListObject->getListId(), 'listIdentifier');
-		$view->addItem($this->currentListObject->getAllColumnDescriptions(true)->removeHiddenColumns()->getMarkerArray(), 'columns', false); // do not filter HTML here since the column headers could already contain HTML rendered by Typoscript
+		$view->addItem($this->getCurrentListObject()->getListId(), 'listIdentifier');
+		$view->addItem($this->getCurrentListObject()->getAllColumnDescriptions(true)->removeHiddenColumns()->getMarkerArray(), 'columns', false); // do not filter HTML here since the column headers could already contain HTML rendered by Typoscript
 		$view->addItem($this->getColumnContents(), 'listItems', false);  // do not filter HTML here since the column contents may already be rendered as HTML (e.g. from Typoscript wraps) and the database data is already HTML filtered (see getColumnContents())
 
-		$view->addItem($this->currentListObject->getAllFilters(true, 'renderInList', true)->getMarkerArray(), 'filterbox', false);
+		// inline filters
+		$view->addItem($this->getCurrentListObject()->getAllFilters(true, 'renderInList', true)->getMarkerArray(), 'filterbox', false);
+		
+		// inline pager
+		if ($this->conf['inlinePager']) {
+			$view->addItem($this->doAction('pagerDefault'), 'pager', false);
+		}
+		
+		// aggregates
         $view->addItem($this->getAggregateRows(), 'aggregateRows', false);
 
         // (added by rk 28.08.09) # TODO: Replace this by a translation mechanism
-        $view->addItem($this->currentListObject->get_noElementsFoundText(), 'noElementsFoundText', false); // do not filter HTML here since the display text may already be formatted as HTML (e.g. from Typoscript configuration)
+        $view->addItem($this->getCurrentListObject()->get_noElementsFoundText(), 'noElementsFoundText', false); // do not filter HTML here since the display text may already be formatted as HTML (e.g. from Typoscript configuration)
         
 		$appendToSortingUrl = '';
 		if ($this->conf['appendFilterValuesToUrls']) {
-			$appendToSortingUrl = $this->currentListObject->getCompleteListStateAsUrlParameters(true);
+			$appendToSortingUrl = $this->getCurrentListObject()->getCompleteListStateAsUrlParameters(true);
 		}
 		$view->addItem($appendToSortingUrl, 'appendToSortingUrl', false);
 
@@ -674,19 +755,19 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 	protected function extjsListDefaultAction() {
 
 		// id of the div, where ext js will render the grid into
-		$element = 'tx-ptlist-grid-'.$this->currentListObject->get_listId();
+		$element = 'tx-ptlist-grid-'.$this->getCurrentListObject()->get_listId();
 
 		$view = $this->getView('list_extjsList_headerdata');
 		$view->addItem($element, 'element');
 		$view->addItem($this->conf['itemsPerPage'], 'itemsPerPage');
-		$view->addItem($this->currentListObject->getAllColumnDescriptions()->getMarkerArray(), 'columns', false);
-		$view->addItem($this->currentListObject->getListId(), 'listIdentifier');
+		$view->addItem($this->getCurrentListObject()->getAllColumnDescriptions()->getMarkerArray(), 'columns', false);
+		$view->addItem($this->getCurrentListObject()->getListId(), 'listIdentifier');
 		$view->addItem($this->cObj->data['uid'], 'tt_content_uid');
-		$view->addItem($this->currentListObject->getAllFilters(true, 'defaultFilterbox')->getMarkerArray(), 'defaultFilterbox', false);
-		$view->addItem($this->currentListObject->getAllFilters(true, 'topFilterbox')->getMarkerArray(), 'topFilterbox', false);
+		$view->addItem($this->getCurrentListObject()->getAllFilters(true, 'defaultFilterbox')->getMarkerArray(), 'defaultFilterbox', false);
+		$view->addItem($this->getCurrentListObject()->getAllFilters(true, 'topFilterbox')->getMarkerArray(), 'topFilterbox', false);
 
 		// setup and include own headerData
-		$GLOBALS['TSFE']->additionalHeaderData['tx_ptlist_grid_'.$this->currentListObject->get_listId()] = $view->render();
+		$GLOBALS['TSFE']->additionalHeaderData['tx_ptlist_grid_'.$this->getCurrentListObject()->get_listId()] = $view->render();
 
 		return '<div id="'.$element.'" class="tx-ptlist-grid"></div>';
 	}
@@ -723,7 +804,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 	protected function filterbreadcrumbDefaultAction() {
 		$view = $this->getView('list_filterbreadcrumb');
 
-		$activeFilterCollection = $this->currentListObject->getAllFilters(true)->where_isActive();
+		$activeFilterCollection = $this->getCurrentListObject()->getAllFilters(true)->where_isActive();
 
 		$view->addItem($activeFilterCollection->count(), 'activeFilterCount');
 		$view->addItem($activeFilterCollection->getMarkerArray(), 'filters', false);
@@ -834,7 +915,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 
 			if (!empty($sortingDirection) && !empty($sortingColumn)) {
 				$sortingDirection = (strtoupper($sortingDirection) == 'DESC') ? tx_ptlist_columnDescription::SORTINGSTATE_DESC : tx_ptlist_columnDescription::SORTINGSTATE_ASC;
-				$this->currentListObject->setSortingParameters($sortingColumn, $sortingDirection);
+				$this->getCurrentListObject()->setSortingParameters($sortingColumn, $sortingDirection);
 			}
 
 			// get itemCollection for the requested page from the pager object
@@ -845,7 +926,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 			foreach ($itemCollection as $itemObj) {
 				$listItem = array();
 
-				foreach ($this->currentListObject->getAllColumnDescriptions(true) as $columnDescription) { /* @var $columnDescription tx_ptlist_columnDescription */
+				foreach ($this->getCurrentListObject()->getAllColumnDescriptions(true) as $columnDescription) { /* @var $columnDescription tx_ptlist_columnDescription */
 
 					$dataDescriptionIdentifiers = $columnDescription->get_dataDescriptions()->getDataDescriptionIdentifiers();
 
@@ -914,15 +995,15 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 	protected function getAggregateRows() {
 
 		tx_pttools_assert::isInstanceOf($this->pager, 'tx_ptlist_pager', array('message' => 'No pager object found!'));
-		tx_pttools_assert::isInstanceOf($this->currentListObject, 'tx_ptlist_list', array('message' => 'No list object found!'));
+		tx_pttools_assert::isInstanceOf($this->getCurrentListObject(), 'tx_ptlist_list', array('message' => 'No list object found!'));
 
 		$markerArray = array();
 
-		if (!(method_exists($this->currentListObject, 'getAggregateRowInfo') && method_exists($this->currentListObject, 'getAllAggregates'))) {
+		if (!(method_exists($this->getCurrentListObject(), 'getAggregateRowInfo') && method_exists($this->getCurrentListObject(), 'getAllAggregates'))) {
 			return $markerArray; // return empty marker array
 		}
 
-		$aggregateRowsConfig = $this->currentListObject->getAggregateRowInfo();
+		$aggregateRowsConfig = $this->getCurrentListObject()->getAggregateRowInfo();
 
 		if (is_array($aggregateRowsConfig) && !empty($aggregateRowsConfig)) {
 
@@ -930,9 +1011,9 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 
 			if (TYPO3_DLOG) t3lib_div::devLog('Aggregated data', 'pt_list', 0, $aggregateData);
 
-			tx_pttools_assert::isNotEmptyArray($aggregateData, array('message' => sprintf('No aggregated data found for list "%s"!', $this->currentListObject->get_listId())));
+			tx_pttools_assert::isNotEmptyArray($aggregateData, array('message' => sprintf('No aggregated data found for list "%s"!', $this->getCurrentListObject()->get_listId())));
 
-			$columnDescriptionCollection = $this->currentListObject->getAllColumnDescriptions(true)->removeHiddenColumns();
+			$columnDescriptionCollection = $this->getCurrentListObject()->getAllColumnDescriptions(true)->removeHiddenColumns();
 
 			foreach ($aggregateRowsConfig as $rowKey => $row) {
 				$markerArray[$rowKey] = array();
@@ -980,7 +1061,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 	protected function getColumnContents() {
 
 		tx_pttools_assert::isInstanceOf($this->pager, 'tx_ptlist_pager', array('message' => 'No pager object found!'));
-		tx_pttools_assert::isInstanceOf($this->currentListObject, 'tx_ptlist_list', array('message' => 'No list object found!'));
+		tx_pttools_assert::isInstanceOf($this->getCurrentListObject(), 'tx_ptlist_list', array('message' => 'No list object found!'));
 
 
 		/**
@@ -995,7 +1076,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 		// __Check requirement 1__: itemCollection must be traversable!
 		tx_pttools_assert::isInstanceOf($itemCollection, 'Traversable', array('message' => 'Return object is not traversable!'));
 
-		$columnDescriptionCollection = $this->currentListObject->getAllColumnDescriptions(true)->removeHiddenColumns();
+		$columnDescriptionCollection = $this->getCurrentListObject()->getAllColumnDescriptions(true)->removeHiddenColumns();
 
 		// render itemCollection into marker array
 		$listItems = array();

@@ -273,13 +273,17 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
         $view->addItem($this->conf, 'filterconf', false);
         
         // add appendToUrl variable to view if configured
-		if (tx_pttools_div::getTS('plugin.tx_ptlist.controller.list.appendFilterValuesToUrls')) {
+		if (tx_pttools_div::getTS('plugin.tx_ptlist.controller.list.appendFilterValuesToUrls') || $this->conf['appendFilterValuesToUrls']) {
 			$listObject = tx_pttools_registry::getInstance()->get($this->listIdentifier.'_listObject'); /* @var $listObject tx_ptlist_list */
-			$view->addItem($listObject->getCompleteListStateAsUrlParameters(false, $this->filterIdentifier), 'appendToUrl', false);
+			$appendToUrl = $listObject->getCompleteListStateAsUrlParameters(false, $this->filterIdentifier);
+			$view->addItem($appendToUrl, 'appendToUrl', false);
 		}
 		
+		// Add reset link pid
+		$resetLinkPid = !empty($this->conf['resetLinkPid']) ? $this->conf['resetLinkPid'] : $GLOBALS['TSFE']->id;
+		$view->addItem($resetLinkPid, 'resetLinkPid');
+		
         return $view;
-        
     }
     
     
@@ -809,7 +813,13 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
             'filterPrefixId' => $this->prefixId, 
             'filterId' => $this->filterIdentifier,
             'filterClass' => str_replace('_', '-', get_class($this)),
+        	'conf' => $this->conf,
+        
+        	// shortcuts to configuration values
             'hideResetLink' => ($this->conf['hideResetLink'] == true),
+        	'dropResetParameter' => ($this->conf['dropResetParameter'] == true),
+        	'dropActionParameter' => ($this->conf['dropActionParameter'] == true),
+        	'renderResetLinkWithinFilter' => ($this->conf['renderResetLinkWithinFilter'] == true)
         );
 
         // filter html in the markerArray
