@@ -50,8 +50,14 @@ class tx_ptlist_genericDataAccessor {
 	 */
 	protected $externalDatabase = false;
 	
+	/**
+	 * @var string
+	 */
 	protected $identifier;
 	
+	/**
+	 * @var array
+	 */
 	protected static $queryCache = array();
 
 
@@ -97,6 +103,13 @@ class tx_ptlist_genericDataAccessor {
         trigger_error('Clone is not allowed for '.get_class($this).' (Singleton)', E_USER_ERROR);
     }
     
+    
+    /**
+     * Store all caches to session
+     * 
+     * @return void
+     * @author	Fabrizio Branca <mail@fabrizio-branca.de>
+     */
     public static function storeAllCachesToSession() {
     	foreach (self::$uniqueInstances as $accessor) { /* @var $accessor tx_ptlist_genericDataAccessor */
     		$accessor->storeCacheToSession();
@@ -126,10 +139,16 @@ class tx_ptlist_genericDataAccessor {
 		self::$queryCache = tx_pttools_sessionStorageAdapter::getInstance()->read('querycache_genericDataAccessor_'.$this->identifier);
 		if (TYPO3_DLOG) t3lib_div::devLog(sprintf('Found query cache for "%s" in session with "%s" entries', $this->identifier, count(self::$queryCache)), 'pt_list', 1);
 		
-		
 	}
 
 	
+	
+	/**
+	 * Store cache to session
+	 * 
+	 * @return void
+	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
+	 */
 	public function storeCacheToSession() {
 		if (TYPO3_DLOG) t3lib_div::devLog(sprintf('Storing query cache to session for accessor "%s" with "%s" entries', $this->identifier, count(self::$queryCache)), 'pt_list', 1);
 		tx_pttools_sessionStorageAdapter::getInstance()->store('querycache_genericDataAccessor_'.$this->identifier, self::$queryCache);
@@ -151,6 +170,16 @@ class tx_ptlist_genericDataAccessor {
 		$this->externalDatabase = true;
     }
 
+    
+    
+    /**
+     * Get rows
+     * 
+     * @param resource $res
+     * @param bool $freeResult
+     * @return array rows
+     * @author	Fabrizio Branca <mail@fabrizio-branca.de>
+     */
     public function getRows($res, $freeResult = true) {
     	$rows = array();
     	while (($a_row = $this->dbObj->sql_fetch_assoc($res)) == true) {
@@ -174,12 +203,28 @@ class tx_ptlist_genericDataAccessor {
      * @param 	int		timestamp of the entry
      * @param 	int		(opional) maximum age in seconds, if 0 the entry is always valid
      * @return 	bool	true, if the entry of young enough, false otherwise
+     * @author	Fabrizio Branca <mail@fabrizio-branca.de>
      */
     public function checkAge($tstamp, $maxAge=0) {
     	return ($maxAge > 0 && ($tstamp + $maxAge < time()));
     }
     
     
+    
+    /**
+     * Select 
+     * 
+     * @param string $select_fields
+     * @param string $from_table
+     * @param string $where_clause
+     * @param string (optional) $groupBy
+     * @param string (optional) $orderBy
+     * @param string (optional) $limit
+     * @param bool (optional) $forceCacheUpdate
+     * @param int (optional) $maxAge
+     * @return array result rows
+     * @author	Fabrizio Branca <mail@fabrizio-branca.de>
+     */
     public function select($select_fields, $from_table, $where_clause, $groupBy='', $orderBy='', $limit='', $forceCacheUpdate=false, $maxAge=0)	{
     	
     	$cacheId = md5(serialize(func_get_args()));
