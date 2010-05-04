@@ -272,6 +272,8 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
         // TODO change this. Passed configuration should be accessible as "conf" or "config" in template class
         $view->addItem($this->conf, 'filterconf', false);
         
+        $view->addItem($this->filterIdentifier, 'filterId');
+        
         // add appendToUrl variable to view if configured
 		if (tx_pttools_div::getTS('plugin.tx_ptlist.controller.list.appendFilterValuesToUrls') || $this->conf['appendFilterValuesToUrls']) {
 			$listObject = tx_pttools_registry::getInstance()->get($this->listIdentifier.'_listObject'); /* @var $listObject tx_ptlist_list */
