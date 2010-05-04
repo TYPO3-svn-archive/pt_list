@@ -1,6 +1,6 @@
 <ul class="filter-options-links {if $filterActive}filter-options-links-active{else}filter-options-links-notactive{/if}">
 	{foreach from=$possibleValues item=possibleValue}
-		<li class="{if $possibleValue.active}selected{/if} {$possibleValue.class}">
+		<li {if $possibleValue.active || $possibleValue.class}class="{if $possibleValue.active}selected {/if}{$possibleValue.class}"{/if}>
 		{strip}
 		{assign var="value" value=$possibleValue.item|urlencode}
 		{if $filterconf.dropActionParameter}
@@ -12,7 +12,7 @@
 		</a>{/strip} <span class="count">{$possibleValue.quantity|wrap:"(|)"}</span>
 		</li>
 	{foreachelse}
-		{"noItemsFound"|ll}
+		<li>{"noItemsFound"|ll}</li>
 	{/foreach}
 </ul>
 
