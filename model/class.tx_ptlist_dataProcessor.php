@@ -114,13 +114,15 @@ class tx_ptlist_dataProcessor {
 				0 // max age
 			);
 	
-			$renderConfig = array(
-				'renderObj' => $conf['renderObj'],
-				'renderObj.' => $conf['renderObj.'],
-				'renderUserFunctions.' => $conf['renderUserFunctions.'],
-			);
-			$data['label'] = tx_ptlist_div::renderValues($row[0], $renderConfig);
-			
+			if (!empty($row[0])) {
+				$renderConfig = array(
+					'renderObj' => $conf['renderObj'],
+					'renderObj.' => $conf['renderObj.'],
+					'renderUserFunctions.' => $conf['renderUserFunctions.'],
+				);
+				$data['label'] = tx_ptlist_div::renderValues($row[0], $renderConfig);
+			}
+				
 		}
 		
 		return $params['groupData'];
@@ -147,6 +149,8 @@ class tx_ptlist_dataProcessor {
 		return $params['groupData'];
 	}
 	
+	
+	
     /**
      * Generic field sorter used as callback function for usort in the sort_ "magic method"
      * 
@@ -162,6 +166,7 @@ class tx_ptlist_dataProcessor {
     	}
     	return $res;
     }
+
 
 }
 
