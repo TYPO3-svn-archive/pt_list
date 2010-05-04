@@ -80,7 +80,19 @@ class tx_ptlist_controller_filter_options_group extends tx_ptlist_controller_fil
 		$ignoredFiltersForWhereClause .= empty($ignoredFiltersForWhereClause) ? '' : ', ';
 		$ignoredFiltersForWhereClause .= $this->filterIdentifier;
 
-		return $listObject->getGroupData($select, $where, $groupBy, $orderBy, $limit, $ignoredFiltersForWhereClause);
+		$groupData = $listObject->getGroupData($select, $where, $groupBy, $orderBy, $limit, $ignoredFiltersForWhereClause);
+		
+		if (is_array($this->conf['processDataUserFunc.'])) {
+			$sortedKeys = t3lib_TStemplate::sortedKeyList($this->conf['processDataUserFunc.'], false);
+			foreach ($sortedKeys as $key) {
+				$params = array('groupData' => $groupData);
+				$rendererUserFunc = $this->conf['processDataUserFunc.'][$key];
+				$params['conf'] = $this->conf['processDataUserFunc.'][$key.'.']; // pass the configuration found under "<key>." to the userfunction
+				$groupData = t3lib_div::callUserFunction($rendererUserFunc, $params, $this, '');
+			}
+		}
+		
+		return $groupData;
 	}
 
 }
