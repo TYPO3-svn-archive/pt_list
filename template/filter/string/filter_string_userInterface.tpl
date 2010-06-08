@@ -9,7 +9,7 @@
 	<input type="submit" value="{$filterconf.submitValue|ll:0}" />
 </form>
 
-{if filterActive && !$filterconf.hideResetLink && $filterconf.renderResetLinkWithinFilter}
+{if $filterActive && !$filterconf.hideResetLink && $filterconf.renderResetLinkWithinFilter}
 	{strip}{* This action is implemented in the abstract tx_ptlist_filter class *}
 	{if $filterconf.dropResetParameter}
 		<a href="{url parameter=$resetLinkPid additionalParams=$appendToUrl setup='lib.tx_ptlist.typolinks.filterResetLink'}" class="resetlink">{"reset"|ll}</a>
