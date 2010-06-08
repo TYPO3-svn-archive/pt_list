@@ -136,8 +136,7 @@ class tx_ptlist_pagerStrategy_default implements tx_ptlist_iPagerStrategy {
 	 */
 	public function getLinks() {
 		$links = array();
-
-		foreach (t3lib_div::trimExplode(',', $this->conf['elements']) as $element) {
+		foreach (t3lib_div::trimExplode(',', $this->conf['elements'], true) as $element) {
 			
 			switch ($element) {
 				case 'pages': {		
@@ -215,7 +214,7 @@ class tx_ptlist_pagerStrategy_default implements tx_ptlist_iPagerStrategy {
 				} break;
 				
 				default: {
-					throw new tx_pttools_exception('Invalid element!');
+					throw new tx_pttools_exception(sprintf('"%s" is an invalid element!', $element));
 				}
 			}
 			
