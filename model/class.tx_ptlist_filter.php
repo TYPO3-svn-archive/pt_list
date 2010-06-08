@@ -273,6 +273,7 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
         $view->addItem($this->conf, 'filterconf', false);
         
         $view->addItem($this->filterIdentifier, 'filterId');
+        $view->addItem((bool)$this->isActive, 'filterActive');
         
         // add appendToUrl variable to view if configured
 		if (tx_pttools_div::getTS('plugin.tx_ptlist.controller.list.appendFilterValuesToUrls') || $this->conf['appendFilterValuesToUrls']) {
@@ -780,7 +781,10 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
             }
             foreach ($dataDescriptionIdentifiers as $dataDescriptionIdentifier) {
                 tx_pttools_assert::isNotEmptyString($dataDescriptionIdentifier, array('message' => 'Empty "dataDescriptionIdentifier"!'));
-                $this->dataDescriptions->addItem($registry[$this->listIdentifier.'_listObject']->getAllDataDescriptions()->getItemById($dataDescriptionIdentifier));
+                $allDataDescriptionsFromRegistry = $registry[$this->listIdentifier.'_listObject']->getAllDataDescriptions(); /* @var $allDataDescriptionsFromRegistry tx_ptlist_dataDescriptionCollection */
+                tx_pttools_assert::isTrue($allDataDescriptionsFromRegistry->hasItem($dataDescriptionIdentifier), array('message' => sprintf('Data description "%s" not found!', $dataDescriptionIdentifier))); 
+                $dataDescription = $allDataDescriptionsFromRegistry->getItemById($dataDescriptionIdentifier);
+                $this->dataDescriptions->addItem($dataDescription);
             }
         }
         
