@@ -119,6 +119,9 @@ abstract class tx_ptlist_controller_filter_options_base extends tx_ptlist_filter
 
 		// get array of possible values to be displayed for selection
 		$this->possibleValues = $this->getOptions(); /* @var $possibleValues array of array('item' => <value>, 'label' => <label>, 'quantity' => <quantity>) */
+
+		// check if there are real different options
+		$differentOptions = count($this->possibleValues) > 1;
 		
 		if ($this->conf['removeEmptyValues']) {
 			foreach ($this->possibleValues as $key => $value) {
@@ -165,6 +168,7 @@ abstract class tx_ptlist_controller_filter_options_base extends tx_ptlist_filter
 		$view->addItem((bool)$this->conf['multiple'], 'multiple');
 		$view->addItem((bool)$this->conf['submitOnChange'], 'submitOnChange');
 		$view->addItem($this->determineSelectBoxSize(), 'selectBoxSize');
+		$view->addItem($differentOptions, 'differentOptions');
 		
 		if (!$this->conf['multiple']) {
 			$value = $this->value[0];
