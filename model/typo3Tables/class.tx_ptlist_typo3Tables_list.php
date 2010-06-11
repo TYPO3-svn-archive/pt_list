@@ -394,7 +394,7 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 		// get the id of the given current item
 		$id = $items->searchItem($currentItem);
 		if ($id === false) {
-			throw new tx_pttools_exception(sprintf('Item not found for the given currentItem "%s"', var_export($currentItem, 1)));
+			throw new tx_pttools_exception(sprintf('Item not found for the given currentItem "%s"', str_replace(chr(10), '', var_export($currentItem, 1))));
 		}
 		
 		$idx = $items->getIndexByItemId($id);
