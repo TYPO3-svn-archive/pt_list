@@ -5,7 +5,7 @@
 	{/foreach}
 
 	{if !$submitOnChange}
-	<br />
-	<input type="submit" value="{$filterconf.submitValue|ll:0}" />
+		<br />
+		<input type="submit" value="{$filterconf.submitValue|ll:0}" />
 	{/if}
 </form>
