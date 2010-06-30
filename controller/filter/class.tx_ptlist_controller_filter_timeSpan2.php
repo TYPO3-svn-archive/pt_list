@@ -26,7 +26,7 @@
 
 /**
  * Class file definition for timespan filter
- * 
+ *
  * @author   Michael Knoll
  * @since    2009-07-17
  * @version  $ID:$
@@ -53,8 +53,8 @@ require_once t3lib_extMgm::extPath('pt_tools').'res/objects/class.tx_pttools_exc
  */
 class tx_ptlist_controller_filter_timeSpan2 extends tx_ptlist_filter {
 
-	
-	
+
+
 	/**
 	 * Current state
 	 * 'from' => [<empty, if mode is "preset>|<timestamp>]
@@ -64,12 +64,12 @@ class tx_ptlist_controller_filter_timeSpan2 extends tx_ptlist_filter {
 	 */
 	protected $value = array();
 
-	
-	
+
+
 	/****************************************************************************************************************
      * Modifying MVC functionality
      ****************************************************************************************************************/
-	
+
     /**
      * MVC init method:
      * Checks if the column collection contains exactly one column as this filter can be used only with one column at the same time
@@ -81,22 +81,22 @@ class tx_ptlist_controller_filter_timeSpan2 extends tx_ptlist_filter {
      * @since   2009-01-23
      */
     public function init() {
-        
+
     	// Make sure, pt_jqueryui extension is installed
         if (!t3lib_extMgm::isLoaded('pt_jqueryui')) {
             throw new tx_pttools_exception('You need to install and load pt_jqueryui to run datepicker filter!');
         }
-    	
+
         parent::init();
         tx_pttools_assert::isEqual(count($this->dataDescriptions), 1, array('message' => sprintf('This filter can only be used with 1 dataDescription (dataDescription found: "%s"', count($this->dataDescriptions))));
     }
-    
-	
-	
+
+
+
 	/****************************************************************************************************************
 	 * Action Methods
 	 ****************************************************************************************************************/
-	
+
 	/**
 	 * Displays the user interface in active state
 	 * - calls isNotActiveAction as both states have the same output
@@ -111,8 +111,8 @@ class tx_ptlist_controller_filter_timeSpan2 extends tx_ptlist_filter {
 		return $this->doAction('isNotActive');
 	}
 
-	
-	
+
+
 	/**
 	 * Is not active action
 	 *
@@ -141,10 +141,10 @@ class tx_ptlist_controller_filter_timeSpan2 extends tx_ptlist_filter {
 	 * @since	2009-02-06
 	 */
 	public function breadcrumbAction() {
-		
+
 		if (!empty($this->value)) {
-			// todo ry21 add some localization here!
-			$value = 'Zeitspanne: ' . $this->formatTimeSpan($this->value['from'], $this->value['to']);
+			// TODO ry21 add some localization here!
+			$value = $this->formatTimeSpan($this->value['from'], $this->value['to']);
 		} else {
 			$value = 'Not set';
 		}
@@ -154,13 +154,13 @@ class tx_ptlist_controller_filter_timeSpan2 extends tx_ptlist_filter {
 		$view->addItem($value, 'value');
 		return $view->render();
 	}
-	
-	
+
+
 
     /****************************************************************************************************************
      * Template methods
      ****************************************************************************************************************/
-    
+
     /**
      * Pre-Submit action
      *
@@ -178,14 +178,14 @@ class tx_ptlist_controller_filter_timeSpan2 extends tx_ptlist_filter {
         );
 
     }
-	
 
-	
+
+
 	/****************************************************************************************************************
      * Domain Logic -
      * implementing abstract methods from parent class
      ****************************************************************************************************************/
-	
+
     /**
      * Get sql where clause snippet
      *
@@ -203,12 +203,12 @@ class tx_ptlist_controller_filter_timeSpan2 extends tx_ptlist_filter {
         }
 
         $rangeSnippet = $this->getRangeSnippet($span['from'], $span['to'], $this->getDbColumn());
-        
+
         return $rangeSnippet;
     }
 
-	
-	
+
+
 	/****************************************************************************************************************
      * Helper methods
      ****************************************************************************************************************/
@@ -223,13 +223,13 @@ class tx_ptlist_controller_filter_timeSpan2 extends tx_ptlist_filter {
 	 * @since	2009-02-09
 	 */
 	protected function formatTimeSpan($from, $to) {
-		
+
 		// Convert to Unix timestamp
 		$fromDateTime = date_create($from);
         $from = date_format($fromDateTime, 'U');
         $toDateTime = date_create($to);
         $to = date_format($toDateTime, 'U');
-		
+
 		if (date('Y', $from) == date('Y', $to)) {
 			if (date('m', $from) == date('m', $to)) {
 				if (date('d', $from) == date('d', $to)) {
@@ -266,17 +266,17 @@ class tx_ptlist_controller_filter_timeSpan2 extends tx_ptlist_filter {
         if (empty($from) && empty($to)) {
             throw new tx_pttools_exception('"From" and "to" cannot be both empty!');
         }
-        
+
         // Determine field type of date field
 		$dateFieldType = $this->conf['dateFieldType'] == '' ? 'timestamp' : $this->conf['dateFieldType'];
         $sqlWhereClauseSnippet = array();
         $snippet = '';
-        
+
 		if ($dateFieldType == 'date') {
 	        // Generate where clause for date fields
 	        $dateFrom = date('Y-m-d', $from);
 	        $dateTo   = date('Y-m-d', $to);
-	        $snippet  = $dbColumn . ' BETWEEN \'' . $dateFrom . '\' AND \'' . $dateTo .'\''; 
+	        $snippet  = $dbColumn . ' BETWEEN \'' . $dateFrom . '\' AND \'' . $dateTo .'\'';
 		} elseif($dateFieldType == 'timestamp') {
             // Generate where clause for timestamp fields
 	        if (!empty($from)) {
@@ -289,15 +289,15 @@ class tx_ptlist_controller_filter_timeSpan2 extends tx_ptlist_filter {
 		} else {
 			throw new tx_pttools_exceptionConfiguration("No valid date field type set.", "No valid date field type set for timespan filter. Type was $dateFieldType but can only be 'date' or 'timestamp'!");
 		}
-        
+
         return $snippet;
     }
 
-    
-    
+
+
     /**
      * Returns the DB column for the filter to be applied to
-     * 
+     *
      * @return string
      * @author Fabrizio Branca <mail@fabriziobranca.de>
      * @since 2009-07-17
@@ -309,30 +309,30 @@ class tx_ptlist_controller_filter_timeSpan2 extends tx_ptlist_filter {
         return $table.'.'.$field;
     }
 
-    
-    
+
+
     /**
      * Converts filter values to an array of unix timestamps
-     * 
+     *
      * @param   array   $value  Array with dates array( 'from' => date, 'to' => date )
      * @return  array           Array with timestamps array( 'from' => timestamp, 'to' => timestamp )
      * @author  Michael Knoll <knoll@punkt.de>
      * @since   2009-07-17
      */
     protected function valueToTimeSpan($value) {
-    	
+
     	tx_pttools_assert::isNotEmpty($value['from'], array('message' => 'Value "From" must not be empty but was empty.'));
     	tx_pttools_assert::isNotEmpty($value['to'], array('message' => 'Value "To" must not be empty but was empty.'));
-    	
+
     	$fromDateTime = date_create($value['from']);
     	$fromTimestamp = date_format($fromDateTime, 'U');
-    	
+
     	$toDateTime = date_create($value['to']);
     	$toTimestamp = date_format($toDateTime, 'U');
-    	
-    	return array('from' => $fromTimestamp, 'to' => $toTimestamp); 
+
+    	return array('from' => $fromTimestamp, 'to' => $toTimestamp);
     }
-	
+
 
 }
 
