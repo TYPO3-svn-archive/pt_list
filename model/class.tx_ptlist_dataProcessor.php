@@ -67,6 +67,30 @@ class tx_ptlist_dataProcessor {
 		
 	/**
 	 * Lookup labels
+	 * 
+	 * <example>
+	 *  fooFilter < plugin.tx_ptlist.alias.filter_options_group
+	 *	fooFilter {
+	 *		processDataUserFunc {
+	 *			10 = EXT:pt_list/model/class.tx_ptlist_dataProcessor.php:tx_ptlist_dataProcessor->lookupLabels
+	 *			10 {
+	 *				# uid of a database connection record or complete string
+	 *				# dsn = 
+	 *				select {
+	 *						# all select properties support stdWrap
+	 *					fields = title
+	 *					from = tx_foo_foo
+	 *						# ###VALUE### will be replaced by the current filter value
+	 *					where = uid = ###VALUE###
+	 *					# groupBy = 
+	 *					# orderBy =
+	 *				}	
+	 *				# renderObj = 
+	 *				# renderUserFunctions =
+	 *			}
+	 *		} 
+	 *	}
+	 * </example>
 	 *
 	 * @param 	array 	$data
 	 * @return 	array 	$data
@@ -76,7 +100,6 @@ class tx_ptlist_dataProcessor {
 	public static function lookupLabels(array $params) {
 		
 		$conf = $params['conf'];
-
 		$dsn = $conf['dsn'];
 
 		if (is_numeric($dsn)) {
@@ -85,25 +108,22 @@ class tx_ptlist_dataProcessor {
 		
 		tx_pttools_assert::isNotEmptyArray($conf['select.'], array('message' => 'No "select" configuration found!'));
 		
-		foreach ($params['groupData'] as &$data) {
+		foreach ($params['groupData'] as &$data) { /* @var $data array */
 			
 			// get a fresh copy of the select statement
 			$select = $conf['select.'];
 
+			// process stdWraps and insert dynamic values
 			$replaceArray = array('###VALUE###' => $data['item']);
-	
 			foreach ($select as $tsKey => &$value) {
 				if (substr($tsKey, -1) != '.') {
-	
-					// resolve stdWraps
 					$value = $GLOBALS['TSFE']->cObj->stdWrap($select[$tsKey], $select[$tsKey.'.']);
-	
-					// insert values
 					$value = str_replace(array_keys($replaceArray), array_values($replaceArray), $value);
 				}
 			}
 	
-			$row = tx_ptlist_genericDataAccessor::getInstance(md5($dsn), $dsn)->select(
+			// get data from database
+			list($row) = tx_ptlist_genericDataAccessor::getInstance(md5($dsn), $dsn)->select(
 				$select['fields'],
 				$select['from'],
 				$select['where'],
@@ -114,15 +134,15 @@ class tx_ptlist_dataProcessor {
 				0 // max age
 			);
 	
-			if (!empty($row[0])) {
+			// render data
+			if (!empty($row)) {
 				$renderConfig = array(
 					'renderObj' => $conf['renderObj'],
 					'renderObj.' => $conf['renderObj.'],
 					'renderUserFunctions.' => $conf['renderUserFunctions.'],
 				);
-				$data['label'] = tx_ptlist_div::renderValues($row[0], $renderConfig);
+				$data['label'] = tx_ptlist_div::renderValues($row, $renderConfig);
 			}
-				
 		}
 		
 		return $params['groupData'];
