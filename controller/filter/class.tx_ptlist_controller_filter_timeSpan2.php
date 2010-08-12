@@ -322,7 +322,7 @@ class tx_ptlist_controller_filter_timeSpan2 extends tx_ptlist_filter {
 		$fromDateTime = date_create($value['from']);
 		$fromTimestamp = date_format($fromDateTime, 'U');
 
-		$toDateTime = date_create($value['to']);
+		$toDateTime = date_create($value['to'] . ' 23:59:59');
 		$toTimestamp = date_format($toDateTime, 'U');
 
 		return array('from' => $fromTimestamp, 'to' => $toTimestamp);
