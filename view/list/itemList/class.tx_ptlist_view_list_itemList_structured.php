@@ -90,7 +90,6 @@ class tx_ptlist_view_list_itemList_structured extends tx_ptlist_view_list_itemLi
 	public function __construct($controller=NULL) {
 
 		// TODO ry21: Make this configurable via TS
-		$this->templateFilePath = t3lib_extMgm::extPath('pt_list') . 'template/list/list_itemList.tpl';
 		parent::__construct($controller);
 
 	}
