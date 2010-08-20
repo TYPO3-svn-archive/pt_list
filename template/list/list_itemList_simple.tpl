@@ -21,13 +21,11 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ************************************************************** *}
 
-
-
 <table class="tx-ptlist-list tx-ptlist-list-standard {$listIdentifier} {$tableClass}">
 
 	<thead>
 		<tr class="tr-even tr-0">
-			{assign var="cellCounter" value="0"}
+			{assign var="cellCounter" value=0}
 			{foreach from=$columns item=column name="columnHeaders"}
                 <th class="tx-ptlist-list-header td-{$cellCounter}">
                     {if $column.isSortable}
@@ -54,18 +52,17 @@
 	</thead>
 	
 	<tbody>
-	{assign var="rowCounter" value="1"}
+	{assign var="rowCounter" value=1}
 	{foreach from=$listItems item=row name="rows"}
-    	<tr class="tr-{if $smarty.foreach.rows.index % 2}even{else}odd{/if} tr-{$rowCounter}">
-    		{assign var="cellCounter" value="0"}
-    		{foreach from=$row item=value key=columnDescriptionIdentifier}
+		<tr class="tr-{if $smarty.foreach.rows.index % 2}even{else}odd{/if} tr-{$rowCounter}">
+			{assign var="cellCounter" value=0}
+			{foreach from=$row item=value key=columnDescriptionIdentifier}
 				<td class="tx-ptlist-field-{$columnDescriptionIdentifier} td-{$cellCounter}">{$value}</td>
-				{assign var="cellCounter" value=$cellCounter+1}  
-    		{/foreach}
-    	</tr>
-       {assign var="rowCounter" value=$rowCounter+1} 
+				{assign var="cellCounter" value=$cellCounter+1}
+			{/foreach}
+		</tr>
+		{assign var="rowCounter" value=$rowCounter+1} 
 	{/foreach}
 
 	</tbody>
-
 </table>
