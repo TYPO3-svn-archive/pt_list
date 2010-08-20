@@ -26,7 +26,7 @@
 
 /**
  * Class definition for pt_list structured list view.
- * 
+ *
  * @version   $Id$
  * @author    Michael Knoll <knoll@punkt.de>
  * @since     2009-06-30
@@ -44,7 +44,7 @@ require_once t3lib_extMgm::extPath('pt_tools').'res/staticlib/class.tx_pttools_a
 
 /**
  * Class definition for structured list view.
- * 
+ *
  * @package     TYPO3
  * @subpackage pt_list
  * @author Michael Knoll <knoll@punkt.de>
@@ -52,56 +52,56 @@ require_once t3lib_extMgm::extPath('pt_tools').'res/staticlib/class.tx_pttools_a
  */
 class tx_ptlist_view_list_itemList_structured extends tx_ptlist_view_list_itemList {
 
-	
-	
+
+
 	/**
 	 * @var array  Columns to structure list by
 	 */
 	protected $structureByCols;
-	
-	
-	
+
+
+
 	/**
 	 * @var array  Columns to show as header for structured list
 	 */
 	protected $structureByHeaders;
-	
-	
+
+
 	/**
 	 * @var string ID of current list
 	 */
 	protected $listId;
-	
-	
+
+
 	/**
 	 * @var string String to concat structured header columns
 	 */
 	protected $concatString;
-	
-	
+
+
 	/**
 	 * Constructor for structured list
-	 * 
+	 *
 	 * @author Michael Knoll <knoll@punkt.de>
 	 * @since 2009-06-30
 	 * @param  $controller tx_ptmvc_controller
 	 * @return void
 	 */
 	public function __construct($controller=NULL) {
-		
+
 		// TODO ry21: Make this configurable via TS
 		$this->templateFilePath = t3lib_extMgm::extPath('pt_list') . 'template/list/list_itemList.tpl';
 		parent::__construct($controller);
-		
+
 	}
-	
-	
-	
+
+
+
     /**
      * This will be executed before rendering the template
-     * 
+     *
      * Create template configuration for structured lists and sort data according to structure given in TS
-     * 
+     *
      * @param   void
      * @return  void
      * @author  Michael Knoll <knoll@punkt.de>
@@ -109,19 +109,19 @@ class tx_ptlist_view_list_itemList_structured extends tx_ptlist_view_list_itemLi
      */
     public function beforeRendering() {
         parent::beforeRendering();
-        
+
         /* Get configuration for structured list */
         $this->initStructureConfig();
-        
+
         /* Generate keys for sorting list items */
         $this->createSortingColumn();
-        
+
         /* Sort list items according to structure */
         $this->reSortListItems();
-        
+
         /* Add headers for structured sections */
         $this->addStructureHeaders();
-        
+
         /* Assign additional template vars for structured list */
         $this->addItem('1', 'is_a_structured_list', false);
         $this->addItem(array_merge($this->structureByCols, $this->structureByHeaders), 'structure_by_cols', false);
@@ -129,18 +129,18 @@ class tx_ptlist_view_list_itemList_structured extends tx_ptlist_view_list_itemLi
         $this->addItem($this->countVisibleCols(array_keys($this->itemsArr['columns']),array_merge($this->structureByCols, $this->structureByHeaders)), 'spanned_cols_by_header', false);
         $this->addItem($this->concatString, 'concat_string');
     }
-    
-    
-    
+
+
+
     /* ***************************************************************
      * HELPER METHODS
      * ***************************************************************/
-    
-    
-    
+
+
+
     /**
      * Helper method for generating sorting column for structure
-     * 
+     *
      * @author Michael Knoll <knoll@punkt.de>
      * @since  2009-07-01
      */
@@ -148,14 +148,14 @@ class tx_ptlist_view_list_itemList_structured extends tx_ptlist_view_list_itemLi
         foreach ($this->itemsArr['listItems'] as &$row) {
             $combinedStructCol = $this->combineCols($row, $this->structureByCols);
             $row['__combined_struct_col__'] = $combinedStructCol;
-        }  
+        }
     }
-    
-    
-    
+
+
+
     /**
-     * Helper method for initializing structure config 
-     * 
+     * Helper method for initializing structure config
+     *
      * @author Michael Knoll <knoll@punkt.de>
      * @since  2009-07-01
      */
@@ -165,16 +165,16 @@ class tx_ptlist_view_list_itemList_structured extends tx_ptlist_view_list_itemLi
         tx_pttools_assert::isArray($this->structureByCols, array('message' => 'No structure by cols given for list configuration!'));
         $this->structureByHeaders   = t3lib_div::trimExplode(',', tx_pttools_div::getTS('plugin.tx_ptlist.listConfig.' . $this->listId . '.structureByHeaders'));
         tx_pttools_assert::isArray($this->structureByHeaders, array('message' => 'No headers for structure by col given for list configuration!'));
-        
+
         $this->concatString = tx_pttools_div::getTS('plugin.tx_ptlist.listConfig.' . $this->listId . '.concatString') != '' ?
             tx_pttools_div::getTS('plugin.tx_ptlist.listConfig.' . $this->listId . '.concatString') : ' - ';
     }
-    
-    
-    
+
+
+
     /**
      * Helper method for generating structure headers
-     * 
+     *
      * @author Michael Knoll <knoll@punkt.de>
      * @since  2009-07-01
      */
@@ -191,9 +191,9 @@ class tx_ptlist_view_list_itemList_structured extends tx_ptlist_view_list_itemLi
                  */
                 $newListItems[] = array_merge(
 	                                  array(
-	                                      'is_structure_header' => '1', 
+	                                      'is_structure_header' => '1',
 	                                      '__structure_header__' => $this->getCurrentHeader($row, $this->structureByHeaders, $this->concatString)
-	                                  ), 
+	                                  ),
 	                                  $row
                                   );
             }
@@ -201,12 +201,12 @@ class tx_ptlist_view_list_itemList_structured extends tx_ptlist_view_list_itemLi
         }
         $this->itemsArr['listItems'] = $newListItems;
     }
-    
-    
-    
+
+
+
     /**
      * Helper method for re-sorting list items according to structure by columns
-     * 
+     *
      * @author Michael Knoll <knoll@punkt.de>
      * @since  2009-07-01
      */
@@ -215,15 +215,15 @@ class tx_ptlist_view_list_itemList_structured extends tx_ptlist_view_list_itemLi
     	$secondKeyName = $this->_extConf['listConfig.'][$this->listId . '.']['defaults.']['sortingColumn'];
         $secondKey = $this->getArrayKeys($this->itemsArr['listItems'], $secondKeyName);
         $sortingDirection = $this->_extConf['listConfig.'][$this->listId . '.']['defaults.']['sortingDirection'] == 'DESC' ? SORT_DESC : SORT_ASC;
-        
+
         array_multisort($combinedStructKeys, SORT_ASC, $secondKey, $sortingDirection, $this->itemsArr['listItems']);
     }
-    
-    
-    
+
+
+
     /**
      * Determines the number of visible columns for a given list.
-     * 
+     *
      * @param   array   $allColumns     Columns array containing all columns
      * @param   array   $hiddenColumns  Array of columns to hide
      * @return  int                     Number of columns to display
@@ -239,13 +239,13 @@ class tx_ptlist_view_list_itemList_structured extends tx_ptlist_view_list_itemLi
     	}
     	return $counter;
     }
-    
-    
-    
+
+
+
     /**
      * Returns current header from a row with key=>value pairs.
      * The values to be combined are given in $keys, the string to combine them is given by $glue
-     * 
+     *
      * @param   array   $row    Array to take values from
      * @param   array   $keys   Keys of array fields to combine as a header
      * @param   string  $glue   String to put between merged fields
@@ -261,12 +261,12 @@ class tx_ptlist_view_list_itemList_structured extends tx_ptlist_view_list_itemLi
     	$currentHeader .= $row[$keys[$i]];
     	return $currentHeader;
     }
-    
-    
-    
+
+
+
     /**
      * Returns all values from an associative array for a given key
-     * 
+     *
      * @param   array   $array  Array to take values from
      * @param   string  $key    Key for values that should be taken from $array
      * @author  Michael Knoll <knoll@punkt.de>
@@ -279,12 +279,12 @@ class tx_ptlist_view_list_itemList_structured extends tx_ptlist_view_list_itemLi
     	}
     	return $returnArray;
     }
-    
-    
-    
+
+
+
     /**
      * Returns a string of combined columns from $row given in $keys
-     * 
+     *
      * @param   array   $row    Array to take values to combine from
      * @param   array   $keys   Array of keys to combin from $row
      * @return  string          Combined values from row
@@ -298,8 +298,8 @@ class tx_ptlist_view_list_itemList_structured extends tx_ptlist_view_list_itemLi
     	}
     	return $combinedCol;
     }
-    
-    
+
+
 }
 
 ?>
