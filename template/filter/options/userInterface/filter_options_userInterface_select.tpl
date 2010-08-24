@@ -1,7 +1,7 @@
 <form method="post" action="{url parameter=$currentPage additionalParams='&%s[action]=submit'|vsprintf:$prefixId setup='lib.tx_ptlist.typolinks.options_select'}">
-	<select size="{$selectBoxSize}" name="{$prefixId}[value][]" {if $submitOnChange}onchange="submit()"{/if} {if $multiple}multiple{/if}>
+	<select size="{$selectBoxSize}" name="{$prefixId}[value][]" {if $submitOnChange}onchange="submit()"{/if}{if $multiple} multiple="multiple"{/if}>
 		{foreach from=$possibleValues item=possibleValue}
-			<option value="{$possibleValue.item|urlencode}"{if $possibleValue.active} selected{/if}>
+			<option value="{$possibleValue.item|urlencode}"{if $possibleValue.active} selected="selected"/if}>
 				{$possibleValue.label} <span class="count">{$possibleValue.quantity|wrap:"(|)"}</span>
 			</option>
 		{/foreach}
