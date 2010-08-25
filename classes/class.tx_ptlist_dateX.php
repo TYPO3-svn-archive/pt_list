@@ -80,6 +80,14 @@ class tx_ptlist_dateX implements tx_pttools_iSingleton {
 		trigger_error('Clone is not allowed for '.get_class($this).' (Singleton)', E_USER_ERROR);
 	}
 
+	/**
+	 * Resets date X by deleting it
+	 * @return void
+	 */
+	public static function resetDateX() {
+		self::delete();
+	}
+
 
 	/**
 	 * Returns date X
@@ -91,7 +99,7 @@ class tx_ptlist_dateX implements tx_pttools_iSingleton {
 	}
 
 	/**
-	 *
+	 * get date X as timestamp
 	 * @return int
 	 */
 	public static function getDateXAsTimestamp() {

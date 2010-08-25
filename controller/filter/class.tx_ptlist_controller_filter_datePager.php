@@ -1,26 +1,26 @@
 <?php
 /***************************************************************
-*  Copyright notice
-*
-*  (c) 2009 Joachim Mathes <mathes@punkt.de>
-*  All rights reserved
-*
-*  This script is part of the TYPO3 project. The TYPO3 project is
-*  free software; you can redistribute it and/or modify
-*  it under the terms of the GNU General Public License as published by
-*  the Free Software Foundation; either version 2 of the License, or
-*  (at your option) any later version.
-*
-*  The GNU General Public License can be found at
-*  http://www.gnu.org/copyleft/gpl.html.
-*
-*  This script is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the
-*  GNU General Public License for more details.
-*
-*  This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+ *  Copyright notice
+ *
+ *  (c) 2009 Joachim Mathes <mathes@punkt.de>
+ *  All rights reserved
+ *
+ *  This script is part of the TYPO3 project. The TYPO3 project is
+ *  free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  The GNU General Public License can be found at
+ *  http://www.gnu.org/copyleft/gpl.html.
+ *
+ *  This script is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the
+ *  GNU General Public License for more details.
+ *
+ *  This copyright notice MUST APPEAR in all copies of the script!
+ ***************************************************************/
 
 require_once t3lib_extMgm::extPath('pt_tools').'res/objects/class.tx_pttools_exception.php';
 require_once t3lib_extMgm::extPath('pt_tools').'res/staticlib/class.tx_pttools_assert.php';
@@ -61,10 +61,10 @@ class tx_ptlist_controller_filter_datePager extends tx_ptlist_filter {
 
 		parent::init();
 		tx_pttools_assert::isInRange(count($this->dataDescriptions),
-			1,
-			2,
-			array('message' => sprintf('This filter can only be used with 1 or 2 dataDescriptions (dataDescriptions found: "%s")',
-				count($this->dataDescriptions))));
+		1,
+		2,
+		array('message' => sprintf('This filter can only be used with 1 or 2 dataDescriptions (dataDescriptions found: "%s")',
+		count($this->dataDescriptions))));
 	}
 
 	/**
@@ -126,6 +126,19 @@ class tx_ptlist_controller_filter_datePager extends tx_ptlist_filter {
 	}
 
 	/**
+	 * Resets this filter.
+	 *
+	 * @param   void
+	 * @return  void
+	 * @author  Simon Schaufelberger <schaufelberger@punkt.de>
+	 * @since   2010-08-25
+	 */
+	public function reset() {
+		tx_ptlist_dateX::getInstance()->resetDateX();
+		parent::reset();
+	}
+
+	/**
 	 * Get SQL where clause snippet
 	 *
 	 * @param   void
@@ -163,8 +176,8 @@ class tx_ptlist_controller_filter_datePager extends tx_ptlist_filter {
 		$dateTimestamp = $dateX->getDateXAsTimestamp();
 
 		$startDateColumn = $this->dataDescriptions->getItemByIndex(0)->get_table()
-			. '.'
-			. $this->dataDescriptions->getItemByIndex(0)->get_field();
+		. '.'
+		. $this->dataDescriptions->getItemByIndex(0)->get_field();
 		$sqlDateFunction = $this->determineSqlDateFunction();
 		$dateEntity = $this->determineDateEntity();
 		switch ($dateEntity) {
@@ -201,11 +214,11 @@ class tx_ptlist_controller_filter_datePager extends tx_ptlist_filter {
 		$dateTimestamp = $dateX->getDateXAsTimestamp();
 
 		$startDateColumn = $this->dataDescriptions->getItemByIndex(0)->get_table()
-			. '.'
-			. $this->dataDescriptions->getItemByIndex(0)->get_field();
+		. '.'
+		. $this->dataDescriptions->getItemByIndex(0)->get_field();
 		$endDateColumn = $this->dataDescriptions->getItemByIndex(1)->get_table()
-			. '.'
-			. $this->dataDescriptions->getItemByIndex(1)->get_field();
+		. '.'
+		. $this->dataDescriptions->getItemByIndex(1)->get_field();
 		$sqlDateFunction = $this->determineSqlDateFunction();
 		$dateEntity = $this->determineDateEntity();
 
@@ -225,20 +238,20 @@ class tx_ptlist_controller_filter_datePager extends tx_ptlist_filter {
 					"WEEKOFYEAR(" . $sqlDateFunction . "(" . $startDateColumn . ", '%Y-%m-%d')) <= '" . date('W', $dateTimestamp) . "' AND " . $sqlDateFunction . "(" . $startDateColumn . ", '%Y') <= '" . date('Y', $dateTimestamp) . "' "
 					. "AND "
 					. "WEEKOFYEAR(" . $sqlDateFunction . "(" . $endDateColumn . ", '%Y-%m-%d')) >= '" . date('W', $dateTimestamp) . "' AND " . $sqlDateFunction . "(" . $endDateColumn . ", '%Y') >= '" . date('Y', $dateTimestamp) . "'";
-				break;
+					break;
 			case 'month':
 				$sqlWhereClauseSnippet =
 					"STR_TO_DATE(" . $sqlDateFunction . "(" . $startDateColumn . ", '%Y-%m'), '%Y-%m') <= STR_TO_DATE('" . date('Y-m', $dateTimestamp) . "', '%Y-%m') "
 					. "AND "
 					. "STR_TO_DATE(" . $sqlDateFunction . "(" . $endDateColumn . ", '%Y-%m'), '%Y-%m') >= STR_TO_DATE('" . date('Y-m', $dateTimestamp) . "', '%Y-%m')";
 
-				break;
+					break;
 			case 'year':
 				$sqlWhereClauseSnippet =
 					"STR_TO_DATE(" . $sqlDateFunction . "(" . $startDateColumn . ", '%Y'), '%Y') <= STR_TO_DATE('" . date('Y', $dateTimestamp) . "', '%Y') "
 					. "AND "
 					. "STR_TO_DATE(" . $sqlDateFunction . "(" . $endDateColumn . ", '%Y'), '%Y') >= STR_TO_DATE('" . date('Y', $dateTimestamp) . "', '%Y')";
-				break;
+					break;
 			default:
 				throw new tx_pttools_exceptionConfiguration("No valid 'dateEntity' set in Typoscript configuration.");
 		}
