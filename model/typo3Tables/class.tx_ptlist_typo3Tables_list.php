@@ -205,11 +205,13 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 	 * @since	2009-02-12
 	 */
 	public function getGroupData($select, $where='', $groupBy='', $orderBy='', $limit='', $ignoredFiltersForWhereClause='') {
+		$whereClauseFromOtherFilters = '';
+
 		if (!t3lib_div::inList('__ALL__', $ignoredFiltersForWhereClause)) {
 			$whereClauseFromOtherFilters = $this->getAllFilters()->getSqlWhereClauseSnippet($ignoredFiltersForWhereClause);
 		}
 
-		$whereClause = $whereClauseFromOtherFilters;
+		$whereClause = '';
 		$whereClause .= (!empty($whereClauseFromOtherFilters) && !empty($where) ? ' AND ' : '');
 		$whereClause .= $where;
 
