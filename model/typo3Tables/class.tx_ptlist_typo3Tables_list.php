@@ -44,12 +44,12 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
  	 * @var array	involved tables
 	 */
 	protected $tables = array();
-	
+
 	/**
 	 * @var array	language overlay configuration
 	 */
 	protected $languageOverlays = array();
-	
+
 
 	/***************************************************************************
 	 * Implementing abstract methods from the "tx_ptlist_list" class
@@ -69,16 +69,16 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 		$typoscriptPath = 'plugin.tx_ptlist.listConfig.'.$this->listId.'.';
 		$this->conf = tx_pttools_div::getTS($typoscriptPath);
 		tx_pttools_assert::isNotEmptyArray($this->conf, array('message' => sprintf('No typoscript configuration found under "%s"!', $typoscriptPath)));
-		
+
 		$this->setPropertiesFromArray($this->conf);
 	}
-	
-	
-	
+
+
+
 	/***************************************************************************
 	 * Methods for the "tx_ptlist_iSettableByArray" interface
 	 **************************************************************************/
-	
+
 	/**
 	 * Sets the properties from an array
 	 *
@@ -88,7 +88,7 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 	 * @since	2009-03-13
 	 */
 	public function setPropertiesFromArray(array $dataArray) {
-		
+
 		tx_pttools_assert::isNotEmptyArray($dataArray['data.'], array('message' => 'No data defined in typoscript configuration!'));
 		tx_pttools_assert::isNotEmptyArray($dataArray['columns.'], array('message' => 'No columns defined in typoscript configuration!'));
 
@@ -109,7 +109,7 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 		// SQL base where clause
 		$this->baseWhereClause = $GLOBALS['TSFE']->cObj->stdWrap($dataArray['baseWhereClause'], $dataArray['baseWhereClause.']);
 		if (empty($this->baseWhereClause)) {
-			$this->baseWhereClause = '1=1';	
+			$this->baseWhereClause = '1=1';
 		}
 
 		// SQL base group by clause
@@ -117,17 +117,17 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 
 		// SQL base from clause
 		$this->baseFromClause = $GLOBALS['TSFE']->cObj->stdWrap($dataArray['baseFromClause'], $dataArray['baseFromClause.']);
-		
 
-		
+
+
 		// TODO: check if this table can be localized
-		
+
 		if (TYPO3_DLOG) t3lib_div::devLog('base clauses', 'pt_list', 0, array(
 			'baseWhereClause' => $this->baseWhereClause,
 			'baseGroupByClause' => $this->baseGroupByClause,
 			'baseFromClause' => $this->baseFromClause
 		));
-		
+
         // text do display if no elements have been found for a list request (added by rk 2009-08-28)  # TODO: Replace this by a translation mechanism
         $this->noElementsFoundText = $GLOBALS['TSFE']->cObj->stdWrap($dataArray['noElementsFoundText'], $dataArray['noElementsFoundText.']);
 
@@ -136,9 +136,9 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 		// the default table is the first defined table (or its alias)
 		$this->dataDescriptions->set_defaultTable(end(t3lib_div::trimExplode(' ', $this->tables[0])));
 		$this->dataDescriptions->setPropertiesFromArray($dataArray['data.']);
-		
+
 		$postFix = '_ptlistOL';
-		
+
 		// language overlays
 		if (($languageUid = $GLOBALS['TSFE']->sys_language_content) && (is_array($dataArray['languageOverlays.']))) {
 			foreach ($dataArray['languageOverlays.'] as $tableName => $flag) {
@@ -146,10 +146,10 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 					$languageField = $GLOBALS['TCA'][$tableName]['ctrl']['languageField'];
 					tx_pttools_assert::isNotEmptyString($languageField, array('message' => 'No languageField found for table "'.$tableName.'"'));
 					$this->languageOverlays[$tableName]['languageField'] = $languageField;
-					
+
 					$parentField = $GLOBALS['TCA'][$tableName]['ctrl']['transOrigPointerField'];
 					tx_pttools_assert::isNotEmptyString($parentField, array('message' => 'No parentField found for table "'.$tableName.'"'));
-					
+
 					$this->baseFromClause .= sprintf(' LEFT JOIN %1$s AS %1$s%3$s ON (%1$s%3$s.%2$s = %1$s.uid)', $tableName, $parentField, $postFix);
 					$this->baseWhereClause .= sprintf(' AND (%1$s%4$s.%2$s = %3$s OR %1$s.%2$s in (-1,0))', $tableName, $languageField, intval($languageUid), $postFix);
 
@@ -158,14 +158,14 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 					$this->dataDescriptions->addItem($tmpDataDescription);
 				}
 			}
-			
+
 			$this->dataDescriptions->addLanguageOverlays($this->languageOverlays);
-		}		
+		}
 
 		// setup columns
 		$this->columnDescriptions = new tx_ptlist_columnDescriptionCollection($this->listId);
 		$this->columnDescriptions->setPropertiesFromArray($dataArray['columns.']);
-		
+
 		// hide columns
 		$this->hideColumns = $GLOBALS['TSFE']->cObj->stdWrap($dataArray['hideColumns'], $dataArray['hideColumns.']);
 
@@ -182,9 +182,9 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 			$sortingDirection = (strtolower($sortingDirection) == 'desc') ? tx_ptlist_columnDescription::SORTINGSTATE_DESC : tx_ptlist_columnDescription::SORTINGSTATE_ASC;
 			$this->setSortingParameters($sortingColumn, $sortingDirection);
 		}
-		
+
 	}
-	
+
 
 	/***************************************************************************
 	 * Methods for the "tx_ptlist_iFilterable" interface
@@ -205,7 +205,7 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 	 * @since	2009-02-12
 	 */
 	public function getGroupData($select, $where='', $groupBy='', $orderBy='', $limit='', $ignoredFiltersForWhereClause='') {
-		if ($ignoredFiltersForWhereClause != '__ALL__') {
+		if (!t3lib_div::inList('__ALL__', $ignoredFiltersForWhereClause)) {
 			$whereClauseFromOtherFilters = $this->getAllFilters()->getSqlWhereClauseSnippet($ignoredFiltersForWhereClause);
 		}
 
@@ -263,7 +263,7 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 	}
 
 
-	
+
 	/**
 	 * Get single aggregate value
 	 *
@@ -274,9 +274,9 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 	 * @since	2009-02-23
 	 */
 	public function getSingleAggregate($aggregateDataDescriptionIdentifier, $limit) {
-		
+
 		$limit = ''; // MySQL does not support limit on aggregated values
-		
+
 		tx_pttools_assert::isNotEmptyString($aggregateDataDescriptionIdentifier, array('message' => '"aggregateDataDescriptionIdentifier" was for empty!'));
 		$aggregateColumn = $this->conf['aggregateData.'][$aggregateDataDescriptionIdentifier];
 		tx_pttools_assert::isNotEmptyString($aggregateColumn, array('message' => sprintf('No config found for "%s"', $aggregateDataDescriptionIdentifier)));
@@ -295,7 +295,7 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 
 	/**
 	 * Get all aggregates
-	 * 
+	 *
 	 * @param	string	limit value (from pager)
 	 * @return	array	array(<aggregateDataDescriptionIdentifier> => <aggregateValue>)
 	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
@@ -318,7 +318,7 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 	}
 
 
-	
+
 	/**
 	 * Returns an array with information about available aggregate rows
 	 *
@@ -330,7 +330,7 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 	 * 		)
 	 * );
 	 * </code>
-	 * 
+	 *
 	 * @param 	void
 	 * @return 	array
 	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
@@ -367,11 +367,11 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 			return $this->baseFromClause;
 		}
 	}
-	
+
 	/**
 	 * Get nav link
 	 * TODO: add a method in the abstract list class
-	 * 
+	 *
 	 * @param string navLink
 	 * @param array $currentItem
 	 * @return string HTML output
@@ -379,26 +379,26 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 	 * @since	2010-03-10
 	 */
 	public function getNavLink($navLink) {
-		
+
 		$currentItem = empty($this->conf['currentItemSpecifier.']) ? array() : $this->conf['currentItemSpecifier.'];
 		$currentItem = tx_pttools_div::stdWrapArray($currentItem);
-		
+
 		tx_pttools_assert::isNotEmptyArray($currentItem, array('message' => 'No current item configuration found'));
-		
+
 		$supportedNavLinks = array('next', 'prev');
 		tx_pttools_assert::isInArray($navLink, $supportedNavLinks, array('message' => 'Unsupported nav link'));
-		
+
 		// get all items
 		$items = $this->getItems();
-		
+
 		// get the id of the given current item
 		$id = $items->searchItem($currentItem);
 		if ($id === false) {
 			throw new tx_pttools_exception(sprintf('Item not found for the given currentItem "%s"', str_replace(chr(10), '', var_export($currentItem, 1))));
 		}
-		
+
 		$idx = $items->getIndexByItemId($id);
-		
+
 		if ($navLink == 'next') {
 			$direction = 1;
 			$renderConf = $this->conf['nextItem.'];
@@ -408,11 +408,11 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 		} else {
 			throw new tx_pttools_exception('Unknown navLink');
 		}
-			
+
 		// if goOnSearching the loop will go on searching for the first element that returns something. Otherwise it will only check the direct neighbour
 		$stop = !($renderConf['goOnSearching']);
 		do {
-			$idx += $direction;	
+			$idx += $direction;
 			$item = $items->hasIndex($idx) ? $items->getItemByIndex($idx) : false;
 			if ($item !== false) {
 				$renderedItem = tx_ptlist_div::renderValues($item->getData(), $renderConf);
@@ -423,21 +423,21 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 				$stop = true;
 			}
 		} while(!$stop);
-		
+
 		if (empty($renderedItem)) {
 			$renderedItem = $GLOBALS['TSFE']->cObj->stdWrap($renderConf['ifEmpty'], $renderConf['ifEmpty.']);
 		}
-		
+
 		return $renderedItem;
 	}
-	
+
 	/***************************************************************************
 	 * Getter / Setter methods
 	 **************************************************************************/
 
 	/**
 	 * Get tables
-	 * 
+	 *
 	 * @return string
 	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
 	 */
@@ -445,11 +445,11 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 		return $this->tables;
 	}
 
-	
+
 
 	/**
 	 * Get base where clause
-	 * 
+	 *
 	 * @return string
 	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
 	 */
@@ -457,11 +457,11 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 		return $this->baseWhereClause;
 	}
 
-	
+
 
 	/**
 	 * Get base group by clause
-	 * 
+	 *
 	 * @return string
 	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
 	 */
@@ -469,23 +469,23 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 		return $this->baseGroupByClause;
 	}
 
-	
+
 
 	/**
 	 * Get base from clause
-	 * 
+	 *
 	 * @return string
 	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
 	 */
 	public function get_baseFromClause() {
 		return $this->baseFromClause;
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Set tables
-	 * 
+	 *
 	 * @param string
 	 * @return string
 	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
@@ -494,11 +494,11 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 		$this->tables = $tables;
 	}
 
-	
+
 
 	/**
 	 * Set base where clause
-	 * 
+	 *
 	 * @param string
 	 * @return string
 	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
@@ -507,11 +507,11 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 		$this->baseWhereClause = $baseWhereClause;
 	}
 
-	
+
 
 	/**
 	 * Set base group by clause
-	 * 
+	 *
 	 * @param string
 	 * @return string
 	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
@@ -520,11 +520,11 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 		$this->baseGroupByClause = $baseGroupByClause;
 	}
 
-	
+
 
 	/**
 	 * Set base from clause
-	 * 
+	 *
 	 * @param string
 	 * @return string
 	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
@@ -532,7 +532,7 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 	public function set_baseFromClause($baseFromClause) {
 		$this->baseFromClause = $baseFromClause;
 	}
-    
+
 }
 
 ?>
