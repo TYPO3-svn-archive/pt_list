@@ -211,7 +211,7 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 			$whereClauseFromOtherFilters = $this->getAllFilters()->getSqlWhereClauseSnippet($ignoredFiltersForWhereClause);
 		}
 
-		$whereClause = '';
+		$whereClause = $whereClauseFromOtherFilters;
 		$whereClause .= (!empty($whereClauseFromOtherFilters) && !empty($where) ? ' AND ' : '');
 		$whereClause .= $where;
 
