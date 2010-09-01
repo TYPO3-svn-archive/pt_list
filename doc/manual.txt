@@ -4,7 +4,7 @@ Extension Key: pt_list
 Language: en
 Keywords: list, generator, forDevelopers, forAdmins, forIntermediates, forAdvanced
 Copyright 2009, Fabrizio Branca, Rainer Kuhn, Michael Knoll, et. al.
-                       <mail@fabrizio-branca.de, kuhn@punkt.de, knoll@punkt.de> 
+                       <mail@fabrizio-branca.de, knoll@punkt.de> 
 
 Extension development sponsored by punkt.de GmbH (http://punkt.de)
 
@@ -54,6 +54,7 @@ Frontend
 
 Displaying the main features: Filterbox, Item list and Pager.
 
+
 Backend
 
 
@@ -66,17 +67,17 @@ Download and install the extension from the Extension Repository using the Exten
 There are no further settings to be made in the Extension manager.
 How to set up the demo list
 The extension contains a demo list that shows pt_list's main features. Follow the instructions below to set up this demo list.
-1.Create a page to insert the plugin and the template for the list.
-2.Create a TS Extension template or use your site's default TS Template and include the following static TS templates:
+1. Create a page to insert the plugin and the template for the list.
+2. Create a TS Extension template or use your site's default TS Template and include the following static TS templates:
 [pt_list] List configuration (pt_list)
 [pt_list] Themes / Default (pt_list)
 [pt_list] Demo list (static_info_tables) (pt_list)
-3.Put three instances of the pt_list plugin on the page you just created. 
-4.Set the first plugin's “Plugin Mode” to “Filterbox”, the second plugin's “Plugin Mode” to “List” and the third plugin's “Plugin Mode” to “Pager”.
+3. Put three instances of the pt_list plugin on the page you just created. 
+4. Set the first plugin's “Plugin Mode” to “Filterbox”, the second plugin's “Plugin Mode” to “List” and the third plugin's “Plugin Mode” to “Pager”.
 Make sure to set the list identifier of all three plugin instances to “myDemoList” to make the example working and the “List Type” to “TYPO3 Tables”. 
 Make sure, the field “Filterbox identifier” says “defaultFilterbox” in the plugin instance where you chose “Filterbox” as “Plugin Mode”.
 Make sure to select “Default Pager” in the selectbox “Pager” on the plugin instance where you chose “Pager” as “Plugin Mode”.
-5.Have a look at the frontend – voilà, there comes your demo list.
+5. Have a look at the frontend – voilà, there comes your demo list.
 
 Administration
 Erklären, wie die ganze Sache funktioniert
@@ -474,16 +475,16 @@ FilterIdentifier-specific settings overrule filter-specific settings.
 
 Example:
 plugin.tx_ptlist.controller.filter_options_group.groupContinents {
-  hideResetLink = 1
-  ignoreFilters = firstLetterCapital, groupSubContinents
-  orderBy = item asc
+	hideResetLink = 1
+	ignoreFilters = firstLetterCapital, groupSubContinents
+	orderBy = item asc
 }
 For convenience reasons all filterDefinition configuration parameters will be passed to the filter controller. That means you can configure the filter directly in the filterDefinition, too:
 Example:
 plugin.tx_ptlist.listConfig.myDemoList.filters.defaultFilterbox.50 {
-  hideResetLink = 1
-  ignoreFilters = firstLetterCapital, groupSubContinents
-  orderBy = item asc
+	hideResetLink = 1
+	ignoreFilters = firstLetterCapital, groupSubContinents
+	orderBy = item asc
 }
 Available Filters
 
@@ -579,8 +580,8 @@ string
 Determines the display mode of the Date Picker. 
 Possible values: 'inline' (default), 'overlay'
 This filter has two display modes:
-1.overlay mode: input field with a calendar icon aside. If the icon is clicked, a calendar sheet pops up.
-2.inline mode: inline calendar sheet
+1. overlay mode: input field with a calendar icon aside. If the icon is clicked, a calendar sheet pops up.
+2. inline mode: inline calendar sheet
 changeMonth
 bool
 Determines, whether the month can be selected by a drop-down list.
@@ -756,10 +757,10 @@ $params['values']
 The source values to be rendered
 Example:
 class tx_myext_renderer {
-  public static function nameAndCapitalRenderer(array $params) {
-    $values = $params['values'];
-    return sprintf('%s (%s)', $values['name_local'], $values['capital']);
-  }
+	public static function nameAndCapitalRenderer(array $params) {
+		$values = $params['values'];
+		return sprintf('%s (%s)', $values['name_local'], $values['capital']);
+	}
 }
 ->aggregateRowDefinition
 Property:
@@ -925,6 +926,18 @@ The delta is the amount of page that should be displayed left and right from the
 Example (current page is 7):
 delta=3 => … 4 5 6 7 8 9 10 …
 delta=5 => … 2 3 4 5 6 7 8 9 10 11 12...
+fix
+int
+This configuration defines an fix amount of pages that should be displayed. If fix is set the configuration of delta is ignored.
+Example (current page is 9):
+fix=10 => 1 2 3 4 5 6 7 8 9 10 
+fix=7 =>  3 4 5 6 7 8 9 
+pagesNoFirst
+boolean
+do not show the first page in the pager additionally (by default the first page is shown as page 1)
+pagesNoLast
+boolean
+do not show the last page in the pager additionally (by default the first page is shown as page n)
 elements
 string
 Comma separated list of following elements. The elements will be displayed in the order in the list
@@ -1051,23 +1064,23 @@ plugin.tx_ptlist.listConfig.<listId>
 
 Here are two examples on how to overwrite plugin.tx_ptlist.controller.list can be overwritten by individual listId-specific configuration:
 
-1.Example: Overwrite template for a given list ID only on a certain page (pageId = 10)
+1. Example: Overwrite template for a given list ID only on a certain page (pageId = 10)
 [globalVar = TSFE:id = 10]
 plugin.tx_ptlist.controller.list.tx_ptlist_controller_list_listId_<myListId> {
-    view.list_itemList.template = EXT:<myExtensionName>/template/<someTemplateToBeUsed>
+	view.list_itemList.template = EXT:<myExtensionName>/template/<someTemplateToBeUsed>
 }
 [end]
 
-2.Example: Set the number of items to 4 for a given list ID only 
+2. Example: Set the number of items to 4 for a given list ID only 
 plugin.tx_ptlist.controller.list.tx_ptlist_controller_list_listId_<myListId> {
-    itemsPerPage = 4
+	itemsPerPage = 4
 }
 How filters are processed
 Filter controllers have multiple actions that are performed in the following order:
-1.Display filter form
-2.Validate filter form on submit
-3.Do User-Defined action after validation
-4.Serve as SQL Snippet generator for list generation
+1. Display filter form
+2. Validate filter form on submit
+3. Do User-Defined action after validation
+4. Serve as SQL Snippet generator for list generation
 Steps 1. to 3. are taken, if the filter is displayed as a form. Step 4 is taken, whenever a list is displayed that has an active filter filtering the contents of the list.
 As filters extend tx_ptmvc_controller, the call order of the methods is almost the same as above.
 Creating an own filter class
@@ -1147,17 +1160,16 @@ Further conventions
 TS Configuration for filters
 To set up a filter, you have to use some TS on the TS template of the page where you want to insert your pt_list instance:
 filters {
-
-        devFilterBox {
-        
-            10 =  EXT:pt_list/controller/filter/class.tx_ptlist_controller_filter_timeSpan.php: tx_ptlist_controller_filter_timeSpan
-            10 {
-                filterIdentifier = sucheTimeSpanFilter
-                dataDescriptionIdentifier = DatKund
-                spans = today,thisweek,thismonth,thisyear
-                submitValue = Suchen
-            }
-}            
+	devFilterBox {
+		10 =  EXT:pt_list/controller/filter/class.tx_ptlist_controller_filter_timeSpan.php: tx_ptlist_controller_filter_timeSpan
+		10 {
+			filterIdentifier = sucheTimeSpanFilter
+			dataDescriptionIdentifier = DatKund
+			spans = today,thisweek,thismonth,thisyear
+			submitValue = Suchen
+		}
+	}
+}
 
 Everything inside the 10 = Block above will be passed to the filter controller and is accessible via $this->conf and is passed to the view as 'filter'. So you can for example access the value for your submit button via
 <input type="submit" value="{$filter.submitValue|ll:0}" />
@@ -1236,29 +1248,28 @@ You can create templates for PDF generation using XML format. This templates can
 Your template can look somehow similar to this:
 <?xml version="1.0" encoding="UTF-8"?>
 <document orientation="L" unit="mm" format="A4"><!--{strip}-->
-    <!-- Main configuration -->
-    <!--{assign var="borderLeft" value="20"}-->
-    <!--{assign var="borderRight" value="20"}-->
-    <!--{assign var="borderTop" value="20"}-->
-    <!--{assign var="borderBottom" value="20"}-->
-    <!--{assign var="paperWidth" value="297"}-->
-    <!--{assign var="paperHeight" value="210"}-->
+	<!-- Main configuration -->
+	<!--{assign var="borderLeft" value="20"}-->
+	<!--{assign var="borderRight" value="20"}-->
+	<!--{assign var="borderTop" value="20"}-->
+	<!--{assign var="borderBottom" value="20"}-->
+	<!--{assign var="paperWidth" value="297"}-->
+	<!--{assign var="paperHeight" value="210"}-->
 
-    <!-- Table configuration -->
-    <!--{assign_array var="colpos" values="20,30,40,70,85,100,130,145,160,190,235,280"}-->
-    <!--{assign_array var="colwidths" values="10,10,30,15,15 ,30 ,15 ,15 ,30 ,45 ,42"}-->
-    <!--{assign_array var="colaligns" values="L,C,L,L,C,L,L,L,L,L,L"}-->
-    <!-- {assign_array var="tableHeadings" values="tableHeadings"|ll} -->
-    <!--{/strip}-->
+	<!-- Table configuration -->
+	<!--{assign_array var="colpos" values="20,30,40,70,85,100,130,145,160,190,235,280"}-->
+	<!--{assign_array var="colwidths" values="10,10,30,15,15 ,30 ,15 ,15 ,30 ,45 ,42"}-->
+	<!--{assign_array var="colaligns" values="L,C,L,L,C,L,L,L,L,L,L"}-->
+	<!-- {assign_array var="tableHeadings" values="tableHeadings"|ll} -->
+	<!--{/strip}-->
 
-    <content>
-        <addpage />
-        
-        <!-- ########################### GENERATE TABLE HEADERS #################################### -->
-        
-        <setfont family="Arial" style="" size="8" />
-        <sety y="<!--{$borderTop}-->" />
-        <setx x="<!--{$borderRight}-->" />
+	<content>
+		<addpage />
+		<!-- ######################### GENERATE TABLE HEADERS ################################## -->
+
+		<setfont family="Arial" style="" size="8" />
+		<sety y="<!--{$borderTop}-->" />
+		<setx x="<!--{$borderRight}-->" />
 
 		<!--{foreach name="headers" from=$columns key="number" item="columnArray"}-->
 			<!--{assign var="col" value=$smarty.foreach.headers.iteration-1}-->
@@ -1285,8 +1296,7 @@ Your template can look somehow similar to this:
 		<!--{/foreach}-->
 		<addpage iflessthan="<!--{$borderBottom}-->" />
 		<line x1="<!--{$borderLeft}-->" x2="<!--{$paperWidth-$borderRight}-->" /> 
-
-    </content>
+	</content>
 </document>
 
 The headers of the list data is given to your template in the variable $columns, the content is given in $listItems.
@@ -1311,36 +1321,32 @@ plugin.tx_ptlist.view.list_itemList {
 ###########################################################################
 
 plugin.tx_ptlist.view {
-	
-    xls_rendering {
-    	
-    	# Set file name of download file
-    	fileName = dateiname.xls
-    	
-    	# Set to 1 if date and timestamp should be used for filename
-    	useDateAndTimestampInFilename = 0
-    	
-    	# Name of sheet in XLS file
-    	sheetName = Worksheet 1
 
-    }
-    
-    # Deactivate filtering of HTML for XLS output
-    filterHtml = 0
-    
+	xls_rendering {
+		# Set file name of download file
+		fileName = dateiname.xls
+
+		# Set to 1 if date and timestamp should be used for filename
+		useDateAndTimestampInFilename = 0
+
+		# Name of sheet in XLS file
+		sheetName = Worksheet 1
+	}
+	# Deactivate filtering of HTML for XLS output
+	filterHtml = 0
 }
 Using pt_list to generate structured lists
 If you want to generate lists that are structured by certain columns, you can use the following configuration in you TS:
 plugin.tx_ptlist.listConfig.<listId> {
-    defaults {
-        sortingColumn = <NameOfListColumnToSortSubsectionsBy>
-        sortingDirection = <ASC|DESC>
-    }
-    
-    # Columns to structure list by - 
-    # REMIND: Must be the column identifiers of the GUI colums (columns.[n].columnIdentifier)!
-    structureByCols = <Comma seperated list of columns to structure list by>
-    structureByHeaders = <Comma seperated list of columns to generate section headers from>
+	defaults {
+		sortingColumn = <NameOfListColumnToSortSubsectionsBy>
+		sortingDirection = <ASC|DESC>
+	}
+
+	# Columns to structure list by - 
+	# REMIND: Must be the column identifiers of the GUI colums (columns.[n].columnIdentifier)!
+	structureByCols = <Comma seperated list of columns to structure list by>
+	structureByHeaders = <Comma seperated list of columns to generate section headers from>
 }
 
 If you are rendering a structured list, none of the following features of pt_list will be working:
@@ -1356,29 +1362,27 @@ As there are many SQL Snippets configured in Typoscript, make sure to encode par
 
 baseWhereClause = TEXT
 baseWhereClause {
-    cObject = COA
-    cObject {
-        10 = TEXT
-        10 {
-           # Encoding INTEGER params
-           data = GPvar:prefix|param
-           intval = 1
-           noTrimWrap = |tablename.UID = | |
-        }
-        20 = TEXT
-        20 {
-            cObject = TEXT
-            cObject {
-                data = GPvar:tablename|date 
-                postUserFunc = tx_pttools_div->quoteStr
-                postUserFunc.table = tablename
-            }
-            wrap = AND tablename.DATE = "|"
-        }
-    }
+	cObject = COA
+	cObject {
+		10 = TEXT
+		10 {
+			# Encoding INTEGER params
+			data = GPvar:prefix|param
+			intval = 1
+			noTrimWrap = |tablename.UID = | |
+		}
+		20 = TEXT
+		20 {
+			cObject = TEXT
+			cObject {
+				data = GPvar:tablename|date 
+				postUserFunc = tx_pttools_div->quoteStr
+				postUserFunc.table = tablename
+			}
+			wrap = AND tablename.DATE = "|"
+		}
+	}
 }
-
-
 Generic pager
 If you have any object collections and want to use a pager to thumb through your items, you can use tx_ptlist_view_list_genericPager to display a pager for your collections. First of all, you have to include the required classes:
 require_once t3lib_extMgm::extPath('pt_list').'view/list/class.tx_ptlist_view_list_dropdownPager.php';
@@ -1387,33 +1391,31 @@ require_once t3lib_extMgm::extPath('pt_list').'model/pagerStrategy/class.tx_ptli
 There are some lines of code to write to use the pager in your code. In the controller, you have to set some parameters for the pager to work correctly:
 
 protected function createPager(tx_pttools_iPageable $anyCollection) {
-     $currentPageNumber = ($this->params['page'] > 0 ? intval($this->params['page']) : 1);
-     // create pager model
-     $pagerStrategy = new tx_ptlist_pagerStrategy_default();
-     $pagerStrategy->setConfiguration(array());
-        
-     $pager = new tx_ptlist_pager();
-     $pager->set_itemsPerPage(1);
-     $pager->set_itemCollection($anyCollection);
-     $pager->set_currentPageNumber($currentPageNumber);
-     $pager->set_pagerStrategy($pagerStrategy);
-      
+    $currentPageNumber = ($this->params['page'] > 0 ? intval($this->params['page']) : 1);
+    // create pager model
+    $pagerStrategy = new tx_ptlist_pagerStrategy_default();
+    $pagerStrategy->setConfiguration(array());
+    
+    $pager = new tx_ptlist_pager();
+    $pager->set_itemsPerPage(1);
+    $pager->set_itemCollection($anyCollection);
+    $pager->set_currentPageNumber($currentPageNumber);
+    $pager->set_pagerStrategy($pagerStrategy);
+    
     // create pager view
     $pagerView = new tx_ptlist_view_list_genericPager($this);
     $pagerView->addItem($pager->getMarkerArray(), 'pager');
     $pagerView->addItem($this->getPrefixId(), 'controllerName');
-    $pagerView->addItem('controller_'.$this->getControllerName().'_historie_pager_form', 	'pager_form_name');
-
+    $pagerView->addItem('controller_'.$this->getControllerName().'_historie_pager_form', 'pager_form_name');
 
     // add hidden fields for MVC
     $hiddenFields = array($this->getPrefixId().'[action]' =>'showHistory');  
     $pagerView->addItem($hiddenFields, 'hidden_fields_array');
-      
+    
     // render and return  pager HTML
     $pagerHtml = $pagerView->render();
-       
+    
     return $pagerHtml;
-        
 }
 
 This method will output the HTML for your pager. 
@@ -1433,7 +1435,7 @@ When showing a date in your lists, you often have a database field of the type '
 		10 = TEXT
 		10.data = field:seminars_begin_date
 		10.strftime = %d.%m.%y
-	}		
+	}
 }
 Rendering links in columns
 When using pt_list in a CRUD context, you often need to have a field linked to a detail page. Therefore you have to generate a link. This can be done with the following TS:
@@ -1456,14 +1458,14 @@ Hacks on SQL-Queries
 Using GET / POST parameters in pt_list SQL clauses
 When you want to add information from URL parameters in your pt_list configuration you can use the following TS to access URL parameters from within Typoscript:
 baseWhereClause {
-        cObject = COA
-        cObject {
-            10 = TEXT
-            10 {
-                data = GPvar:tx_yourextension|parameter
-                intval = 1
-                noTrimWrap = |table.field = | |
-            }
+	cObject = COA
+	cObject {
+		10 = TEXT
+		10 {
+			data = GPvar:tx_yourextension|parameter
+			intval = 1
+			noTrimWrap = |table.field = | |
+		}
 	}
 }
 Attention: Remind that YOU are responsible for avoiding SQL-incjections when using GET- or POST-paramters in your SQL queries!
