@@ -227,7 +227,7 @@ class tx_ptlist_genericDataAccessor {
      */
     public function select($select_fields, $from_table, $where_clause, $groupBy='', $orderBy='', $limit='', $forceCacheUpdate=false, $maxAge=0)	{
     	
-    	$cacheId = md5(serialize(func_get_args()));
+    	$cacheId = md5(serialize(func_get_args()) . __METHOD__);
     	
     	if ($forceCacheUpdate // force update 
     		|| ($notSet = !isset(self::$queryCache[$cacheId]['entry'])) // no cache entry found 
@@ -262,7 +262,25 @@ class tx_ptlist_genericDataAccessor {
     	
         return self::$queryCache[$cacheId]['entry']; 
     }
+
     
+    
+    /**
+     * Select a records (including translation overlay)
+     * 
+     * @param $table
+     * @param $uid
+     * @param $translate
+     */
+    public function selectRecord($table, $uid, $translate=true) {
+    	
+		tx_pttools_assert::isTcaTable($table, array('message' => 'No valid table given'));
+		tx_pttools_assert::isValidUid($uid, false, array('message' => 'No valid uid given'));
+
+		// TODO: t3lib_BEfunc::getRecord() ?
+		throw new Exception('Not implemented yet');
+
+    }
     
 	
 }
