@@ -189,6 +189,10 @@ class tx_ptlist_controller_filter_datePicker extends tx_ptlist_filter {
 	protected function renderView () {
 		$this->defineSmartyTemplateVariables();
 		$view = $this->getView('filter_datePicker_userInterface');
+		if (isset($GLOBALS['TSFE'])) {
+			//set via config.language
+			$view->addItem($GLOBALS['TSFE']->lang, 'language');
+		}
 		$view->addItem($this->submitLabel, 'submitLabel');
 		$view->addItem($this->smartyTemplateVariables['datesJSON'], 'datesJSON', false);
 		$view->addItem($this->smartyTemplateVariables['datePickerMode'], 'datePickerMode');
