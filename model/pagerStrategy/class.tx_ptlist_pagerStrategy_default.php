@@ -136,30 +136,32 @@ class tx_ptlist_pagerStrategy_default implements tx_ptlist_iPagerStrategy {
 
 		foreach (t3lib_div::trimExplode(',', $this->conf['elements']) as $element) {
 			switch ($element) {
-				case 'pages': {		
-					for ($i=1; $i<=$this->amountPages; $i++) {
-						// render the link only if it is in the delta (or if delta is off), if it is the first or the last one
-						if (($this->conf['delta'] == 0 && $this->conf['fix'] == 0)
-							|| (abs($i-$this->currentPageNumber) <= $this->conf['delta'] && $this->conf['delta'] !=0) 
-							|| ($i <= $this->conf['fix'] && $this->currentPageNumber <= $this->conf['fix']   && $this->conf['fix'] !=0)                              
-							|| ($i > $this->currentPageNumber - $this->conf['fix'] && $i <= $this->currentPageNumber && $this->currentPageNumber > $this->conf['fix']  && $this->conf['fix'] !=0)                              
-							|| ($i == 1 && $this->conf['pagesNoFirst'] == false) 
-							|| ($i == $this->amountPages && $this->conf['pagesNoLast'] == false) ) {
-							$links[] = array(
-								'pageNumber' => $i,
-								'label' => $i,
-								'current' => ($i == $this->currentPageNumber),
-								'type' => 'pageitem'
-							);
-							#echo '<br>$i.'.$i.' abs:'.abs($this->conf['fix']-$this->currentPageNumber). ' $this->currentPageNumber'.$this->currentPageNumber;
-						} else {
-							// append a "fill" item if it does not already exist
-							$lastLinkItem = end($links);				
-							if ($lastLinkItem['type'] != 'fillitem') {
+				case 'pages': {
+					if ( 1 < $this->amountPages ) {
+						for ($i=1; $i<=$this->amountPages; $i++) {
+							// render the link only if it is in the delta (or if delta is off), if it is the first or the last one
+							if (($this->conf['delta'] == 0 && $this->conf['fix'] == 0)
+								|| (abs($i-$this->currentPageNumber) <= $this->conf['delta'] && $this->conf['delta'] !=0) 
+								|| ($i <= $this->conf['fix'] && $this->currentPageNumber <= $this->conf['fix']   && $this->conf['fix'] !=0)                              
+								|| ($i > $this->currentPageNumber - $this->conf['fix'] && $i <= $this->currentPageNumber && $this->currentPageNumber > $this->conf['fix']  && $this->conf['fix'] !=0)                              
+								|| ($i == 1 && $this->conf['pagesNoFirst'] == false) 
+								|| ($i == $this->amountPages && $this->conf['pagesNoLast'] == false) ) {
 								$links[] = array(
-									'label' => 'EXT:pt_list/locallang.xml:pager_fill',
-									'type' => 'fillitem'
+									'pageNumber' => $i,
+									'label' => $i,
+									'current' => ($i == $this->currentPageNumber),
+									'type' => 'pageitem'
 								);
+								#echo '<br>$i.'.$i.' abs:'.abs($this->conf['fix']-$this->currentPageNumber). ' $this->currentPageNumber'.$this->currentPageNumber;
+							} else {
+								// append a "fill" item if it does not already exist
+								$lastLinkItem = end($links);				
+								if ($lastLinkItem['type'] != 'fillitem') {
+									$links[] = array(
+										'label' => 'EXT:pt_list/locallang.xml:pager_fill',
+										'type' => 'fillitem'
+									);
+								}
 							}
 						}
 					}
@@ -175,6 +177,18 @@ class tx_ptlist_pagerStrategy_default implements tx_ptlist_iPagerStrategy {
 					);
 				} break;
 				
+				case 'prevIfNotFirst': {
+					if ( 1 != $this->currentPageNumber ) {
+						$prevpage = max($this->currentPageNumber - 1, 1);
+						$links[] =  array(
+							'pageNumber' => $prevpage,
+							'label' => 'EXT:pt_list/locallang.xml:pager_prev',
+							'current' => ($prevpage == $this->currentPageNumber),
+							'type' => 'prev',
+						);
+					}
+				} break;
+				
 				case 'next': {
 					$nextpage = min($this->currentPageNumber + 1, $this->amountPages);
 					$links[] = array(
@@ -183,7 +197,19 @@ class tx_ptlist_pagerStrategy_default implements tx_ptlist_iPagerStrategy {
 						'current' => ($nextpage == $this->currentPageNumber),
 						'type' => 'next'
 					);
-				} break; 
+				} break;
+				
+				case 'nextIfNotLast': {
+					if ( $this->currentPageNumber != $this->amountPages ) {
+						$nextpage = min($this->currentPageNumber + 1, $this->amountPages);
+						$links[] = array(
+							'pageNumber' => $nextpage,
+							'label' => 'EXT:pt_list/locallang.xml:pager_next',
+							'current' => ($nextpage == $this->currentPageNumber),
+							'type' => 'next',
+						);
+					}
+				} break;
 				
 				case 'first': {
 					$firstpage = 1;
