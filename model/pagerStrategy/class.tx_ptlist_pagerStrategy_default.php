@@ -200,7 +200,7 @@ class tx_ptlist_pagerStrategy_default implements tx_ptlist_iPagerStrategy {
 				} break;
 				
 				case 'nextIfNotLast': {
-					if ( $this->currentPageNumber != $this->amountPages ) {
+					if ( (1 < $this->amountPages) && ($this->currentPageNumber != $this->amountPages) ) {
 						$nextpage = min($this->currentPageNumber + 1, $this->amountPages);
 						$links[] = array(
 							'pageNumber' => $nextpage,
