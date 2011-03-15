@@ -117,7 +117,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 	 * @var array	local configuration (set in the constructor)
 	 */
 	protected $localConfiguration = array();
-	
+
 	/**
 	 * @var array	list prefix specific paramters (will be merged to params)
 	 */
@@ -232,7 +232,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 
 		// as we need the pluginMode already here we fetch the pluginMode here
 		$this->getPluginMode();
-		
+
 		$this->filterboxId = $this->conf['filterboxId'];
 		if ($this->pluginMode == 'filterbox') {
 			tx_pttools_assert::isNotEmptyString($this->filterboxId, array('message' => 'No "filterboxId" found in configuration.'));
@@ -267,52 +267,52 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 
 		// merge parameters
 		if (t3lib_div::compat_version('4.3')) {
-			$this->listPrefixParams = t3lib_div::_GPmerged($this->listPrefix);	
+			$this->listPrefixParams = t3lib_div::_GPmerged($this->listPrefix);
 		} else {
-			$this->listPrefixParams = t3lib_div::GParrayMerged($this->listPrefix);	
+			$this->listPrefixParams = t3lib_div::GParrayMerged($this->listPrefix);
 		}
-		
+
 		$this->params = t3lib_div::array_merge_recursive_overrule($this->listPrefixParams, $this->params);
 	}
-	
-	
-	
-	
+
+
+
+
     /**
      * Get view
-     * 
+     *
      * @param string $viewName (optional) Name of view
      * @return tx_ptmvc_view View for filter user interface
      * @author Fabrizio Branca <mail@fabrizio-branca.de>
      * @since  2010-05-03
      */
     public function getView($viewName='') {
-        
+
         $view = parent::getView($viewName);
-        
+
         // add appendToUrl variable to view if configured
 		if ($this->conf['appendFilterValuesToUrls']) {
 			$appendToUrl = $this->getCurrentListObject()->getCompleteListStateAsUrlParameters(false, $this->filterIdentifier);
 			$view->addItem($appendToUrl, 'appendToUrl', false);
 		}
-		
+
         return $view;
-        
+
     }
-	
-	
-	
+
+
+
 	/**
 	 * Setup / create list object
-	 * 
+	 *
 	 * @return void
 	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since 2010-04-30
 	 */
 	protected function setupListObject() {
-		
+
 		tx_pttools_assert::isNull($this->currentListObject, array('message' => 'The list object has already been created before'));
-		
+
 		/**
 		 * Take passed list object (must be an instance from tx_ptlist_list).
 		 * e.g. pass a reference to the listObject in the localConfiguration passed to this controller in the constructor
@@ -330,24 +330,24 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 			tx_pttools_assert::isNotEmptyString($this->conf['listClass'], array('message' => 'No "listClass" found in configuration!'));
 			$listObject = t3lib_div::getUserObj($this->conf['listClass']);
 		}
-		
-		/* @var $listObject tx_ptlist_list */ 
-		
+
+		/* @var $listObject tx_ptlist_list */
+
 		// store reference to listObject into the registry
 		tx_pttools_registry::getInstance()->register($this->currentlistId.'_listObject', $listObject);
-		
+
 			// setup the current listObject (set list ID & prepare columns, filters etc. for the list)
 		$listObject->set_listId($this->currentlistId);
 		$listObject->setup();
-		
+
 		$this->setCurrentListObject($listObject);
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Get current list object
-	 * 
+	 *
 	 * @return tx_ptlist_list list object
 	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since 2010-04-30
@@ -355,12 +355,12 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 	protected function getCurrentListObject() {
 		return $this->currentListObject;
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Set current list object
-	 * 
+	 *
 	 * @param tx_ptlist_list $listObject
 	 * @return void
 	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
@@ -382,7 +382,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 	 * @since	2009-01-15
 	 */
 	protected function init() {
-		
+
 		$registry = tx_pttools_registry::getInstance();
 
 		// if no processed state flag for current list found in registry: process list
@@ -396,7 +396,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 			}
 
 			$this->setupListObject();
-			
+
 			$serializedFilterCollection = $this->restoreFilterCollection();
 
 			if (!empty($serializedFilterCollection)) {
@@ -404,7 +404,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 				tx_pttools_assert::isInstanceOf($filterCollection, 'tx_ptlist_filterCollection', array('message' => sprintf('Class "%s" does not match "tx_ptlist_filterCollection"', get_class($filterCollection))));
 				$this->getCurrentListObject()->invokeFilterCollection($filterCollection);
 			}
-			
+
 			$this->processSorting();
 
 			// process filter sub controllers (processes all subcontrollers and retrieves the where clause from them)
@@ -413,7 +413,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 			$this->initPager();
 
 			$serializedFilterCollection = serialize($this->getCurrentListObject()->getAllFilters());
-			
+
 			// store serialized filters into session
 			if (!$this->conf['doNotUseSession']) {
 				if (TYPO3_DLOG) t3lib_div::devLog('Storing serialized filterCollection to session', 'pt_list', 0, $serializedFilterCollection);
@@ -423,7 +423,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 			if ($this->params['action'] == 'addBookmark') {
 				$this->createBookmark($this->params['bookmark_name'], $serializedFilterCollection);
 			}
-			
+
 			// store processed state flag for list into the registry
 			$registry[$this->currentlistId.'_isProcessed'] = true;
 		}
@@ -433,30 +433,30 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 		$this->pager = $registry[$this->currentlistId.'_pager'];
 	}
 
-	
-	
+
+
 	/**
 	 * Sets the sorting of the list by reading parameters or restoring the state from the session
 	 * (Refactoring "extractMethod" from originally init() method)
-	 * 
+	 *
 	 * @param void
 	 * @return void
 	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since 2009-12-09
 	 */
 	protected function processSorting() {
-		if (isset($this->params['sorting_column']) && isset($this->params['sorting_direction'])) {
+		if (!empty($this->params['sorting_column']) && !empty($this->params['sorting_direction'])) {
 		    // if sorting action submitted: set submitted sorting parameters in current list and store them into session
 			$this->getCurrentListObject()->setSortingParameters($this->params['sorting_column'], $this->params['sorting_direction']);
 
 			// store sorting info into session
 			if (!$this->conf['doNotUseSession']) {
-				
+
 				$sessionKeyPrefix = $GLOBALS['TSFE']->fe_user->user['uid'] . '_' . $this->currentlistId;
-				
+
 				tx_pttools_sessionStorageAdapter::getInstance()->store($sessionKeyPrefix . '_sortingColumn', $this->params['sorting_column']);
 				tx_pttools_sessionStorageAdapter::getInstance()->store($sessionKeyPrefix . '_sortingDirection', $this->params['sorting_direction']);
-				
+
 			}
 
 		} elseif (!$this->conf['doNotUseSession']) {
@@ -468,13 +468,13 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 			}
 		}
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Init pager
 	 * (Refactoring "extractMethod" from originally init() method)
-	 * 
+	 *
 	 * @param void
 	 * @return void
 	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
@@ -493,11 +493,11 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 		$this->pager->set_currentPageNumber(!empty($this->params['page']) ? $this->params['page'] : 1);
 		tx_pttools_registry::getInstance()->register($this->currentlistId.'_pager', $this->pager);
 	}
-	
-	
+
+
 	/**
 	 * Stores the current state as bookmark
-	 * 
+	 *
 	 * @param string $bookmarkName
 	 * @param string $serializedFilterCollection
 	 * @return void
@@ -513,14 +513,14 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 		$bookmark->set_filterstates($serializedFilterCollection);
 		$bookmark->storeSelf();
 	}
-	
-	
+
+
 	/**
 	 * Restores the filter collection
 	 * - using a bookmark from configuration OR
 	 * - using a bookmark from parameter OR
 	 * - using the session
-	 * 
+	 *
 	 * @param void
 	 * @return string serialized filter collection
 	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
@@ -548,8 +548,8 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 			$serializedFilterCollection = tx_pttools_sessionStorageAdapter::getInstance()->read($GLOBALS['TSFE']->fe_user->user['uid'] . '_' . $this->currentlistId . '_filter', false);
 			if (TYPO3_DLOG) t3lib_div::devLog('Serialized filterCollection from session', 'pt_list', 0, $serializedFilterCollection);
 		}
-		
-		return $serializedFilterCollection; 
+
+		return $serializedFilterCollection;
 	}
 
 
@@ -567,7 +567,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 	public function doAction($action = '', array $parameter = array()) {
 
 		if (isset($this->forcedNextAction['actionName'])) {
-			
+
 			$originalAction = $action;
 
 			// copy actionName and parameters to local variables
@@ -576,10 +576,10 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 
 			// reset class variable
 			$this->forcedNextAction = array();
-			
+
 			if (TYPO3_DLOG) t3lib_div::devLog(sprintf('Executing "%s" instead of "%s"', $action, $originalAction), 'pt_list');
-		} 
-		
+		}
+
 		return parent::doAction($action, $parameter);
 
 	}
@@ -607,41 +607,41 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 		$fiterCollection = $this->getCurrentListObject()->getAllFilters(true, $this->filterboxId, true)->getMarkerArray(); /* @var $filterCollection array */
 		$view->addItem($fiterCollection, 'filterbox', false);  // do not filter HTML here since the complete filterbox is already rendered as HTML
 		$view->addItem($this->filterboxId, 'filterboxId');
-	
+
 		$resetLinkPid = !empty($this->conf['resetLinkPid']) ? $this->conf['resetLinkPid'] : $GLOBALS['TSFE']->id;
 		$view->addItem($resetLinkPid, 'resetLinkPid');
 
 		return $view->render();
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Nav links
-	 * 
+	 *
 	 * @param string (optional) csl of navlink identifiers. If empty those will be fetched from configuration
 	 * @return string HTML output
 	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
-	 * @since 2010-01-19 
+	 * @since 2010-01-19
 	 */
 	public function navLinkDefaultAction($navLinks=NULL) {
-		
+
 		// try getting navLinks from parameters if not found in method arguments
 		if (empty($navLinks) && !empty($this->params['navLinks'])) {
 			$navLinks = $this->params['navLinks'];
 		}
-		
+
 		// get navLinks from configuration
 		if (empty($navLinks)) {
 			$navLinks = $this->conf['navLinks'];
 		}
 		tx_pttools_assert::isNotEmptyString($navLinks);
-		
+
 		$output = '';
 		foreach (t3lib_div::trimExplode(',', $navLinks) as $navLink) {
 			$output .= $this->getCurrentListObject()->getNavLink($navLink);
 		}
-		
+
 		return $output;
 	}
 
@@ -718,18 +718,18 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 
 		// inline filters
 		$view->addItem($this->getCurrentListObject()->getAllFilters(true, 'renderInList', true)->getMarkerArray(), 'filterbox', false);
-		
+
 		// inline pager
 		if ($this->conf['inlinePager']) {
 			$view->addItem($this->doAction('pagerDefault'), 'pager', false);
 		}
-		
+
 		// aggregates
         $view->addItem($this->getAggregateRows(), 'aggregateRows', false);
 
         // (added by rk 28.08.09) # TODO: Replace this by a translation mechanism
         $view->addItem($this->getCurrentListObject()->get_noElementsFoundText(), 'noElementsFoundText', false); // do not filter HTML here since the display text may already be formatted as HTML (e.g. from Typoscript configuration)
-        
+
 		$appendToSortingUrl = '';
 		if ($this->conf['appendFilterValuesToUrls']) {
 			$appendToSortingUrl = $this->getCurrentListObject()->getCompleteListStateAsUrlParameters(true);
