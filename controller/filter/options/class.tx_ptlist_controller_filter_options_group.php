@@ -94,6 +94,25 @@ class tx_ptlist_controller_filter_options_group extends tx_ptlist_controller_fil
 		
 		return $groupData;
 	}
+    
+    
+    
+    /**
+     * Extends base class method to check & convert filter value to an array.
+     * This is required due to strict type check in tx_ptlist_controller_filter_options_base::getSqlWhereClauseSnippet() method.
+     * 
+     * @param   array   $dataArray      Array of configuration data
+     * @return  void 
+	 * @author	Chetan Thapliyal <chetan.thapliyal@aoemedia.de>
+     * @since   2011-03-18
+     */
+    protected function setPresetStateFromArray($dataArray) {
+    	
+    	parent::setPresetStateFromArray($dataArray);
+    	if (!is_array($this->value)) {
+    		$this->value = array($this->value);
+    	}
+    }
 
 }
 
