@@ -433,15 +433,19 @@ abstract class tx_ptlist_controller_filter_options_base extends tx_ptlist_filter
                 $label = $GLOBALS['TSFE']->sL('LLL:EXT:pt_list/locallang.xml:filter_group_all');
             }
             $class = !empty($this->conf['includeEmptyOption.']['class']) ? $this->conf['includeEmptyOption.']['class'] : 'empty-option';
-            array_unshift(
-                $this->possibleValues,
-                array(
-                    'item' => 'reset',
-                    'label' => $label,
-                    'quantity' => '',
-                    'class' => $class,
-                )
+            
+            $resetOption = array(
+                'item' => 'reset',
+                'label' => $label,
+                'quantity' => '',
+                'class' => $class,
             );
+            
+            if (!empty($this->conf['includeEmptyOption.']['insertAfter'])) {
+            	array_push($this->possibleValues, $resetOption);
+            } else {
+            	array_unshift($this->possibleValues, $resetOption);
+            }
         }
 	}
 	
