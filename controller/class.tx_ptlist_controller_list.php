@@ -893,11 +893,56 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 		// TODO: empty because this is processed in the init() method. Find a better solution than writing emtpy action methods!
 		return $this->doAction();
 	}
+	
+	
+	protected function getRawDataAction() {
+		
+		tx_pttools_assert::isInstanceOf($this->pager, 'tx_ptlist_pager', array('message' => 'No pager object found!'));
+		tx_pttools_assert::isInstanceOf($this->getCurrentListObject(), 'tx_ptlist_list', array('message' => 'No list object found!'));
+		
+		$offset = 0;
+		$rowcount = 10;
+
+		$sortingColumn = false;
+		$sortingDirection = false;
+		if (!empty($sortingDirection) && !empty($sortingColumn)) {
+			$sortingDirection = (strtoupper($sortingDirection) == 'DESC') ? tx_ptlist_columnDescription::SORTINGSTATE_DESC : tx_ptlist_columnDescription::SORTINGSTATE_ASC;
+			$this->getCurrentListObject()->setSortingParameters($sortingColumn, $sortingDirection);
+		}
+
+		// get itemCollection for the requested page from the pager object
+		$itemCollection = $this->pager->getItemCollection($rowcount, $offset);
+
+		// render itemCollection into marker array
+		$listItems = array();
+		foreach ($itemCollection as $itemObj) {
+			$listItem = array();
+
+			foreach ($this->getCurrentListObject()->getAllColumnDescriptions(true) as $columnDescription) { /* @var $columnDescription tx_ptlist_columnDescription */
+
+				$dataDescriptionIdentifiers = $columnDescription->get_dataDescriptions()->getDataDescriptionIdentifiers();
+
+				// collect values for each dataDescriptionIdentifier
+				$values = array();
+				foreach ($dataDescriptionIdentifiers as $dataDescriptionIdentifier) {
+					if (!isset($itemObj[$dataDescriptionIdentifier])) {
+						throw new tx_pttools_exception(sprintf('Property "%s" not found (via ArrayAccess)', $dataDescriptionIdentifier));
+					}
+					$values[$dataDescriptionIdentifier] = $itemObj[$dataDescriptionIdentifier];
+				}
+
+				$listItem[$columnDescription->get_columnIdentifier()] = $columnDescription->renderFieldContent($values);
+			}
+
+			$listItems[] = $listItem;
+		}
+		return $listItems;
+	}
 
 
 
 	/**
-	 * Returns data in JSON format direclty to the client.
+	 * Returns data in JSON format directly to the client.
 	 * This action will be executed asynchronously!
 	 *
 	 * @param 	void
