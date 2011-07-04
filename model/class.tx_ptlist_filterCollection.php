@@ -61,30 +61,30 @@ class tx_ptlist_filterCollection extends tx_pttools_objectCollection implements 
 
 
 
-    /**
-     * Adds a filter item to the collection and checks if the key already exists
-     *
-     * @param   tx_ptlist_filter    filter object
-     * @throws 	tx_pttools_exception	if trying to add a filter with key, that already exists in the collection
-     * @return  void
-     * @author  Rainer Kuhn <kuhn@punkt.de>
-     * @since   2009-01-21
-     */
-    public function addItem(tx_ptlist_filter $filterObj) {
+	/**
+	 * Adds a filter item to the collection and checks if the key already exists
+	 *
+	 * @param   tx_ptlist_filter    filter object
+	 * @throws 	tx_pttools_exception	if trying to add a filter with key, that already exists in the collection
+	 * @return  void
+	 * @author  Rainer Kuhn <kuhn@punkt.de>
+	 * @since   2009-01-21
+	 */
+	public function addItem(tx_ptlist_filter $filterObj) {
 
-        if (func_num_args() > 1) {
-            throw new tx_pttools_exception('Too many parameters');
-        }
+		if (func_num_args() > 1) {
+			throw new tx_pttools_exception('Too many parameters');
+		}
 
-        $key = $filterObj->get_filterIdentifier();
+		$key = $filterObj->get_filterIdentifier();
 
-        if ($this->hasItem($key)) {
-        	throw new tx_pttools_exception(sprintf('Filter "%s" already exists in collection and cannot be overwritten!', $key));
-        }
+		if ($this->hasItem($key)) {
+			throw new tx_pttools_exception(sprintf('Filter "%s" already exists in collection and cannot be overwritten!', $key));
+		}
 
-        parent::addItem($filterObj, $key);
+		parent::addItem($filterObj, $key);
 
-    }
+	}
 
 
 
@@ -111,7 +111,7 @@ class tx_ptlist_filterCollection extends tx_pttools_objectCollection implements 
 
 
 
-    /**
+	/**
 	 * Return a filterCollection containing references to those filters that are accessible by the current user
 	 *
 	 * @param 	string	group list
@@ -256,7 +256,7 @@ class tx_ptlist_filterCollection extends tx_pttools_objectCollection implements 
 	 * @since	2009-10-01
 	 */
 	public function getAllFilterValueAsGetParameterString($ignoredFilters = '') {
-		
+
 		$ignoredFilterIdentifiers = t3lib_div::trimExplode(',', $ignoredFilters);
 		$parameterString = '';
 		/* @var $filter tx_ptlist_filter */
@@ -265,15 +265,15 @@ class tx_ptlist_filterCollection extends tx_pttools_objectCollection implements 
 				$parameterString .= $filter->getFilterValueAsGetParameterString();
 			}
 		}
-		
+
 		return $parameterString;
 	}
 
 
 
-    /***************************************************************************
-     * Methods implementing "tx_pttools_iSettableByArray" interface
-     **************************************************************************/
+	/***************************************************************************
+	 * Methods implementing "tx_pttools_iSettableByArray" interface
+	 **************************************************************************/
 
 	/**
 	 * Set properties from array
@@ -334,7 +334,7 @@ class tx_ptlist_filterCollection extends tx_pttools_objectCollection implements 
 				tx_pttools_assert::isFilePath($file, array('message' => sprintf('File "%s" not found', $file)));
 
 				// construct object
-				$tmpFilter = t3lib_div::getUserObj($filterClass); /* @var $tmpFilter tx_ptlist_filter */
+				$tmpFilter = t3lib_div::getUserObj($filterClass, ''); /* @var $tmpFilter tx_ptlist_filter */
 				tx_pttools_assert::isInstanceOf($tmpFilter, 'tx_ptlist_filter', array('message' => 'Created object is not an instance of "tx_ptlist_filter"'));
 
 				// set/overwrite listIdentifier into filter configuration array
