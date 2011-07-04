@@ -138,8 +138,8 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 	 *			'subControllerPrefixPart' => 'bookmarkList',
 	 *			'listId' => 'bookmarkList',
 	 *			'listObject' => new tx_ptlist_bookmarklist(), // extends tx_ptlist_list
- 	 * 		)
-     * );
+	 * 		)
+	 * );
 	 * @param  array  localConfiguration
 	 * @return void
 	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
@@ -149,8 +149,8 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 
 		// save local configuration to a property
 		if (!empty($localConfiguration)) {
-		    $this->localConfiguration = t3lib_div::array_merge_recursive_overrule($this->localConfiguration, $localConfiguration);
-		    if (TYPO3_DLOG) t3lib_div::devLog('Merging localConfiguration to property', 'pt_list', 0, $localConfiguration);
+			$this->localConfiguration = t3lib_div::array_merge_recursive_overrule($this->localConfiguration, $localConfiguration);
+			if (TYPO3_DLOG) t3lib_div::devLog('Merging localConfiguration to property', 'pt_list', 0, $localConfiguration);
 		}
 
 		parent::__construct();
@@ -214,14 +214,14 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 		// get standard MVC configuration (see tx_ptmvc_controllerFrontend::getConfiguration())
 		parent::getConfiguration();
 
-        // merge local configuration (set in the constructor) over existing MVC configuration
-        if (is_array($this->localConfiguration) && !empty($this->localConfiguration)) {
-            $this->conf = t3lib_div::array_merge_recursive_overrule($this->conf, $this->localConfiguration);
-            if (TYPO3_DLOG) t3lib_div::devLog('Merging localConfiguration with existing MVC configuration', 'pt_list', 0, $this->localConfiguration);
+		// merge local configuration (set in the constructor) over existing MVC configuration
+		if (is_array($this->localConfiguration) && !empty($this->localConfiguration)) {
+			$this->conf = t3lib_div::array_merge_recursive_overrule($this->conf, $this->localConfiguration);
+			if (TYPO3_DLOG) t3lib_div::devLog('Merging localConfiguration with existing MVC configuration', 'pt_list', 0, $this->localConfiguration);
 
-            // unset the localConfiguration to avoid that the controller will merge settings again
-            $this->localConfiguration = array();
-        }
+			// unset the localConfiguration to avoid that the controller will merge settings again
+			$this->localConfiguration = array();
+		}
 
 		// set some class properties depending on special configuration settings: set list ID for the current list controller from TS config
 		$this->currentlistId = $this->conf['listId'];
@@ -278,27 +278,27 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 
 
 
-    /**
-     * Get view
-     *
-     * @param string $viewName (optional) Name of view
-     * @return tx_ptmvc_view View for filter user interface
-     * @author Fabrizio Branca <mail@fabrizio-branca.de>
-     * @since  2010-05-03
-     */
-    public function getView($viewName='') {
+	/**
+	 * Get view
+	 *
+	 * @param string $viewName (optional) Name of view
+	 * @return tx_ptmvc_view View for filter user interface
+	 * @author Fabrizio Branca <mail@fabrizio-branca.de>
+	 * @since  2010-05-03
+	 */
+	public function getView($viewName='') {
 
-        $view = parent::getView($viewName);
+		$view = parent::getView($viewName);
 
-        // add appendToUrl variable to view if configured
+		// add appendToUrl variable to view if configured
 		if ($this->conf['appendFilterValuesToUrls']) {
 			$appendToUrl = $this->getCurrentListObject()->getCompleteListStateAsUrlParameters(false, $this->filterIdentifier);
 			$view->addItem($appendToUrl, 'appendToUrl', false);
 		}
 
-        return $view;
+		return $view;
 
-    }
+	}
 
 
 
@@ -446,7 +446,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 	 */
 	protected function processSorting() {
 		if (!empty($this->params['sorting_column']) && !empty($this->params['sorting_direction'])) {
-		    // if sorting action submitted: set submitted sorting parameters in current list and store them into session
+			// if sorting action submitted: set submitted sorting parameters in current list and store them into session
 			$this->getCurrentListObject()->setSortingParameters($this->params['sorting_column'], $this->params['sorting_direction']);
 
 			// store sorting info into session
@@ -722,13 +722,14 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 		// inline pager
 		if ($this->conf['inlinePager']) {
 			$view->addItem($this->doAction('pagerDefault'), 'pager', false);
+			$view->addItem($this->pager->getMarkerArray(), 'pagerData');
 		}
 
 		// aggregates
-        $view->addItem($this->getAggregateRows(), 'aggregateRows', false);
+		$view->addItem($this->getAggregateRows(), 'aggregateRows', false);
 
-        // (added by rk 28.08.09) # TODO: Replace this by a translation mechanism
-        $view->addItem($this->getCurrentListObject()->get_noElementsFoundText(), 'noElementsFoundText', false); // do not filter HTML here since the display text may already be formatted as HTML (e.g. from Typoscript configuration)
+		// (added by rk 28.08.09) # TODO: Replace this by a translation mechanism
+		$view->addItem($this->getCurrentListObject()->get_noElementsFoundText(), 'noElementsFoundText', false); // do not filter HTML here since the display text may already be formatted as HTML (e.g. from Typoscript configuration)
 
 		$appendToSortingUrl = '';
 		if ($this->conf['appendFilterValuesToUrls']) {
@@ -829,9 +830,9 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 
 
 
-    /***************************************************************************
-     * Additional Action Methods
-     **************************************************************************/
+	/***************************************************************************
+	 * Additional Action Methods
+	 **************************************************************************/
 
 	/**
 	 * Display available bookmarks action
@@ -871,7 +872,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 			'listId' => 'bookmarks',
 			'pluginMode' => 'list',
 		);
-		 $listController = new tx_ptlist_controller_list($localConfiguration);
+		$listController = new tx_ptlist_controller_list($localConfiguration);
 		// pass the cObj to the subcontroller
 		// $listController->cObj = $this->cObj;
 		$listController->cObj = clone $this->cObj;
@@ -893,18 +894,55 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 		// TODO: empty because this is processed in the init() method. Find a better solution than writing emtpy action methods!
 		return $this->doAction();
 	}
-	
-	
-	protected function getRawDataAction() {
-		
+
+
+
+	/**
+	 * Get raw data
+	 *
+	 * @return array raw data
+	 * @author Fabrizio Branca <fabrizio.branca@aoemedia.de>
+	 * @since 2011-07-04 (<- Independency Day!)
+	 */
+	protected function getRawDataAction(array $params=array()) {
+
 		tx_pttools_assert::isInstanceOf($this->pager, 'tx_ptlist_pager', array('message' => 'No pager object found!'));
 		tx_pttools_assert::isInstanceOf($this->getCurrentListObject(), 'tx_ptlist_list', array('message' => 'No list object found!'));
-		
-		$offset = 0;
-		$rowcount = 10;
+
+		$offset = $params['offset'] ? $params['offset'] : 0;
+		$rowcount = $params['rowcount'] ? $params['rowcount'] : 0;
 
 		$sortingColumn = false;
 		$sortingDirection = false;
+		if (!empty($sortingDirection) && !empty($sortingColumn)) {
+			$sortingDirection = (strtoupper($sortingDirection) == 'DESC') ? tx_ptlist_columnDescription::SORTINGSTATE_DESC : tx_ptlist_columnDescription::SORTINGSTATE_ASC;
+			$this->getCurrentListObject()->setSortingParameters($sortingColumn, $sortingDirection);
+		}
+
+		// get itemCollection for the requested page from the pager object
+		return $itemCollection = $this->pager->getItemCollection($rowcount, $offset);
+	}
+
+
+
+	/**
+	 * Get raw column content
+	 *
+	 * @return array column content
+	 * @author Fabrizio Branca <fabrizio.branca@aoemedia.de>
+	 * @since 2011-07-04 (<- Independency Day!)
+	 */
+	protected function getRawColumnsAction(array $params=array()) {
+
+		tx_pttools_assert::isInstanceOf($this->pager, 'tx_ptlist_pager', array('message' => 'No pager object found!'));
+		tx_pttools_assert::isInstanceOf($this->getCurrentListObject(), 'tx_ptlist_list', array('message' => 'No list object found!'));
+
+		$offset = $params['offset'] ? $params['offset'] : 0;
+		$rowcount = $params['rowcount'] ? $params['rowcount'] : 0;
+
+		$sortingColumn = $params['sortingColumn'] ? $params['sortingColumn'] : false;
+		$sortingDirection = $params['sortingDirection'] ? $params['sortingDirection'] : false;
+
 		if (!empty($sortingDirection) && !empty($sortingColumn)) {
 			$sortingDirection = (strtoupper($sortingDirection) == 'DESC') ? tx_ptlist_columnDescription::SORTINGSTATE_DESC : tx_ptlist_columnDescription::SORTINGSTATE_ASC;
 			$this->getCurrentListObject()->setSortingParameters($sortingColumn, $sortingDirection);
@@ -952,43 +990,13 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 	 */
 	protected function fetchDataAction() {
 		try {
-			$offset = t3lib_div::_GP('start');
-			$rowcount = t3lib_div::_GP('limit');
 
-			$sortingColumn = t3lib_div::_GP('sort');
-			$sortingDirection = t3lib_div::_GP('dir');
-
-			if (!empty($sortingDirection) && !empty($sortingColumn)) {
-				$sortingDirection = (strtoupper($sortingDirection) == 'DESC') ? tx_ptlist_columnDescription::SORTINGSTATE_DESC : tx_ptlist_columnDescription::SORTINGSTATE_ASC;
-				$this->getCurrentListObject()->setSortingParameters($sortingColumn, $sortingDirection);
-			}
-
-			// get itemCollection for the requested page from the pager object
-			$itemCollection = $this->pager->getItemCollection($rowcount, $offset);
-
-			// render itemCollection into marker array
-			$listItems = array();
-			foreach ($itemCollection as $itemObj) {
-				$listItem = array();
-
-				foreach ($this->getCurrentListObject()->getAllColumnDescriptions(true) as $columnDescription) { /* @var $columnDescription tx_ptlist_columnDescription */
-
-					$dataDescriptionIdentifiers = $columnDescription->get_dataDescriptions()->getDataDescriptionIdentifiers();
-
-					// collect values for each dataDescriptionIdentifier
-					$values = array();
-					foreach ($dataDescriptionIdentifiers as $dataDescriptionIdentifier) {
-						if (!isset($itemObj[$dataDescriptionIdentifier])) {
-							throw new tx_pttools_exception(sprintf('Property "%s" not found (via ArrayAccess)', $dataDescriptionIdentifier));
-						}
-						$values[$dataDescriptionIdentifier] = $itemObj[$dataDescriptionIdentifier];
-					}
-
-					$listItem[$columnDescription->get_columnIdentifier()] = $columnDescription->renderFieldContent($values);
-				}
-
-				$listItems[] = $listItem;
-			}
+			$listItems = $this->doAction('getRawColumns', array(
+				'offset' => t3lib_div::_GP('start'),
+				'rowcount' => t3lib_div::_GP('limit'),
+				'sortingColumn' => t3lib_div::_GP('sort'),
+				'sortingDirection' => t3lib_div::_GP('dir')
+			));
 
 			$count = $this->pager->get_totalItemCount();
 			$data = '{"success": true, "count": '.$count.', "listitems":' . json_encode($listItems) . '}';
@@ -1018,16 +1026,16 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-26
 	 */
-    protected function changeSortingOrderAction() {
-        // this will be processed in the init() method
-        return $this->doAction();
-    }
+	protected function changeSortingOrderAction() {
+		// this will be processed in the init() method
+		return $this->doAction();
+	}
 
 
 
-    /***************************************************************************
-     * Additional Methods
-     **************************************************************************/
+	/***************************************************************************
+	 * Additional Methods
+	 **************************************************************************/
 
 	/**
 	 * Return a marker array for all aggregate rows
@@ -1150,18 +1158,18 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 					 * filter all values
 					 */
 					$tsHtmlFiltering = tx_pttools_div::getTS('plugin.tx_ptlist.view.filterHtml');
-                    $filterHtml = true;     // filter HTML by default
+					$filterHtml = true;     // filter HTML by default
 					if ( $tsHtmlFiltering === 0 || $tsHtmlFiltering === '0' ) {
-			            $filterHtml = false;
-			        }
+						$filterHtml = false;
+					}
 
-			        if ($filterHtml) {
+					if ($filterHtml) {
 						// Here only raw data is filtered, BEFORE data is rendered by TS setup
 						$values[$dataDescriptionIdentifier] = tx_pttools_div::htmlOutput($itemObj[$dataDescriptionIdentifier]); // added HTML filtering by default (rk 09.05.2009) - TODO: check implementation at this place and make HTML filtering configurable for each dataDescriptionIdentifier via Typoscript
-			        } else {
-			        	// Filtering is deactivated by TS
-			        	$values[$dataDescriptionIdentifier] = $itemObj[$dataDescriptionIdentifier];
-			        }
+					} else {
+						// Filtering is deactivated by TS
+						$values[$dataDescriptionIdentifier] = $itemObj[$dataDescriptionIdentifier];
+					}
 
 				}
 				$listItem[$columnDescription->get_columnIdentifier()] = $columnDescription->renderFieldContent($values);
@@ -1175,55 +1183,55 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 
 
 
-    /***************************************************************************
-     * Getter/Setter
-     **************************************************************************/
+	/***************************************************************************
+	 * Getter/Setter
+	 **************************************************************************/
 
-    /**
-     * Returns the list prefix
-     *
-     * @param   void
-     * @return  string  list prefix
-     * @author  Fabrizio Branca <mail@fabrizio-branca.de>
-     * @since   2009-01-23
-     */
-    public function get_listPrefix() {
-        return $this->listPrefix;
-    }
-
-
-
-    /**
-     * Returns the current list id
-     *
-     * @param void
-     * @return string list id
-     * @author Michael Knoll <knoll@punkt.de>
-     * @since 2009-06-17
-     */
-    public function get_currentlistId() {
-    	return $this->currentlistId;
-    }
+	/**
+	 * Returns the list prefix
+	 *
+	 * @param   void
+	 * @return  string  list prefix
+	 * @author  Fabrizio Branca <mail@fabrizio-branca.de>
+	 * @since   2009-01-23
+	 */
+	public function get_listPrefix() {
+		return $this->listPrefix;
+	}
 
 
 
-    /**
-     * Set forced next action.
-     *
-     * @param   string  action name
-     * @param   array   (optional) array of parameters passed to the action
-     * @author  Fabrizio Branca <mail@fabrizio-branca.de>
-     * @since   2009-01-26
-     */
-    public function set_forcedNextAction($actionName, array $params=array()) {
-    	if (TYPO3_DLOG) t3lib_div::devLog(sprintf('Setting "forcedNextAction" to "%s"', $actionName), 'pt_list', 0, $params);
+	/**
+	 * Returns the current list id
+	 *
+	 * @param void
+	 * @return string list id
+	 * @author Michael Knoll <knoll@punkt.de>
+	 * @since 2009-06-17
+	 */
+	public function get_currentlistId() {
+		return $this->currentlistId;
+	}
 
-        // tx_pttools_assert::isNotEmptyString($actionName, array('message' => 'No valid "actionName"!'));
-        $this->forcedNextAction = array(
-            'actionName' => $actionName,
-            'params' => $params,
-        );
-    }
+
+
+	/**
+	 * Set forced next action.
+	 *
+	 * @param   string  action name
+	 * @param   array   (optional) array of parameters passed to the action
+	 * @author  Fabrizio Branca <mail@fabrizio-branca.de>
+	 * @since   2009-01-26
+	 */
+	public function set_forcedNextAction($actionName, array $params=array()) {
+		if (TYPO3_DLOG) t3lib_div::devLog(sprintf('Setting "forcedNextAction" to "%s"', $actionName), 'pt_list', 0, $params);
+
+		// tx_pttools_assert::isNotEmptyString($actionName, array('message' => 'No valid "actionName"!'));
+		$this->forcedNextAction = array(
+			'actionName' => $actionName,
+			'params' => $params,
+		);
+	}
 
 
 }
