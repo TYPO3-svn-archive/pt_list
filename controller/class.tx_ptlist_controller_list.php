@@ -902,37 +902,9 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 	 *
 	 * @return array raw data
 	 * @author Fabrizio Branca <fabrizio.branca@aoemedia.de>
-	 * @since 2011-07-04 (<- Independency Day!)
+	 * @since 2011-07-04
 	 */
 	protected function getRawDataAction(array $params=array()) {
-
-		tx_pttools_assert::isInstanceOf($this->pager, 'tx_ptlist_pager', array('message' => 'No pager object found!'));
-		tx_pttools_assert::isInstanceOf($this->getCurrentListObject(), 'tx_ptlist_list', array('message' => 'No list object found!'));
-
-		$offset = $params['offset'] ? $params['offset'] : 0;
-		$rowcount = $params['rowcount'] ? $params['rowcount'] : 0;
-
-		$sortingColumn = false;
-		$sortingDirection = false;
-		if (!empty($sortingDirection) && !empty($sortingColumn)) {
-			$sortingDirection = (strtoupper($sortingDirection) == 'DESC') ? tx_ptlist_columnDescription::SORTINGSTATE_DESC : tx_ptlist_columnDescription::SORTINGSTATE_ASC;
-			$this->getCurrentListObject()->setSortingParameters($sortingColumn, $sortingDirection);
-		}
-
-		// get itemCollection for the requested page from the pager object
-		return $itemCollection = $this->pager->getItemCollection($rowcount, $offset);
-	}
-
-
-
-	/**
-	 * Get raw column content
-	 *
-	 * @return array column content
-	 * @author Fabrizio Branca <fabrizio.branca@aoemedia.de>
-	 * @since 2011-07-04 (<- Independency Day!)
-	 */
-	protected function getRawColumnsAction(array $params=array()) {
 
 		tx_pttools_assert::isInstanceOf($this->pager, 'tx_ptlist_pager', array('message' => 'No pager object found!'));
 		tx_pttools_assert::isInstanceOf($this->getCurrentListObject(), 'tx_ptlist_list', array('message' => 'No list object found!'));
@@ -949,7 +921,22 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 		}
 
 		// get itemCollection for the requested page from the pager object
-		$itemCollection = $this->pager->getItemCollection($rowcount, $offset);
+		return $itemCollection = $this->pager->getItemCollection($rowcount, $offset);
+	}
+
+
+
+	/**
+	 * Get raw column content
+	 *
+	 * @return array column content
+	 * @author Fabrizio Branca <fabrizio.branca@aoemedia.de>
+	 * @since 2011-07-04
+	 */
+	protected function getRawColumnsAction(array $params=array()) {
+
+		// get itemCollection for the requested page from the pager object
+		$itemCollection = $this->getRawDataAction($params);
 
 		// render itemCollection into marker array
 		$listItems = array();
