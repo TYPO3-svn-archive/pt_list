@@ -245,17 +245,18 @@ class tx_ptlist_typo3Tables_list extends tx_ptlist_list implements tx_pttools_iS
 	 * Get collection "part" for given limit parameter
 	 *
 	 * @param 	string	mysql limit clause
+	 * @param 	string ignored filters
 	 * @return 	tx_ptlist_typo3Tables_dataObjectCollection
 	 * @author	Fabrizio Branca <mail@fabrizio-branca.de>
 	 * @since	2009-01-19
 	 */
-	public function getItems($limit = '') {
+	public function getItems($limit = '', $ignoredFiltersForWhereClause = '') {
 
 		$dataObjectCollection = new tx_ptlist_typo3Tables_dataObjectCollection($this->listId);
 
 		$select = $this->getAllColumnDescriptions()->getSelectClause(); /* @var $select string */
 		tx_pttools_assert::isNotEmptyString($select, array('message' => 'Select clause was empty!'));
-		$where = $this->getAllFilters()->getSqlWhereClauseSnippet();
+		$where = $this->getAllFilters()->getSqlWhereClauseSnippet($ignoredFiltersForWhereClause);
 		$orderBy = $this->getAllColumnDescriptions()->getOrderByClause();
 		$groupBy = '';
 
