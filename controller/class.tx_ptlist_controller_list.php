@@ -395,6 +395,10 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 				$registry[$this->currentlistId.'_listControllerObject'] = $this;
 			}
 
+			if ($this->cObj) {
+				$registry[$this->currentlistId . '_tt_content_uid'] = $this->cObj->data['uid'];
+			}
+
 			$this->setupListObject();
 
 			$serializedFilterCollection = $this->restoreFilterCollection();
@@ -605,6 +609,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 		$view = $this->getView('list_filterbox');
 
 		$fiterCollection = $this->getCurrentListObject()->getAllFilters(true, $this->filterboxId, true)->getMarkerArray(); /* @var $filterCollection array */
+
 		$view->addItem($fiterCollection, 'filterbox', false);  // do not filter HTML here since the complete filterbox is already rendered as HTML
 		$view->addItem($this->filterboxId, 'filterboxId');
 
@@ -679,7 +684,6 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 			$appendToUrl = $this->getCurrentListObject()->getCompleteListStateAsUrlParameters();
 		}
 		$view->addItem($appendToUrl, 'appendToUrl', false);
-
 
 		return $view->render();
 	}
