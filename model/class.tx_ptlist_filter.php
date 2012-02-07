@@ -286,6 +286,12 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
 		$resetLinkPid = !empty($this->conf['resetLinkPid']) ? $this->conf['resetLinkPid'] : $GLOBALS['TSFE']->id;
 		$view->addItem($resetLinkPid, 'resetLinkPid');
 
+		$registry = tx_pttools_registry::getInstance();
+		if ($registry->has($this->listIdentifier . '_tt_content_uid')) {
+			$tt_content_uid = tx_pttools_registry::getInstance()->get($this->listIdentifier . '_tt_content_uid');
+			$view->addItem($tt_content_uid, 'tt_content_uid');
+		}
+
 		return $view;
 	}
 
