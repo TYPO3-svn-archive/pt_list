@@ -487,6 +487,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 	protected function initPager() {
 		// create and configure pager object and store reference to it into the registry
 		$this->pager = new tx_ptlist_pager();
+		$this->conf['itemsPerPage'] = $GLOBALS['TSFE']->cObj->stdWrap($this->conf['itemsPerPage'], $this->conf['itemsPerPage.']);
 		if (!empty($this->conf['itemsPerPage'])) {
 			$this->pager->set_itemsPerPage($this->conf['itemsPerPage']);
 		}
