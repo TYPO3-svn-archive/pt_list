@@ -693,8 +693,8 @@ abstract class tx_ptlist_filter extends tx_ptmvc_controllerFrontend implements t
 				$parameterString .= '&'.$this->prefixId.'[value]='.$this->value;
 			} elseif (is_array($this->value)) {
 				if (count($this->value) > 1) {
-					foreach ($this->value as $value) {
-						$parameterString .= '&'.$this->prefixId.'[value][]='.$value;
+					foreach ($this->value as $i => $value) {
+						$parameterString .= '&'.$this->prefixId.'[value]['.$i.']='.$value;
 					}
 				} else {
 					$parameterString .= '&'.$this->prefixId.'[value]='.reset($this->value);
