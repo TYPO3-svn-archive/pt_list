@@ -420,7 +420,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 
 			// store serialized filters into session
 			if (!$this->conf['doNotUseSession']) {
-				if (TYPO3_DLOG) t3lib_div::devLog('Storing serialized filterCollection to session', 'pt_list', 0, $serializedFilterCollection);
+				if (TYPO3_DLOG) t3lib_div::devLog('Storing serialized filterCollection to session', 'pt_list', 0, array($serializedFilterCollection));
 				tx_pttools_sessionStorageAdapter::getInstance()->store($GLOBALS['TSFE']->fe_user->user['uid'] . '_' . $this->currentlistId . '_filter', $serializedFilterCollection, false);
 			}
 
@@ -538,7 +538,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 			tx_pttools_assert::isValidUid($this->conf['bookmark_uid'], false, array('message' => 'No valid "bookmark_uid" found!'));
 			$bookmark = new tx_ptlist_bookmark($this->conf['bookmark_uid']);
 			$serializedFilterCollection = $bookmark->get_filterstate();
-			if (TYPO3_DLOG) t3lib_div::devLog('Loaded serialized filterstate from bookmark (by configuration)', 'pt_list', 1, $serializedFilterCollection);
+			if (TYPO3_DLOG) t3lib_div::devLog('Loaded serialized filterstate from bookmark (by configuration)', 'pt_list', 1, array($serializedFilterCollection));
 
 		} elseif (!empty($this->params['bookmark_uid'])) {
 
@@ -546,12 +546,12 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 			tx_pttools_assert::isValidUid($this->params['bookmark_uid'], false, array('message' => 'No valid "bookmark_uid" found!'));
 			$bookmark = new tx_ptlist_bookmark($this->params['bookmark_uid']);
 			$serializedFilterCollection = $bookmark->get_filterstate();
-			if (TYPO3_DLOG) t3lib_div::devLog('Loaded serialized filterstate from bookmark (by parameter)', 'pt_list', 1, $serializedFilterCollection);
+			if (TYPO3_DLOG) t3lib_div::devLog('Loaded serialized filterstate from bookmark (by parameter)', 'pt_list', 1, array($serializedFilterCollection));
 
 		} elseif (!$this->conf['doNotUseSession']) {
 			// restore filter collection from session
 			$serializedFilterCollection = tx_pttools_sessionStorageAdapter::getInstance()->read($GLOBALS['TSFE']->fe_user->user['uid'] . '_' . $this->currentlistId . '_filter', false);
-			if (TYPO3_DLOG) t3lib_div::devLog('Serialized filterCollection from session', 'pt_list', 0, $serializedFilterCollection);
+			if (TYPO3_DLOG) t3lib_div::devLog('Serialized filterCollection from session', 'pt_list', 0, array($serializedFilterCollection));
 		}
 
 		return $serializedFilterCollection;

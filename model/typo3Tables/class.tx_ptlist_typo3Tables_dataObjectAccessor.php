@@ -219,7 +219,7 @@ class tx_ptlist_typo3Tables_dataObjectAccessor implements tx_pttools_iSingletonC
         $res = $this->dbObj->exec_SELECTquery($select, $from, $where, $groupByClause, $orderBy, $limit);
         tx_pttools_assert::isMySQLRessource($res, $this->dbObj);
 
-		if (TYPO3_DLOG) t3lib_div::devLog('"selectRows" query', 'pt_list', 1, $this->dbObj->debug_lastBuiltQuery);
+		if (TYPO3_DLOG) t3lib_div::devLog('"selectRows" query', 'pt_list', 1, array($this->dbObj->debug_lastBuiltQuery));
 
         $rows = array();
         while (($a_row = $this->dbObj->sql_fetch_assoc($res)) == true) {
@@ -282,7 +282,7 @@ class tx_ptlist_typo3Tables_dataObjectAccessor implements tx_pttools_iSingletonC
         $res = $this->dbObj->exec_SELECTquery($select, $from, $where, $groupBy);
         tx_pttools_assert::isMySQLRessource($res, $this->dbObj);
         
-        if (TYPO3_DLOG) t3lib_div::devLog('"countRows" query', 'pt_list', 1, $this->dbObj->debug_lastBuiltQuery);
+        if (TYPO3_DLOG) t3lib_div::devLog('"countRows" query', 'pt_list', 1, array($this->dbObj->debug_lastBuiltQuery));
         
         $quantity = $this->dbObj->sql_num_rows($res);
 
