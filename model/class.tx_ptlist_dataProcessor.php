@@ -114,7 +114,7 @@ class tx_ptlist_dataProcessor {
 			$select = $conf['select.'];
 
 			// process stdWraps and insert dynamic values
-			$replaceArray = array('###VALUE###' => $data['item']);
+			$replaceArray = array('###VALUE###' => intval($data['item']));
 			foreach ($select as $tsKey => &$value) {
 				if (substr($tsKey, -1) != '.') {
 					$value = $GLOBALS['TSFE']->cObj->stdWrap($select[$tsKey], $select[$tsKey.'.']);
