@@ -1137,6 +1137,7 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 			foreach ($columnDescriptionCollection as $columnDescription) { /* @var $columnDescription tx_ptlist_columnDescription */
 
 				$dataDescriptionIdentifiers = $columnDescription->get_dataDescriptions()->getDataDescriptionIdentifiers();
+				$dataDescriptionIdentifiers = $this->addDefaultLanguageIdentifiers($dataDescriptionIdentifiers, $itemObj);
 
 				// collect values for each dataDescriptionIdentifier
 				$values = array(); // array(<dataDescriptionIdentifier> => <rawDataDescriptionValue>)
@@ -1225,6 +1226,21 @@ class tx_ptlist_controller_list extends tx_ptmvc_controllerFrontend {
 		);
 	}
 
+	protected function addDefaultLanguageIdentifiers($dataDescriptionIdentifiers, tx_ptlist_typo3Tables_dataObject $itemObj) {
+		$postFix = '_ptlistOL';
+		$strlenPostFix = strlen($postFix);
+		$newIdentifiers = array();
+		foreach($dataDescriptionIdentifiers as $identifier) {
+			if(substr($identifier, -1 * $strlenPostFix) === $postFix) {
+				//if: ends with $postFix
+				$identifierDefault = substr($identifier, 0, strlen($identifier) - $strlenPostFix) . '_default';
+				if(isset($itemObj[$identifierDefault])) {
+					$newIdentifiers[] = $identifierDefault;
+				}
+			}
+		}
+		return array_merge($dataDescriptionIdentifiers, $newIdentifiers);
+	}
 
 }
 
